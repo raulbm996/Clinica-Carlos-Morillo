@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Pide cita en la Clínica Carlos Morillo. Fisioterapia, osteopatía, psicología y nutrición en Alcalá de Guadaíra, Sevilla.">
+    <title>Pedir Cita | Clínica Carlos Morillo</title>
+
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- AOS - Animate On Scroll -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏥</text></svg>">
+</head>
+
+<body>
+
+    <!-- ========== NAVBAR ========== -->
+    <nav class="navbar transparent" data-transparent="true" id="navbar">
+        <div class="container">
+            <a href="index.html" class="nav-logo">
+                <img src="assets/images/logo/logo-removebg-preview (1).png" alt="Logo Clínica Carlos Morillo">
+                <div class="nav-logo-text">
+                    <span class="clinic-name">Clínica Carlos Morillo</span>
+                </div>
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Inicio</a>
+                <a href="sobre-nosotros.html" class="nav-link">Sobre nosotros</a>
+                <a href="servicios.html" class="nav-link">Servicios</a>
+                <a href="contacto.html" class="nav-link">Contacto</a>
+                <a href="pedir-cita.html" class="btn btn-primary nav-cta">Pedir Cita</a>
+            </div>
+            <button class="nav-hamburger" id="nav-hamburger" aria-label="Abrir menú">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="nav-mobile" id="nav-mobile">
+        <a href="index.html" class="nav-link">Inicio</a>
+        <a href="sobre-nosotros.html" class="nav-link">Sobre nosotros</a>
+        <a href="servicios.html" class="nav-link">Servicios</a>
+        <a href="contacto.html" class="nav-link">Contacto</a>
+        <a href="pedir-cita.html" class="btn btn-primary">Pedir Cita</a>
+    </div>
+
+    <!-- ========== PAGE HEADER ========== -->
+    <header class="page-header">
+        <div class="container">
+            <h1 data-aos="fade-up">Pedir Cita</h1>
+            <p data-aos="fade-up" data-aos-delay="100"
+                style="color: var(--text-light); font-size: 1.1rem; margin-top: 0.5rem;">Reserva tu cita de forma rápida
+                y sencilla</p>
+        </div>
+    </header>
+
+    <!-- ========== APPOINTMENT SECTION ========== -->
+    <section class="contact">
+        <div class="container">
+            <div class="contact-grid" style="grid-template-columns: 1fr 1.2fr;">
+
+                <div class="contact-info" data-aos="fade-right" data-aos-duration="700">
+                    <div class="section-title">
+                        <h2>Reserva tu cita</h2>
+                        <p>Rellena el formulario y nos pondremos en contacto contigo para confirmar tu cita lo antes
+                            posible.</p>
+                    </div>
+
+                    <div class="contact-info-cards">
+                        <div class="contact-info-card" data-aos="fade-up" data-aos-delay="100">
+                            <div class="contact-info-icon"><i class="fa-solid fa-phone"></i></div>
+                            <div>
+                                <h4>¿Prefieres llamar?</h4>
+                                <p><a href="tel:+34657177651">657 17 76 51</a></p>
+                            </div>
+                        </div>
+
+                        <div class="contact-info-card" data-aos="fade-up" data-aos-delay="200">
+                            <div class="contact-info-icon"><i class="fa-brands fa-whatsapp"></i></div>
+                            <div>
+                                <h4>WhatsApp</h4>
+                                <p><a href="https://wa.me/34657177651" target="_blank"
+                                        rel="noopener noreferrer">Envíanos un mensaje</a></p>
+                            </div>
+                        </div>
+
+                        <div class="contact-info-card" data-aos="fade-up" data-aos-delay="300">
+                            <div class="contact-info-icon"><i class="fa-regular fa-clock"></i></div>
+                            <div>
+                                <h4>Horario de atención</h4>
+                                <p>Lunes a Viernes<br>9:00 - 21:00</p>
+                            </div>
+                        </div>
+
+                        <div class="contact-info-card" data-aos="fade-up" data-aos-delay="400">
+                            <div class="contact-info-icon"><i class="fa-solid fa-location-dot"></i></div>
+                            <div>
+                                <h4>Ubicación</h4>
+                                <p>Calle Barrio Nuevo, 90A<br>41500 Alcalá de Guadaíra, Sevilla</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-form-wrapper" data-aos="fade-left" data-aos-duration="700">
+                    <h3><i class="fa-regular fa-calendar-check"></i> Solicitar Cita</h3>
+                    <form id="contact-form" action="#" method="POST">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="nombre">Nombre y Apellidos *</label>
+                                <input type="text" id="nombre" name="nombre" class="form-control" required
+                                    placeholder="Tu nombre completo">
+                            </div>
+                            <div class="form-group">
+                                <label for="telefono">Teléfono *</label>
+                                <input type="tel" id="telefono" name="telefono" class="form-control" required
+                                    placeholder="Tu número de teléfono">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="servicio">Servicio de interés *</label>
+                            <select id="servicio" name="servicio" class="form-control" required>
+                                <option value="" disabled selected>Selecciona un servicio</option>
+                                <option value="fisioterapia">Fisioterapia</option>
+                                <option value="osteopatia">Osteopatía</option>
+                                <option value="neurofisioterapia">Neurofisioterapia</option>
+                                <option value="uroginecologia">Uroginecología y Obstetricia</option>
+                                <option value="psicologia">Psicología Sanitaria</option>
+                                <option value="nutricion">Nutrición</option>
+                                <option value="pilates">Pilates y Ejercicio Terapéutico</option>
+                                <option value="otro">Otro</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fecha">Fecha preferida *</label>
+                                <input type="date" id="fecha" name="fecha" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="hora">Hora preferida *</label>
+                                <select id="hora" name="hora" class="form-control" required>
+                                    <option value="" disabled selected>Selecciona una hora</option>
+                                    <option value="09:00">09:00</option>
+                                    <option value="09:30">09:30</option>
+                                    <option value="10:00">10:00</option>
+                                    <option value="10:30">10:30</option>
+                                    <option value="11:00">11:00</option>
+                                    <option value="11:30">11:30</option>
+                                    <option value="12:00">12:00</option>
+                                    <option value="12:30">12:30</option>
+                                    <option value="13:00">13:00</option>
+                                    <option value="13:30">13:30</option>
+                                    <option value="14:00">14:00</option>
+                                    <option value="14:30">14:30</option>
+                                    <option value="15:00">15:00</option>
+                                    <option value="15:30">15:30</option>
+                                    <option value="16:00">16:00</option>
+                                    <option value="16:30">16:30</option>
+                                    <option value="17:00">17:00</option>
+                                    <option value="17:30">17:30</option>
+                                    <option value="18:00">18:00</option>
+                                    <option value="18:30">18:30</option>
+                                    <option value="19:00">19:00</option>
+                                    <option value="19:30">19:30</option>
+                                    <option value="20:00">20:00</option>
+                                    <option value="20:30">20:30</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="mensaje">Mensaje o motivo de la consulta (Opcional)</label>
+                            <textarea id="mensaje" name="mensaje" class="form-control"
+                                placeholder="Cuéntanos brevemente qué te ocurre..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <i class="fa-solid fa-paper-plane"></i> Confirmar Cita
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer" id="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="footer-logo-row">
+                        <img src="assets/images/logo/logo-removebg-preview (1).png" alt="Logo" class="footer-logo-img">
+                        <div class="footer-logo-text">
+                            <span class="clinic-name">Clínica Carlos Morillo</span>
+                        </div>
+                    </div>
+                    <p>Un espacio dedicado al cuidado holístico del cuerpo y la mente en Alcalá de Guadaíra.</p>
+                    <div class="footer-social">
+                        <a href="https://www.facebook.com/carlos.morillo.7587" target="_blank" rel="noopener noreferrer"
+                            aria-label="Facebook">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" />
+                            </svg>
+                        </a>
+                        <a href="https://www.instagram.com/carlosmorillo96_/" target="_blank" rel="noopener noreferrer"
+                            aria-label="Instagram">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="2" width="20" height="20" rx="5" />
+                                <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" />
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                            </svg>
+                        </a>
+                        <a href="https://wa.me/34657177651" target="_blank" rel="noopener noreferrer"
+                            aria-label="WhatsApp">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path
+                                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Clínica</h4>
+                    <a href="index.html">Inicio</a>
+                    <a href="sobre-nosotros.html">Sobre nosotros</a>
+                    <a href="servicios.html">Servicios</a>
+                    <a href="contacto.html">Contacto</a>
+                </div>
+                <div class="footer-column">
+                    <h4>Servicios</h4>
+                    <a href="servicios.html">Fisioterapia</a>
+                    <a href="servicios.html">Osteopatía</a>
+                    <a href="servicios.html">Pilates</a>
+                    <a href="servicios.html">Nutrición</a>
+                    <a href="servicios.html">Psicología</a>
+                </div>
+                <div class="footer-column">
+                    <h4>Contacto</h4>
+                    <div class="footer-contact-item">
+                        <div class="footer-contact-icon"><i class="fa-solid fa-location-dot"></i></div>
+                        <p>Calle Barrio Nuevo, 90A<br>Alcalá de Guadaíra, Sevilla</p>
+                    </div>
+                    <div class="footer-contact-item">
+                        <div class="footer-contact-icon"><i class="fa-solid fa-phone"></i></div>
+                        <p><a href="tel:+34657177651">657 17 76 51</a></p>
+                    </div>
+                    <div class="footer-contact-item">
+                        <div class="footer-contact-icon"><i class="fa-regular fa-clock"></i></div>
+                        <p>Lunes a Viernes<br>9:00 - 21:00</p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>&copy; 2025 Clínica Carlos Morillo. Todos los derechos reservados.</span>
+                <div class="footer-bottom-links">
+                    <a href="#">Aviso Legal</a>
+                    <a href="#">Política de Privacidad</a>
+                    <a href="#">Política de Cookies</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Float -->
+    <a href="https://wa.me/34657177651" target="_blank" rel="noopener noreferrer" class="whatsapp-float"
+        aria-label="Contactar por WhatsApp">
+        <svg viewBox="0 0 24 24" fill="white">
+            <path
+                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+        </svg>
+    </a>
+
+    <!-- AOS Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
