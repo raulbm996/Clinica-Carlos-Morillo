@@ -1212,6 +1212,8 @@ p {
     position: relative;
     width: 100%;
     align-items: center;
+    touch-action: pan-y;
+    user-select: none;
 }
 
 .review-slide {

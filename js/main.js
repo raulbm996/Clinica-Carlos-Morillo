@@ -161,8 +161,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const dots = document.querySelectorAll('.reviews-dot');
         const prevBtn = document.getElementById('reviews-prev');
         const nextBtn = document.getElementById('reviews-next');
+        const slideContainer = document.querySelector('.reviews-slide-container');
         let currentSlide = 0;
         const maxSlide = slides.length - 1;
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchEndX = 0;
+        let isPointerDown = false;
+        const SWIPE_THRESHOLD = 45;
+        const VERTICAL_TOLERANCE = 70;
 
         const updateSlider = (index) => {
             slides.forEach((slide) => {
@@ -179,17 +186,49 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
+        const goToPrev = () => {
+            currentSlide = currentSlide === 0 ? maxSlide : currentSlide - 1;
+            updateSlider(currentSlide);
+        };
+
+        const goToNext = () => {
+            currentSlide = currentSlide === maxSlide ? 0 : currentSlide + 1;
+            updateSlider(currentSlide);
+        };
+
+        const restartAutoplay = () => {
+            clearInterval(autoplayInterval);
+            autoplayInterval = setInterval(() => {
+                goToNext();
+            }, 6000);
+        };
+
+        const handleSwipe = () => {
+            const deltaX = touchEndX - touchStartX;
+            const deltaY = Math.abs(touchStartY - (slideContainer?.dataset.touchEndY ? Number(slideContainer.dataset.touchEndY) : touchStartY));
+
+            if (Math.abs(deltaX) < SWIPE_THRESHOLD || deltaY > VERTICAL_TOLERANCE) return;
+
+            if (deltaX < 0) {
+                goToNext();
+            } else {
+                goToPrev();
+            }
+
+            restartAutoplay();
+        };
+
         updateSlider(0);
 
         if (prevBtn && nextBtn) {
             prevBtn.addEventListener('click', () => {
-                currentSlide = currentSlide === 0 ? maxSlide : currentSlide - 1;
-                updateSlider(currentSlide);
+                goToPrev();
+                restartAutoplay();
             });
 
             nextBtn.addEventListener('click', () => {
-                currentSlide = currentSlide === maxSlide ? 0 : currentSlide + 1;
-                updateSlider(currentSlide);
+                goToNext();
+                restartAutoplay();
             });
         }
 
@@ -197,22 +236,72 @@ document.addEventListener('DOMContentLoaded', () => {
             dot.addEventListener('click', () => {
                 currentSlide = index;
                 updateSlider(currentSlide);
+                restartAutoplay();
             });
         });
 
         // Auto advance
         let autoplayInterval = setInterval(() => {
-            currentSlide = currentSlide === maxSlide ? 0 : currentSlide + 1;
-            updateSlider(currentSlide);
+            goToNext();
         }, 6000);
 
         reviewsCarousel.addEventListener('mouseenter', () => clearInterval(autoplayInterval));
         reviewsCarousel.addEventListener('mouseleave', () => {
-            autoplayInterval = setInterval(() => {
-                currentSlide = currentSlide === maxSlide ? 0 : currentSlide + 1;
-                updateSlider(currentSlide);
-            }, 6000);
+            restartAutoplay();
         });
+
+        // Swipe support (mobile/tablet)
+        if (slideContainer) {
+            slideContainer.addEventListener('touchstart', (event) => {
+                const touch = event.changedTouches[0];
+                touchStartX = touch.clientX;
+                touchStartY = touch.clientY;
+                touchEndX = touch.clientX;
+                slideContainer.dataset.touchEndY = String(touch.clientY);
+            }, { passive: true });
+
+            slideContainer.addEventListener('touchmove', (event) => {
+                const touch = event.changedTouches[0];
+                touchEndX = touch.clientX;
+                slideContainer.dataset.touchEndY = String(touch.clientY);
+            }, { passive: true });
+
+            slideContainer.addEventListener('touchend', (event) => {
+                const touch = event.changedTouches[0];
+                touchEndX = touch.clientX;
+                slideContainer.dataset.touchEndY = String(touch.clientY);
+                handleSwipe();
+            }, { passive: true });
+
+            // Pointer events como fallback para navegadores modernos
+            slideContainer.addEventListener('pointerdown', (event) => {
+                if (event.pointerType !== 'touch') return;
+                isPointerDown = true;
+                touchStartX = event.clientX;
+                touchStartY = event.clientY;
+                touchEndX = event.clientX;
+                slideContainer.dataset.touchEndY = String(event.clientY);
+            });
+
+            slideContainer.addEventListener('pointermove', (event) => {
+                if (!isPointerDown || event.pointerType !== 'touch') return;
+                touchEndX = event.clientX;
+                slideContainer.dataset.touchEndY = String(event.clientY);
+            });
+
+            const onPointerEnd = (event) => {
+                if (!isPointerDown || event.pointerType !== 'touch') return;
+                isPointerDown = false;
+                touchEndX = event.clientX;
+                slideContainer.dataset.touchEndY = String(event.clientY);
+                handleSwipe();
+            };
+
+            slideContainer.addEventListener('pointerup', onPointerEnd);
+            slideContainer.addEventListener('pointercancel', () => {
+                isPointerDown = false;
+            });
+        }
     }
 
     // ---- Parallax subtle effect on hero ----
