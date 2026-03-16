@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }, 800);
             } else {
                 feedback.style.color = '#e74c3c';
-                feedback.textContent = 'Usuario o contraseña incorrectos. (Usa: admin / 1234)';
+                feedback.textContent = 'Usuario o contraseña incorrectos.';
             }
         });
     }
