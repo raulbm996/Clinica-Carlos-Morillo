@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Panel de Administración</title>
+  
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/admin.css">
+  
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏥</text></svg>">
+</head>
+<body class="admin-login-body">
+  
+  <div class="admin-login-container">
+    <div class="admin-login-card">
+      <div class="admin-logo">
+        <img src="assets/images/logo/logo-removebg-preview (1).png" alt="Logo Clínica Carlos Morillo">
+        <h2>Panel de Administración</h2>
+        <p>Solo personal autorizado</p>
+      </div>
+      
+      <form class="admin-form" id="loginForm">
+        <div class="form-group">
+          <label for="adminUser"><i class="fa-solid fa-user"></i> Usuario</label>
+          <input type="text" id="adminUser" placeholder="Introduce el usuario" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="adminPass"><i class="fa-solid fa-lock"></i> Contraseña</label>
+          <input type="password" id="adminPass" placeholder="Introduce la contraseña" required>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
+        </div>
+        <p class="login-feedback" id="loginFeedback"></p>
+      </form>
+      
+      <div class="back-to-site">
+        <a href="index.html"><i class="fa-solid fa-arrow-left"></i> Volver a la web</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/admin.js"></script>
+</body>
+</html>

@@ -726,7 +726,7 @@ p {
 .hero-stats {
     display: flex;
     gap: var(--space-3xl);
-    margin-top: var(--space-3xl);
+    flex-wrap: wrap;
     padding-top: var(--space-2xl);
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -1694,10 +1694,20 @@ p {
     background: var(--white);
 }
 
-.team-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--space-xl);
+.team-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4xl);
+}
+
+.team-list .team-card {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+.team-list .team-card:nth-child(even) {
+    flex-direction: row-reverse;
 }
 
 .team-card {
@@ -1732,7 +1742,9 @@ p {
 }
 
 .team-card-image {
-    height: 350px;
+    height: auto;
+    min-height: 350px;
+    flex: 0 0 45%;
     overflow: hidden;
     position: relative;
 }
@@ -1759,7 +1771,11 @@ p {
 }
 
 .team-card-body {
-    padding: var(--space-xl);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--space-3xl);
 }
 
 .team-card-body h3 {
@@ -1779,6 +1795,83 @@ p {
     font-size: 0.88rem;
     color: var(--text-light);
     line-height: 1.7;
+}
+
+.team-card-formations {
+    margin-top: var(--space-lg);
+}
+
+.team-card-formations h4 {
+    font-size: 0.95rem;
+    color: var(--primary-dark);
+    margin-bottom: var(--space-xs);
+    font-weight: 600;
+}
+
+.team-card-formations ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.team-card-formations li {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-bottom: 6px;
+    padding-left: 1.2rem;
+    position: relative;
+    line-height: 1.5;
+}
+
+.team-card-formations li::before {
+    content: "•";
+    color: var(--primary);
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+}
+
+.additional-formations {
+    margin-top: 1rem;
+    border-top: 1px dashed var(--border-light);
+    padding-top: 0.5rem;
+}
+
+.additional-formations summary {
+    font-size: 0.85rem;
+    color: var(--primary);
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+    /* remove default arrow */
+    display: inline-flex;
+    align-items: center;
+    transition: color var(--transition-base);
+}
+
+.additional-formations summary::-webkit-details-marker {
+    display: none;
+}
+
+.additional-formations summary::after {
+    content: '\f078';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    margin-left: 8px;
+    font-size: 0.75rem;
+    transition: transform var(--transition-base);
+}
+
+.additional-formations[open] summary::after {
+    transform: rotate(180deg);
+}
+
+.additional-formations summary:hover {
+    color: var(--primary-dark);
+}
+
+.additional-formations-list {
+    margin-top: 0.8rem !important;
 }
 
 .team-card-specialties {
@@ -2101,49 +2194,6 @@ select.form-control {
 }
 
 /* ============================================
-   WHATSAPP FLOATING BUTTON
-   ============================================ */
-.whatsapp-float {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 62px;
-    height: 62px;
-    background: #25D366;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 6px 24px rgba(37, 211, 102, 0.35);
-    z-index: 998;
-    transition: all var(--transition-base);
-    animation: whatsappPulse 2.5s ease-in-out infinite;
-}
-
-.whatsapp-float:hover {
-    transform: scale(1.12) translateY(-3px);
-    box-shadow: 0 12px 36px rgba(37, 211, 102, 0.5);
-}
-
-.whatsapp-float svg {
-    width: 30px;
-    height: 30px;
-    fill: white;
-}
-
-@keyframes whatsappPulse {
-
-    0%,
-    100% {
-        box-shadow: 0 6px 24px rgba(37, 211, 102, 0.35);
-    }
-
-    50% {
-        box-shadow: 0 6px 24px rgba(37, 211, 102, 0.35), 0 0 0 14px rgba(37, 211, 102, 0.08);
-    }
-}
-
-/* ============================================
    SERVICES PAGE SPECIFIC
    ============================================ */
 .services-page {
@@ -2218,8 +2268,12 @@ select.form-control {
         grid-template-columns: 1fr;
     }
 
-    .team-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .team-list .team-card {
+        flex-direction: column !important;
+    }
+
+    .team-list .team-card-image {
+        min-height: 300px;
     }
 }
 
@@ -2268,25 +2322,80 @@ select.form-control {
         width: 100%;
     }
 
-    .team-grid {
-        grid-template-columns: 1fr;
-        max-width: 420px;
+    .team-list {
+        gap: var(--space-2xl);
+        max-width: 480px;
         margin: 0 auto;
     }
 
     .footer-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-xl);
+    }
+
+    .footer-brand {
+        grid-column: 1 / -1;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .footer-brand .footer-logo-row {
+        justify-content: center;
+    }
+
+    .footer-brand p {
+        max-width: 100%;
+        text-align: center;
+    }
+
+    .footer-social {
+        justify-content: center;
+    }
+
+    .footer-column:last-child {
+        grid-column: 1 / -1;
+    }
+
+    .footer-column:last-child h4 {
+        text-align: center;
+    }
+
+    .footer-column:last-child .footer-contact-item {
+        max-width: 280px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .footer-column:last-child .footer-contact-item p {
+        text-align: left;
+    }
+
+    .footer-column {
+        text-align: center;
+    }
+
+    .footer-column a:hover {
+        transform: none;
     }
 
     .footer-bottom {
         flex-direction: column;
-        gap: var(--space-md);
+        gap: var(--space-sm);
         text-align: center;
     }
 
     .footer-bottom-links {
-        flex-wrap: wrap;
+        display: flex;
+        gap: var(--space-md);
         justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .footer-bottom-links a {
+        white-space: normal;
+        font-size: 0.72rem;
     }
 
     .about-features {
