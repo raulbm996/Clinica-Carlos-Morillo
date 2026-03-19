@@ -594,7 +594,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             try {
-                const data = await apiPost(`${API}/usuario/cambiar-password`, {
+                const data = await apiPost(`${API}/usuario`, {
                     current_password: current,
                     new_password: next,
                 });
