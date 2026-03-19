@@ -38,27 +38,21 @@ module.exports = async function handler(req, res) {
     if (req.method === 'POST' && req.body?.nombre) {
         const user = requireAuth(req, res);
         if (!user) return;
-        const { nombre, apellidos, email } = req.body || {};
+        const { nombre, apellidos, email, foto } = req.body || {};
         if (!nombre || nombre.trim().length < 3) {
             return res.status(400).json({ ok: false, error: 'El nombre debe tener al menos 3 letras.' });
         }
         try {
             await query(
-                'UPDATE usuarios SET nombre = ?, apellidos = ?, email = ? WHERE id = ?',
-                [nombre.trim(), (apellidos || '').trim(), (email || '').trim(), user.id]
+                'UPDATE usuarios SET nombre = ?, apellidos = ?, email = ?, foto = ? WHERE id = ?',
+                [nombre.trim(), (apellidos || '').trim(), (email || '').trim(), foto || null, user.id]
             );
             // Emitir un nuevo JWT con los datos actualizados
-            const updatedUser = {
-                id: user.id,
-                username: user.username,
-                nombre: nombre.trim(),
-                apellidos: (apellidos || '').trim(),
-                email: (email || '').trim(),
-                rol: user.rol,
-            };
+            const updatedUserRows = await query('SELECT id, username, nombre, apellidos, email, rol, foto FROM usuarios WHERE id = ?', [user.id]);
+            const updatedUser = updatedUserRows[0] || {};
             const newToken = createToken(updatedUser);
             res.setHeader('Set-Cookie', setTokenCookie(newToken));
-            return res.status(200).json({ ok: true, message: 'Perfil guardado correctamente.' });
+            return res.status(200).json({ ok: true, message: 'Perfil guardado correctamente.', user: updatedUser });
         } catch (err) {
             console.error('Error guardando perfil:', err);
             return res.status(500).json({ ok: false, error: 'Error interno del servidor.' });

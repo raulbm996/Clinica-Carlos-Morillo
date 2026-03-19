@@ -535,17 +535,35 @@ document.addEventListener('DOMContentLoaded', () => {
             const email = (userEmailInput.value || '').trim();
 
             try {
+                // Tomar la foto actual del perfil (si existe)
+                let foto = '';
+                if (profilePhotoImg && profilePhotoImg.src && profilePhotoImg.style.display !== 'none') {
+                    foto = profilePhotoImg.src;
+                }
                 const data = await apiPost(`${API}/usuario`, {
                     nombre: name,
                     apellidos,
                     email,
+                    foto,
                 });
 
                 if (data.ok) {
                     const fullName = name + (apellidos ? ' ' + apellidos : '');
                     if (nameEl) nameEl.textContent = fullName;
                     const newInitials = fullName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
-                    if (avatarEl && !sessionStorage.getItem('adminPhoto')) avatarEl.textContent = newInitials;
+                    // Actualizar avatar y foto de perfil con la guardada en BD
+                    if (avatarEl) {
+                        if (data.user && data.user.foto) {
+                            avatarEl.innerHTML = '<img src="' + data.user.foto.replace(/"/g, '&quot;') + '" alt="avatar">';
+                        } else if (!sessionStorage.getItem('adminPhoto')) {
+                            avatarEl.textContent = newInitials;
+                        }
+                    }
+                    if (profilePhotoImg && data.user && data.user.foto) {
+                        profilePhotoImg.src = data.user.foto;
+                        profilePhotoImg.style.display = 'block';
+                        if (photoCameraIcon) photoCameraIcon.style.display = 'none';
+                    }
                     if (breadcrumbEl) breadcrumbEl.textContent = '› ' + fullName;
                     alert('Perfil guardado correctamente.');
                 } else {
