@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
             feedback.textContent = 'Verificando…';
 
             try {
-                const data = await apiPost(`${API}/auth/login`, {
+                const data = await apiPost(`${API}/auth`, {
                     username: user,
                     password: pass,
                 });
@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function loadSession() {
         try {
-            const data = await apiGet(`${API}/auth/session`);
+            const data = await apiGet(`${API}/auth`);
             if (!data.ok) {
                 location.href = 'admin-login.html';
                 return;
@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
         logoutLink.addEventListener('click', async (e) => {
             e.preventDefault();
             try {
-                await apiGet(`${API}/auth/logout`);
+                await apiPost(`${API}/auth`, { logout: true });
             } catch (_) { /* ignore */ }
             location.href = 'admin-login.html';
         });
