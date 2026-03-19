@@ -18,9 +18,72 @@ document.addEventListener('DOMContentLoaded', () => {
                 item.classList.add('active');
                 viewBtn.innerHTML = item.innerHTML + ' <i class="fa-solid fa-caret-down"></i>';
                 viewMenu.style.display = 'none';
-                // Aquí puedes disparar el cambio de vista según item.dataset.view
+                // Cambiar la vista del calendario según la opción seleccionada
+                switch (item.dataset.view) {
+                    case 'mes':
+                        renderCalendarMonth();
+                        break;
+                    case 'semana7':
+                        renderCalendarWeek(7, false);
+                        break;
+                    case 'semana7-listado':
+                        renderCalendarWeek(7, true);
+                        break;
+                    case 'semana5':
+                        renderCalendarWeek(5, false);
+                        break;
+                    case 'semana5-listado':
+                        renderCalendarWeek(5, true);
+                        break;
+                    case 'dia':
+                        renderCalendarDay(false);
+                        break;
+                    case 'dia-listado':
+                        renderCalendarDay(true);
+                        break;
+                    default:
+                        renderCalendarWeek(7, false);
+                }
             });
+            // Funciones de renderizado de vistas de calendario
+            function renderCalendarMonth() {
+                const calGrid = document.getElementById('calendarGrid');
+                if (!calGrid) return;
+                calGrid.innerHTML = '<div style="padding:40px;text-align:center;color:#888;font-size:1.2em;">Vista de Mes (ejemplo visual)</div>';
+            }
+
+            function renderCalendarWeek(daysCount = 7, listado = false) {
+                const calGrid = document.getElementById('calendarGrid');
+                if (!calGrid) return;
+                if (listado) {
+                    // Listado
+                    let html = '';
+                    for (let i = 0; i < daysCount; i++) {
+                        html += `<div style="background:#f4f7fb;border-radius:8px;margin:8px 0;padding:16px 24px;font-size:1.1em;">${DAY_NAMES[i]} ${new Date().getDate() + i}</div>`;
+                    }
+                    calGrid.innerHTML = html;
+                } else {
+                    // Tabla
+                    let html = '<div style="display:grid;grid-template-columns:repeat(' + daysCount + ',1fr);">';
+                    for (let i = 0; i < daysCount; i++) {
+                        html += `<div style="border:1px solid #e0e0e0;padding:16px;text-align:center;font-size:1.1em;">${DAY_NAMES[i]}<br>${new Date().getDate() + i}</div>`;
+                    }
+                    html += '</div>';
+                    calGrid.innerHTML = html;
+                }
+            }
+
+            function renderCalendarDay(listado = false) {
+                const calGrid = document.getElementById('calendarGrid');
+                if (!calGrid) return;
+                if (listado) {
+                    calGrid.innerHTML = `<div style="background:#f4f7fb;border-radius:8px;margin:8px 0;padding:16px 24px;font-size:1.1em;">${DAY_NAMES[new Date().getDay()]} ${new Date().getDate()}</div>`;
+                } else {
+                    calGrid.innerHTML = `<div style="border:1px solid #e0e0e0;padding:16px;text-align:center;font-size:1.1em;">${DAY_NAMES[new Date().getDay()]}<br>${new Date().getDate()}</div>`;
+                }
+            }
         });
+    });
     }
 });
 // Mostrar/ocultar contraseña en login
