@@ -199,14 +199,7 @@ async function renderCalendar() {
             });
         });
     }
-}
-feedback.style.color = '#e53e3e';
-feedback.textContent = 'Error de conexión. Inténtalo de nuevo.';
-btn.disabled = false;
-            }
-        });
-return; // La página de login no necesita más lógica
-    }
+
 
 /* ======== DASHBOARD ======== */
 const adminSidebar = document.getElementById('adminSidebar');
