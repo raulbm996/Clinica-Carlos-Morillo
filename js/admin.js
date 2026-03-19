@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currentUser = data.user;
             const displayName = (currentUser.nombre + (currentUser.apellidos ? ' ' + currentUser.apellidos : '')) || 'Usuario';
             const initials = displayName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
-            
+
             // Foto: primero comprobar sessionStorage, luego la BD
             const savedPhoto = sessionStorage.getItem('adminPhoto') || currentUser.foto;
             if (avatarEl) {
@@ -233,20 +233,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Colores por servicio
     const SERVICE_COLORS = {
-        fisioterapia:       { bg: '#e6f7f8', border: '#3bb2b8', text: '#1a7a7e' },
-        osteopatia:         { bg: '#fef3e2', border: '#f0a030', text: '#8a5a10' },
-        neurofisioterapia:  { bg: '#e8eef8', border: '#5a7dba', text: '#2d4a7a' },
-        uroginecologia:     { bg: '#fce4ec', border: '#e05580', text: '#8a1a40' },
-        psicologia:         { bg: '#f3e5f5', border: '#ab47bc', text: '#6a1b7a' },
-        nutricion:          { bg: '#e8f5e9', border: '#66bb6a', text: '#2e6b30' },
-        pilates:            { bg: '#fff8e1', border: '#fbc02d', text: '#7a6a10' },
-        otro:               { bg: '#f0f0f0', border: '#999',    text: '#555' },
+        fisioterapia: { bg: '#e6f7f8', border: '#3bb2b8', text: '#1a7a7e' },
+        osteopatia: { bg: '#fef3e2', border: '#f0a030', text: '#8a5a10' },
+        neurofisioterapia: { bg: '#e8eef8', border: '#5a7dba', text: '#2d4a7a' },
+        uroginecologia: { bg: '#fce4ec', border: '#e05580', text: '#8a1a40' },
+        psicologia: { bg: '#f3e5f5', border: '#ab47bc', text: '#6a1b7a' },
+        nutricion: { bg: '#e8f5e9', border: '#66bb6a', text: '#2e6b30' },
+        pilates: { bg: '#fff8e1', border: '#fbc02d', text: '#7a6a10' },
+        otro: { bg: '#f0f0f0', border: '#999', text: '#555' },
     };
 
     const STATUS_LABELS = {
-        pendiente:  '⏳',
+        pendiente: '⏳',
         confirmada: '✅',
-        cancelada:  '❌',
+        cancelada: '❌',
     };
 
     async function renderCalendar() {
@@ -535,7 +535,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const email = (userEmailInput.value || '').trim();
 
             try {
-                const data = await apiPost(`${API}/usuario/perfil`, {
+                const data = await apiPost(`${API}/usuario`, {
                     nombre: name,
                     apellidos,
                     email,
