@@ -1,5 +1,5 @@
-// Dropdown de vista de calendario personalizado
 document.addEventListener('DOMContentLoaded', () => {
+    // Dropdown de vista de calendario personalizado
     const viewBtn = document.getElementById('calendarViewBtn');
     const viewMenu = document.getElementById('calendarViewMenu');
     if (viewBtn && viewMenu) {
@@ -18,81 +18,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 item.classList.add('active');
                 viewBtn.innerHTML = item.innerHTML + ' <i class="fa-solid fa-caret-down"></i>';
                 viewMenu.style.display = 'none';
-                // Cambiar la vista del calendario según la opción seleccionada
-                switch (item.dataset.view) {
-                    case 'mes':
-                        renderCalendarMonth();
-                        break;
-                    case 'semana7':
-                        renderCalendarWeek(7, false);
-                        break;
-                    case 'semana7-listado':
-                        renderCalendarWeek(7, true);
-                        break;
-                    case 'semana5':
-                        renderCalendarWeek(5, false);
-                        break;
-                    case 'semana5-listado':
-                        renderCalendarWeek(5, true);
-                        break;
-                    case 'dia':
-                        renderCalendarDay(false);
-                        break;
-                    case 'dia-listado':
-                        renderCalendarDay(true);
-                        break;
-                    default:
-                        renderCalendarWeek(7, false);
-                }
+                // Aquí puedes disparar el cambio de vista según item.dataset.view
             });
-            // Funciones de renderizado de vistas de calendario
-            function renderCalendarMonth() {
-                const calGrid = document.getElementById('calendarGrid');
-                if (!calGrid) return;
-                calGrid.innerHTML = '<div style="padding:40px;text-align:center;color:#888;font-size:1.2em;">Vista de Mes (ejemplo visual)</div>';
-            }
-
-            function renderCalendarWeek(daysCount = 7, listado = false) {
-                const calGrid = document.getElementById('calendarGrid');
-                if (!calGrid) return;
-                if (listado) {
-                    // Listado
-                    let html = '';
-                    for (let i = 0; i < daysCount; i++) {
-                        html += `<div style="background:#f4f7fb;border-radius:8px;margin:8px 0;padding:16px 24px;font-size:1.1em;">${DAY_NAMES[i]} ${new Date().getDate() + i}</div>`;
-                    }
-                    calGrid.innerHTML = html;
-                } else {
-                    // Tabla
-                    let html = '<div style="display:grid;grid-template-columns:repeat(' + daysCount + ',1fr);">';
-                    for (let i = 0; i < daysCount; i++) {
-                        html += `<div style="border:1px solid #e0e0e0;padding:16px;text-align:center;font-size:1.1em;">${DAY_NAMES[i]}<br>${new Date().getDate() + i}</div>`;
-                    }
-                    html += '</div>';
-                    calGrid.innerHTML = html;
-                }
-            }
-
-            function renderCalendarDay(listado = false) {
-                const calGrid = document.getElementById('calendarGrid');
-                if (!calGrid) return;
-                if (listado) {
-                    calGrid.innerHTML = `<div style="background:#f4f7fb;border-radius:8px;margin:8px 0;padding:16px 24px;font-size:1.1em;">${DAY_NAMES[new Date().getDay()]} ${new Date().getDate()}</div>`;
-                } else {
-                    calGrid.innerHTML = `<div style="border:1px solid #e0e0e0;padding:16px;text-align:center;font-size:1.1em;">${DAY_NAMES[new Date().getDay()]}<br>${new Date().getDate()}</div>`;
-                }
-            }
         });
-    });
     }
-});
-// Mostrar/ocultar contraseña en login
-document.addEventListener('DOMContentLoaded', () => {
+
+    // Mostrar/ocultar contraseña en login
     const adminPass = document.getElementById('adminPass');
     const toggleLoginPass = document.getElementById('toggleLoginPass');
     const iconLoginPass = document.getElementById('iconLoginPass');
     if (adminPass && toggleLoginPass && iconLoginPass) {
-        toggleLoginPass.addEventListener('click', () => {
+        toggleLoginPass.addEventListener('click', (e) => {
+            e.preventDefault();
             if (adminPass.type === 'password') {
                 adminPass.type = 'text';
                 iconLoginPass.classList.remove('fa-eye-slash');
@@ -110,7 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const toggleCurrentPass = document.getElementById('toggleCurrentPass');
     const iconCurrentPass = document.getElementById('iconCurrentPass');
     if (currentPass && toggleCurrentPass && iconCurrentPass) {
-        toggleCurrentPass.addEventListener('click', () => {
+        toggleCurrentPass.addEventListener('click', (e) => {
+            e.preventDefault();
             if (currentPass.type === 'password') {
                 currentPass.type = 'text';
                 iconCurrentPass.classList.remove('fa-eye-slash');
@@ -126,7 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const toggleNewPass = document.getElementById('toggleNewPass');
     const iconNewPass = document.getElementById('iconNewPass');
     if (newPass && toggleNewPass && iconNewPass) {
-        toggleNewPass.addEventListener('click', () => {
+        toggleNewPass.addEventListener('click', (e) => {
+            e.preventDefault();
             if (newPass.type === 'password') {
                 newPass.type = 'text';
                 iconNewPass.classList.remove('fa-eye-slash');
