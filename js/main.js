@@ -132,19 +132,49 @@ document.addEventListener('DOMContentLoaded', () => {
         counters.forEach(counter => counterObserver.observe(counter));
     }
 
-    // ---- Form Handling ----
+    // ---- Form Handling (conectado a PHP backend) ----
     const contactForm = document.getElementById('contact-form');
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+        contactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const btn = contactForm.querySelector('button[type="submit"]');
             const originalHTML = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-check"></i> ¡Solicitud enviada!';
-            btn.style.background = '#25D366';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando…';
             btn.disabled = true;
 
-            contactForm.reset();
+            // Recoger datos del formulario
+            const formData = {
+                paciente_nombre: contactForm.querySelector('#nombre')?.value || '',
+                telefono: contactForm.querySelector('#telefono')?.value || '',
+                servicio: contactForm.querySelector('#servicio')?.value || '',
+                fecha: contactForm.querySelector('#fecha')?.value || '',
+                hora: contactForm.querySelector('#hora')?.value || '',
+                mensaje: contactForm.querySelector('#mensaje')?.value || '',
+            };
+
+            try {
+                const res = await fetch('/api/citas/crear', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(formData),
+                });
+                const data = await res.json();
+
+                if (data.ok) {
+                    btn.innerHTML = '<i class="fa-solid fa-check"></i> ¡Cita solicitada!';
+                    btn.style.background = '#25D366';
+                    contactForm.reset();
+                } else {
+                    const errMsg = data.errors ? data.errors.join(', ') : (data.error || 'Error al enviar.');
+                    btn.innerHTML = '<i class="fa-solid fa-exclamation-triangle"></i> ' + errMsg;
+                    btn.style.background = '#e53e3e';
+                }
+            } catch (err) {
+                btn.innerHTML = '<i class="fa-solid fa-exclamation-triangle"></i> Error de conexión';
+                btn.style.background = '#e53e3e';
+            }
 
             setTimeout(() => {
                 btn.innerHTML = originalHTML;

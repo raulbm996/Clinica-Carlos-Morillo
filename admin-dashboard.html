@@ -4,11 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard - Administración</title>
+  <title>Dashboard - Clínica Carlos Morillo</title>
 
-  <!-- Font Awesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/admin.css">
 
   <link rel="icon" type="image/svg+xml"
@@ -18,83 +16,162 @@
 <body class="admin-dashboard-body">
 
   <div class="admin-layout">
-    <!-- Sidebar -->
+
+    <!-- ===== SIDEBAR ===== -->
     <aside class="admin-sidebar" id="adminSidebar">
-      <div class="sidebar-header">
-        <img src="assets/images/logo/logo-removebg-preview (1).png" alt="Logo">
-        <span>Clínica CM</span>
-        <button class="close-sidebar-mobile" id="closeSidebar"><i class="fa-solid fa-xmark"></i></button>
+
+      <div class="sidebar-logo">
+        <img src="assets/images/logo/logo-clinica.png" alt="Logo Clínica">
+        <span class="sidebar-brand">Clínica CM</span>
+        <button class="sidebar-collapse-btn" id="sidebarToggle" title="Colapsar menú">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+      </div>
+
+      <div class="sidebar-mode-toggle">
+        <button class="mode-btn active" data-mode="light"><i class="fa-regular fa-sun"></i> Modo Claro</button>
+        <button class="mode-btn" data-mode="dark"><i class="fa-regular fa-moon"></i> Modo Oscuro</button>
       </div>
 
       <nav class="sidebar-nav">
         <ul>
-          <li class="nav-item active" data-target="reservas">
-            <a href="#"><i class="fa-solid fa-calendar-check"></i> Reservas In-Box</a>
+          <li class="nav-item active" data-target="calendario">
+            <a href="#"><i class="fa-solid fa-table-columns"></i> General</a>
           </li>
-          <li class="nav-item" data-target="pacientes">
-            <a href="#"><i class="fa-solid fa-users"></i> Pacientes</a>
+          <li class="nav-item" data-target="usuario">
+            <a href="#"><i class="fa-solid fa-user"></i> Usuario</a>
           </li>
           <li class="nav-item">
-            <a href="index.html" class="text-danger"><i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar
-              Sesión</a>
+            <a href="#"><i class="fa-regular fa-envelope"></i> Mensajería interna</a>
+          </li>
+          <li class="nav-item">
+            <a href="#"><i class="fa-solid fa-laptop-medical"></i> Portal del paciente
+              <span class="badge-on">ON</span></a>
+          </li>
+          <li class="nav-item">
+            <a href="#"><i class="fa-solid fa-key"></i> Autorizaciones soporte</a>
           </li>
         </ul>
       </nav>
-    </aside>
-    <div class="sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
 
-    <!-- Main Content -->
+      <div class="sidebar-section">
+        <div class="section-label">MIEMBROS</div>
+        <div class="members-grid">
+          <div class="member-avatar" style="background:#2e9ea3" data-name="Carlos Morillo">CM</div>
+          <div class="member-avatar" style="background:#6b8394" data-name="Javi Lerate">JL</div>
+          <div class="member-avatar" style="background:#d4a017" data-name="Andrea Galvarro">AG</div>
+          <div class="member-avatar" style="background:#c05780" data-name="Maite Lozano">ML</div>
+          <div class="member-avatar" style="background:#5a7d4f" data-name="Alejandro Ríos">AR</div>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <a href="#"><i class="fa-solid fa-people-group"></i> Comunidad</a>
+        <a href="#"><i class="fa-solid fa-wrench"></i> Soporte</a>
+        <a href="#" class="logout-link"><i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar
+          Sesión</a>
+      </div>
+    </aside>
+
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <!-- ===== MAIN ===== -->
     <main class="admin-main">
-      <header class="admin-header">
+
+      <!-- Top Bar -->
+      <header class="admin-topbar">
         <button class="hamburger-menu" id="openSidebar"><i class="fa-solid fa-bars"></i></button>
-        <h2>Bienvenido, Administrador</h2>
-        <div class="header-profile">
-          <div class="avatar"><i class="fa-solid fa-user-doctor"></i></div>
+
+        <div class="topbar-search">
+          <i class="fa-solid fa-search"></i>
+          <input type="text" placeholder="buscar paciente…">
+          <button class="topbar-add-btn" title="Nuevo paciente"><i class="fa-solid fa-plus"></i></button>
+        </div>
+
+        <h1 class="topbar-clinic-name">CLÍNICA Carlos Morillo</h1>
+
+        <div class="topbar-actions">
+          <button class="topbar-icon-btn"><i class="fa-solid fa-user-group"></i></button>
+          <button class="topbar-icon-btn">
+            <i class="fa-solid fa-bell"></i>
+            <span class="notif-badge">2</span>
+          </button>
+          <div class="topbar-user">
+            <div class="user-avatar" id="userAvatarInitials">U</div>
+            <span class="user-name" id="userDisplayName">Usuario</span>
+          </div>
         </div>
       </header>
 
+      <!-- Tabs -->
+      <div class="admin-tabs">
+        <button class="tab-btn active" data-target="calendario">Calendario</button>
+        <button class="tab-btn" data-target="pacientes">Pacientes</button>
+      </div>
+
       <div class="admin-content">
 
-        <!-- Vista Reservas -->
-        <section id="reservas" class="view-section active">
-          <div class="section-top">
-            <h3><i class="fa-solid fa-inbox"></i> Solicitudes de Reserva web</h3>
-            <p>Aquí verás las solicitudes que envían los clientes a través del formulario.</p>
+        <!-- ===== CALENDARIO ===== -->
+        <section id="calendario" class="view-section active">
+
+          <div class="calendar-toolbar">
+            <div class="calendar-toolbar-left">
+              <div class="cal-dropdown">
+                <button>Semana 7 días <i class="fa-solid fa-caret-down"></i></button>
+              </div>
+              <button class="cal-nav-btn" id="calPrev"><i class="fa-solid fa-chevron-left"></i></button>
+              <button class="cal-today-btn" id="calToday">HOY</button>
+              <button class="cal-nav-btn" id="calNext"><i class="fa-solid fa-chevron-right"></i></button>
+              <div class="cal-dropdown">
+                <button>Miembros <i class="fa-solid fa-caret-down"></i></button>
+              </div>
+              <div class="cal-dropdown">
+                <button>Etiquetas <i class="fa-solid fa-caret-down"></i></button>
+              </div>
+            </div>
+            <div class="calendar-toolbar-right">
+              <button class="import-google-btn">
+                <i class="fa-brands fa-google"></i> Importar Calendario Google
+              </button>
+            </div>
           </div>
 
-          <div class="card-table">
-            <div class="table-responsive">
-              <table class="data-table">
-                <thead>
-                  <tr>
-                    <th>Fecha / Hora</th>
-                    <th>Paciente</th>
-                    <th>Servicio</th>
-                    <th>Teléfono</th>
-                    <th>Estado</th>
-                    <th>Acción</th>
-                  </tr>
-                </thead>
-                <tbody id="reservasTableBody">
-                  <!-- Mock Data generated by JS -->
-                </tbody>
-              </table>
+          <div class="calendar-subheader">
+            <div class="calendar-subheader-left">
+              <h2 id="calMonthYear">Calendario</h2>
+              <span class="cal-breadcrumb" id="calBreadcrumbUser">› Usuario</span>
+              <i class="fa-solid fa-circle-info cal-info-icon"></i>
+            </div>
+            <div class="calendar-subheader-right">
+              <span>Ajuste automático:</span>
+              <div class="auto-toggle">
+                <button class="auto-toggle-btn active">SI</button>
+                <button class="auto-toggle-btn">NO</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="calendar-wrapper">
+            <div class="calendar-grid" id="calendarGrid">
+              <!-- Generated by JS -->
             </div>
           </div>
         </section>
 
-        <!-- Vista Pacientes -->
+        <!-- ===== PACIENTES ===== -->
         <section id="pacientes" class="view-section">
           <div class="section-top">
             <h3><i class="fa-solid fa-database"></i> Base de Datos Pacientes</h3>
-            <button class="btn btn-primary" id="addPatientBtn"><i class="fa-solid fa-plus"></i> Nuevo Paciente</button>
+            <button class="btn-clinni-primary" id="addPatientBtn">
+              <i class="fa-solid fa-plus"></i> Nuevo paciente
+            </button>
           </div>
 
           <div class="card-table">
             <div class="table-actions">
               <div class="search-box">
                 <i class="fa-solid fa-search"></i>
-                <input type="text" placeholder="Buscar por DNI, Nombre o Teléfono...">
+                <input type="text" placeholder="Buscar por DNI, Nombre o Teléfono…">
               </div>
             </div>
             <div class="table-responsive">
@@ -108,11 +185,103 @@
                     <th>Acciones</th>
                   </tr>
                 </thead>
-                <tbody id="pacientesTableBody">
-                  <!-- Mock Data generated by JS -->
-                </tbody>
+                <tbody id="pacientesTableBody"></tbody>
               </table>
             </div>
+          </div>
+        </section>
+
+        <!-- ===== USUARIO ===== -->
+        <section id="usuario" class="view-section">
+          <div class="usuario-page">
+
+            <!-- Perfil -->
+            <div class="usuario-card">
+              <div class="usuario-profile-row">
+                <div class="usuario-photo-col">
+                  <div class="usuario-photo" id="profilePhoto">
+                    <i class="fa-solid fa-camera" id="photoCameraIcon"></i>
+                    <img id="profilePhotoImg" src="" alt="Foto de perfil" style="display:none">
+                  </div>
+                  <input type="file" id="profilePhotoInput" accept="image/*" style="display:none">
+                  <button class="usuario-photo-remove" id="removePhotoBtn">Eliminar imagen</button>
+                </div>
+                <div class="usuario-fields-col">
+                  <div class="usuario-field">
+                    <label for="userEmail">Email</label>
+                    <input type="email" id="userEmail" placeholder="correo@ejemplo.com">
+                  </div>
+                  <div class="usuario-field-row">
+                    <div class="usuario-field">
+                      <label for="userName">Nombre *</label>
+                      <input type="text" id="userName" placeholder="Tu nombre" minlength="3">
+                      <span class="field-hint">Al menos debe tener 3 letras.</span>
+                    </div>
+                    <div class="usuario-field">
+                      <label for="userSurname">Apellidos</label>
+                      <input type="text" id="userSurname" placeholder="Tus apellidos">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="usuario-save-row">
+                <button class="btn-clinni-primary" id="saveProfileBtn"><i class="fa-solid fa-floppy-disk"></i> Guardar
+                  perfil</button>
+              </div>
+            </div>
+
+            <!-- Notificaciones -->
+            <div class="usuario-card usuario-notif-card">
+              <div class="usuario-card-icon"><i class="fa-solid fa-envelope"></i></div>
+              <div class="usuario-card-body">
+                <h3>Quiero recibir un e-mail…</h3>
+                <label class="check-row">
+                  <input type="checkbox" checked>
+                  <span>Cuando un nuevo usuario se una a un centro al que pertenezco.</span>
+                </label>
+                <label class="check-row">
+                  <input type="checkbox" checked>
+                  <span>Cuando otro usuario me asigne, modifique o elimine una cita.</span>
+                </label>
+                <label class="check-row">
+                  <input type="checkbox">
+                  <span>Con ofertas y comunicaciones comerciales de la clínica.</span>
+                </label>
+                <label class="check-row">
+                  <input type="checkbox" checked>
+                  <span>Con un resumen semanal de datos de informes.</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Cambio de contraseña -->
+            <div class="usuario-card usuario-password-card">
+              <div class="usuario-card-icon"><i class="fa-solid fa-lock"></i></div>
+              <div class="usuario-card-body">
+                <h3>Cambio de contraseña</h3>
+                <p class="password-hint">Al menos debe tener 6 caracteres.<br>Recuerda que vas a trabajar con
+                  información sensible. Te recomendamos introducir una contraseña segura.</p>
+                <div class="password-fields">
+                  <div class="usuario-field">
+                    <label for="currentPass">Contraseña actual</label>
+                    <input type="password" id="currentPass" placeholder="Contraseña actual">
+                  </div>
+                  <div class="usuario-field">
+                    <label for="newPass">Nueva contraseña</label>
+                    <input type="password" id="newPass" placeholder="Nueva contraseña">
+                    <div class="password-strength" id="passwordStrength">
+                      <div class="strength-bar"></div>
+                      <div class="strength-bar"></div>
+                      <div class="strength-bar"></div>
+                      <div class="strength-bar"></div>
+                    </div>
+                  </div>
+                </div>
+                <button class="btn-clinni-primary" id="changePassBtn"><i class="fa-solid fa-key"></i> Cambiar
+                  contraseña</button>
+              </div>
+            </div>
+
           </div>
         </section>
 

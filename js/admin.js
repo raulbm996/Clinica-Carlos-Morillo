@@ -1,156 +1,615 @@
 /* =========================================
-   ADMIN PANEL SCRIPTS (MOCK DATA & LOGIC)
-   Para demostración de la interfaz gráfica
+   ADMIN PANEL – Clínica Carlos Morillo
+   Conectado a Vercel Serverless + TiDB Cloud
 ========================================= */
+
+const API = '/api';
+
+
+function getMonday(d) {
+    const dt = new Date(d);
+    const day = dt.getDay();
+    const diff = dt.getDate() - day + (day === 0 ? -6 : 1);
+    dt.setDate(diff);
+    dt.setHours(0, 0, 0, 0);
+    return dt;
+}
+
+function isSameDay(a, b) {
+    return a.getFullYear() === b.getFullYear() &&
+        a.getMonth() === b.getMonth() &&
+        a.getDate() === b.getDate();
+}
+
+/* ======== Utilidad fetch ======== */
+async function apiPost(url, body = {}) {
+    const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(body),
+    });
+    return res.json();
+}
+
+async function apiGet(url) {
+    const res = await fetch(url, { credentials: 'include' });
+    return res.json();
+}
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    /* --- LOGIN LOGIC --- */
+    /* ======== LOGIN ======== */
     const loginForm = document.getElementById('loginForm');
-
     if (loginForm) {
-        loginForm.addEventListener('submit', (e) => {
+        loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const user = document.getElementById('adminUser').value;
+            const user = document.getElementById('adminUser').value.trim().toLowerCase();
             const pass = document.getElementById('adminPass').value;
             const feedback = document.getElementById('loginFeedback');
+            const btn = loginForm.querySelector('button[type="submit"]');
 
-            // Simulación simple de Auth
-            if (user === 'admin' && pass === '1234') {
-                feedback.style.color = 'var(--primary)';
-                feedback.textContent = 'Acceso correcto. Redirigiendo...';
-                setTimeout(() => {
-                    globalThis.location.href = 'admin-dashboard.html';
-                }, 800);
-            } else {
-                feedback.style.color = '#e74c3c';
-                feedback.textContent = 'Usuario o contraseña incorrectos.';
+            btn.disabled = true;
+            feedback.style.color = '#718096';
+            feedback.textContent = 'Verificando…';
+
+            try {
+                const data = await apiPost(`${API}/auth/login`, {
+                    username: user,
+                    password: pass,
+                });
+
+                if (data.ok) {
+                    feedback.style.color = '#3bb2b8';
+                    feedback.textContent = 'Acceso correcto. Redirigiendo…';
+                    setTimeout(() => { location.href = 'admin-dashboard.html'; }, 800);
+                } else {
+                    feedback.style.color = '#e53e3e';
+                    feedback.textContent = data.error || 'Usuario o contraseña incorrectos.';
+                    btn.disabled = false;
+                }
+            } catch (err) {
+                feedback.style.color = '#e53e3e';
+                feedback.textContent = 'Error de conexión. Inténtalo de nuevo.';
+                btn.disabled = false;
             }
         });
+        return; // La página de login no necesita más lógica
     }
 
-
-    /* --- DASHBOARD LOGIC --- */
-
-    // Sidebar Navigation
-    const navItems = document.querySelectorAll('.nav-item');
-    const viewSections = document.querySelectorAll('.view-section');
-
-    if (navItems.length > 0 && viewSections.length > 0) {
-        navItems.forEach(item => {
-            item.addEventListener('click', (e) => {
-                const targetId = item.dataset.target;
-                if (!targetId) return; // Ignore logout link
-
-                e.preventDefault();
-
-                // Remove active class from all
-                navItems.forEach(nav => nav.classList.remove('active'));
-                viewSections.forEach(sec => sec.classList.remove('active'));
-
-                // Add active to current
-                item.classList.add('active');
-                document.getElementById(targetId).classList.add('active');
-
-                // Mobile: close sidebar on click
-                if (window.innerWidth <= 900) {
-                    document.getElementById('adminSidebar').classList.remove('show');
-                }
-            });
-        });
-    }
-
-    // Mobile Sidebar Toggle
-    const openSidebarBtn = document.getElementById('openSidebar');
-    const closeSidebarBtn = document.getElementById('closeSidebar');
+    /* ======== DASHBOARD ======== */
     const adminSidebar = document.getElementById('adminSidebar');
-    const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+    const backdrop = document.getElementById('sidebarBackdrop');
+    const calGrid = document.getElementById('calendarGrid');
+    if (!calGrid) return; // rest is dashboard-only
 
-    if (openSidebarBtn && closeSidebarBtn && adminSidebar) {
-        openSidebarBtn.addEventListener('click', () => {
-            adminSidebar.classList.add('show');
+    /* --- Verificar sesión al cargar dashboard --- */
+    let currentUser = null;
+
+    async function loadSession() {
+        try {
+            const data = await apiGet(`${API}/auth/session`);
+            if (!data.ok) {
+                location.href = 'admin-login.html';
+                return;
+            }
+            currentUser = data.user;
+            const displayName = (currentUser.nombre + (currentUser.apellidos ? ' ' + currentUser.apellidos : '')) || 'Usuario';
+            const initials = displayName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+            
+            // Foto: primero comprobar sessionStorage, luego la BD
+            const savedPhoto = sessionStorage.getItem('adminPhoto') || currentUser.foto;
+            if (avatarEl) {
+                if (savedPhoto) {
+                    avatarEl.innerHTML = '<img src="' + savedPhoto.replaceAll('"', '&quot;') + '" alt="avatar">';
+                } else {
+                    avatarEl.textContent = initials;
+                }
+            }
+            if (nameEl) nameEl.textContent = displayName;
+            if (breadcrumbEl) breadcrumbEl.textContent = '› ' + displayName;
+        } catch (err) {
+            location.href = 'admin-login.html';
+        }
+    }
+
+    const avatarEl = document.getElementById('userAvatarInitials');
+    const nameEl = document.getElementById('userDisplayName');
+    const breadcrumbEl = document.getElementById('calBreadcrumbUser');
+
+    loadSession();
+
+    /* --- Member tooltips --- */
+    const tooltip = document.createElement('div');
+    tooltip.className = 'member-tooltip';
+    document.body.appendChild(tooltip);
+
+    document.querySelectorAll('.member-avatar[data-name]').forEach(av => {
+        av.addEventListener('mouseenter', () => {
+            tooltip.textContent = av.dataset.name;
+            const rect = av.getBoundingClientRect();
+            tooltip.style.left = rect.left + 'px';
+            tooltip.style.top = (rect.bottom + 6) + 'px';
+            tooltip.style.transform = 'none';
+            tooltip.classList.add('visible');
+        });
+        av.addEventListener('mouseleave', () => {
+            tooltip.classList.remove('visible');
+        });
+    });
+
+    /* --- Mobile sidebar --- */
+    const openBtn = document.getElementById('openSidebar');
+    if (openBtn) {
+        openBtn.addEventListener('click', () => adminSidebar.classList.add('show'));
+    }
+    if (backdrop) {
+        backdrop.addEventListener('click', () => adminSidebar.classList.remove('show'));
+    }
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') adminSidebar.classList.remove('show');
+    });
+
+    /* --- Sidebar nav active state + view switching --- */
+    const tabBar = document.querySelector('.admin-tabs');
+    const allViews = document.querySelectorAll('.view-section');
+
+    function showView(targetId) {
+        allViews.forEach(v => v.classList.remove('active'));
+        const section = document.getElementById(targetId);
+        if (section) section.classList.add('active');
+
+        if (targetId === 'calendario' || targetId === 'pacientes') {
+            tabBar.style.display = '';
+            tabs.forEach(t => {
+                t.classList.toggle('active', t.dataset.target === targetId);
+            });
+        } else {
+            tabBar.style.display = 'none';
+        }
+
+        // Cargar datos al cambiar de vista
+        if (targetId === 'pacientes') loadPacientes();
+        if (targetId === 'calendario') renderCalendar();
+    }
+
+    document.querySelectorAll('.sidebar-nav .nav-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.querySelectorAll('.sidebar-nav .nav-item').forEach(n => n.classList.remove('active'));
+            item.classList.add('active');
+            const target = item.dataset.target;
+            if (target) showView(target);
+            if (window.innerWidth <= 900) adminSidebar.classList.remove('show');
+        });
+    });
+
+    /* --- Tab switching --- */
+    const tabs = document.querySelectorAll('.tab-btn');
+    tabs.forEach(btn => {
+        btn.addEventListener('click', () => {
+            showView(btn.dataset.target);
+        });
+    });
+
+    /* --- Auto-toggle SI/NO --- */
+    document.querySelectorAll('.auto-toggle-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.auto-toggle-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
+
+    /* --- Mode toggle --- */
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
+
+    /* --- Logout --- */
+    const logoutLink = document.querySelector('.logout-link');
+    if (logoutLink) {
+        logoutLink.addEventListener('click', async (e) => {
+            e.preventDefault();
+            try {
+                await apiGet(`${API}/auth/logout`);
+            } catch (_) { /* ignore */ }
+            location.href = 'admin-login.html';
+        });
+    }
+
+    /* ======================================================
+       CALENDAR – Weekly grid con citas reales
+       ====================================================== */
+    const DAY_NAMES = ['lun.', 'mar.', 'mié.', 'jue.', 'vie.', 'sáb.', 'dom.'];
+    const MONTH_NAMES = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    const HOUR_START = 8;
+    const HOUR_END = 21;
+
+    let weekOffset = 0;
+
+    // Colores por servicio
+    const SERVICE_COLORS = {
+        fisioterapia:       { bg: '#e6f7f8', border: '#3bb2b8', text: '#1a7a7e' },
+        osteopatia:         { bg: '#fef3e2', border: '#f0a030', text: '#8a5a10' },
+        neurofisioterapia:  { bg: '#e8eef8', border: '#5a7dba', text: '#2d4a7a' },
+        uroginecologia:     { bg: '#fce4ec', border: '#e05580', text: '#8a1a40' },
+        psicologia:         { bg: '#f3e5f5', border: '#ab47bc', text: '#6a1b7a' },
+        nutricion:          { bg: '#e8f5e9', border: '#66bb6a', text: '#2e6b30' },
+        pilates:            { bg: '#fff8e1', border: '#fbc02d', text: '#7a6a10' },
+        otro:               { bg: '#f0f0f0', border: '#999',    text: '#555' },
+    };
+
+    const STATUS_LABELS = {
+        pendiente:  '⏳',
+        confirmada: '✅',
+        cancelada:  '❌',
+    };
+
+    async function renderCalendar() {
+        const now = new Date();
+        const base = new Date(now);
+        base.setDate(base.getDate() + weekOffset * 7);
+        const monday = getMonday(base);
+
+        const days = [];
+        for (let i = 0; i < 7; i++) {
+            const d = new Date(monday);
+            d.setDate(monday.getDate() + i);
+            days.push(d);
+        }
+
+        const hdr = document.getElementById('calMonthYear');
+        if (hdr) hdr.textContent = MONTH_NAMES[days[0].getMonth()] + ' ' + days[0].getFullYear();
+
+        // Build grid HTML
+        let html = '';
+        html += '<div class="cal-corner"><button class="cal-expand-btn"><i class="fa-solid fa-expand"></i></button></div>';
+        days.forEach((d, i) => {
+            const isToday = isSameDay(d, now);
+            html += `<div class="cal-day-header ${isToday ? 'cal-today' : ''}">
+                <span class="day-name">${DAY_NAMES[i]}</span>
+                <span class="day-num">${d.getDate()}</span>
+            </div>`;
         });
 
-        closeSidebarBtn.addEventListener('click', () => {
-            adminSidebar.classList.remove('show');
-        });
-
-        if (sidebarBackdrop) {
-            sidebarBackdrop.addEventListener('click', () => {
-                adminSidebar.classList.remove('show');
+        for (let h = HOUR_START; h < HOUR_END; h++) {
+            const label = String(h).padStart(2, '0') + ':00';
+            html += `<div class="cal-time-label">${label}</div>`;
+            days.forEach(d => {
+                html += `<div class="cal-cell" data-hour="${h}" data-date="${d.toISOString().slice(0, 10)}"></div>`;
             });
         }
 
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape') {
-                adminSidebar.classList.remove('show');
+        calGrid.innerHTML = html;
+
+        // Cargar citas de la semana desde el backend
+        const fechaInicio = days[0].toISOString().slice(0, 10);
+        const fechaFin = days[6].toISOString().slice(0, 10);
+
+        try {
+            const data = await apiGet(`${API}/citas/listar?fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}`);
+            if (data.ok && data.citas) {
+                data.citas.forEach(cita => {
+                    const horaNum = parseInt(cita.hora.split(':')[0], 10);
+                    const cell = calGrid.querySelector(`.cal-cell[data-date="${cita.fecha}"][data-hour="${horaNum}"]`);
+                    if (cell) {
+                        const colors = SERVICE_COLORS[cita.servicio] || SERVICE_COLORS.otro;
+                        const statusIcon = STATUS_LABELS[cita.estado] || '';
+                        const citaEl = document.createElement('div');
+                        citaEl.className = 'cal-appointment';
+                        citaEl.style.cssText = `background:${colors.bg};border-left:3px solid ${colors.border};color:${colors.text};padding:2px 6px;border-radius:4px;font-size:.75rem;cursor:pointer;margin-bottom:2px;`;
+                        citaEl.innerHTML = `<strong>${cita.hora}</strong> ${statusIcon}<br>${cita.paciente_nombre}<br><em style="opacity:.7">${cita.servicio}</em>`;
+                        citaEl.title = `${cita.paciente_nombre} — ${cita.servicio}\n${cita.hora} | ${cita.estado}\n${cita.mensaje || ''}`;
+
+                        // Click para cambiar estado
+                        citaEl.addEventListener('click', () => showCitaActions(cita, citaEl));
+                        cell.appendChild(citaEl);
+                    }
+                });
+            }
+        } catch (err) {
+            console.error('Error cargando citas:', err);
+        }
+    }
+
+    // Mini-menu para cambiar estado de cita
+    function showCitaActions(cita, el) {
+        // Eliminar menú previo si existe
+        document.querySelectorAll('.cita-actions-popup').forEach(p => p.remove());
+
+        const popup = document.createElement('div');
+        popup.className = 'cita-actions-popup';
+        popup.style.cssText = 'position:absolute;z-index:999;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.15);padding:8px;min-width:160px;';
+
+        const states = ['pendiente', 'confirmada', 'cancelada'];
+        states.forEach(estado => {
+            const btn = document.createElement('button');
+            btn.style.cssText = 'display:block;width:100%;text-align:left;padding:6px 10px;border:none;background:none;cursor:pointer;border-radius:4px;font-size:.85rem;';
+            btn.textContent = `${STATUS_LABELS[estado]} ${estado.charAt(0).toUpperCase() + estado.slice(1)}`;
+            if (cita.estado === estado) btn.style.fontWeight = 'bold';
+            btn.addEventListener('mouseenter', () => btn.style.background = '#f0f4f8');
+            btn.addEventListener('mouseleave', () => btn.style.background = 'none');
+            btn.addEventListener('click', async () => {
+                popup.remove();
+                const res = await apiPost(`${API}/citas/actualizar`, { id: cita.id, estado });
+                if (res.ok) {
+                    renderCalendar(); // Recargar
+                } else {
+                    alert(res.error || 'Error al actualizar la cita.');
+                }
+            });
+            popup.appendChild(btn);
+        });
+
+        el.style.position = 'relative';
+        el.appendChild(popup);
+
+        // Cerrar al hacer click fuera
+        setTimeout(() => {
+            document.addEventListener('click', function handler(e) {
+                if (!popup.contains(e.target)) {
+                    popup.remove();
+                    document.removeEventListener('click', handler);
+                }
+            });
+        }, 10);
+    }
+
+    renderCalendar();
+
+    // Calendar navigation
+    const prevBtn = document.getElementById('calPrev');
+    const nextBtn = document.getElementById('calNext');
+    const todayBtn = document.getElementById('calToday');
+    if (prevBtn) prevBtn.addEventListener('click', () => { weekOffset--; renderCalendar(); });
+    if (nextBtn) nextBtn.addEventListener('click', () => { weekOffset++; renderCalendar(); });
+    if (todayBtn) todayBtn.addEventListener('click', () => { weekOffset = 0; renderCalendar(); });
+
+    /* ======================================================
+       PACIENTES – Datos reales desde PHP
+       ====================================================== */
+    const pacientesBody = document.getElementById('pacientesTableBody');
+
+    async function loadPacientes(buscar = '') {
+        if (!pacientesBody) return;
+        pacientesBody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:#718096;">Cargando…</td></tr>';
+
+        try {
+            const url = buscar
+                ? `${API}/pacientes/listar?buscar=${encodeURIComponent(buscar)}`
+                : `${API}/pacientes/listar`;
+            const data = await apiGet(url);
+
+            if (data.ok && data.pacientes) {
+                if (data.pacientes.length === 0) {
+                    pacientesBody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:#718096;">No se encontraron pacientes.</td></tr>';
+                    return;
+                }
+
+                let html = '';
+                data.pacientes.forEach(p => {
+                    html += `<tr>
+                        <td data-label="ID"><span style="color:#718096;font-size:.8rem">#${String(p.id).padStart(5, '0')}</span></td>
+                        <td data-label="Nombre"><strong>${p.nombre}</strong><br><span style="font-size:.75rem;color:#718096">${p.email || '—'}</span></td>
+                        <td data-label="Contacto">${p.telefono || '—'}</td>
+                        <td data-label="Última Visita">${p.ultima_visita_fmt}</td>
+                        <td data-label="Acciones">
+                            <button class="action-btn" title="Ver Ficha"><i class="fa-regular fa-eye"></i></button>
+                            <button class="action-btn" title="Editar"><i class="fa-solid fa-pen"></i></button>
+                        </td>
+                    </tr>`;
+                });
+                pacientesBody.innerHTML = html;
+            } else {
+                pacientesBody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:#e53e3e;">Error al cargar pacientes.</td></tr>';
+            }
+        } catch (err) {
+            pacientesBody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:#e53e3e;">Error de conexión.</td></tr>';
+        }
+    }
+
+    // Búsqueda de pacientes
+    const searchInput = document.querySelector('.search-box input');
+    if (searchInput) {
+        let searchTimeout;
+        searchInput.addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                loadPacientes(searchInput.value.trim());
+            }, 400);
+        });
+    }
+
+    // Botón nuevo paciente
+    const addPatientBtn = document.getElementById('addPatientBtn');
+    if (addPatientBtn) {
+        addPatientBtn.addEventListener('click', () => {
+            const nombre = prompt('Nombre completo del paciente:');
+            if (!nombre || nombre.trim() === '') return;
+            const telefono = prompt('Teléfono:') || '';
+            const email = prompt('Email:') || '';
+
+            apiPost(`${API}/pacientes/crear`, { nombre: nombre.trim(), telefono, email })
+                .then(data => {
+                    if (data.ok) {
+                        alert('Paciente creado correctamente.');
+                        loadPacientes();
+                    } else {
+                        alert(data.error || 'Error al crear paciente.');
+                    }
+                })
+                .catch(() => alert('Error de conexión.'));
+        });
+    }
+
+    /* ======================================================
+       USUARIO – Profile & Password (conectado a PHP)
+       ====================================================== */
+    const userEmailInput = document.getElementById('userEmail');
+    const userNameInput = document.getElementById('userName');
+    const userSurnameInput = document.getElementById('userSurname');
+
+    // Los datos se cargan cuando la sesión se verifica (loadSession)
+    // Proveemos un setter que se ejecuta después
+    const originalLoadSession = loadSession;
+    loadSession = async function () {
+        await originalLoadSession();
+        if (currentUser) {
+            if (userNameInput) userNameInput.value = currentUser.nombre || '';
+            if (userSurnameInput) userSurnameInput.value = currentUser.apellidos || '';
+            if (userEmailInput) userEmailInput.value = currentUser.email || '';
+
+            // Cargar foto en la sección de perfil
+            const savedPhoto = sessionStorage.getItem('adminPhoto') || currentUser.foto;
+            if (savedPhoto && profilePhotoImg && photoCameraIcon) {
+                profilePhotoImg.src = savedPhoto;
+                profilePhotoImg.style.display = 'block';
+                photoCameraIcon.style.display = 'none';
+            }
+        }
+    };
+    // Re-run con la nueva versión
+    loadSession();
+
+    // Profile photo (mantener en sessionStorage para rapidez, no guardar en BD por tamaño)
+    const profilePhoto = document.getElementById('profilePhoto');
+    const profilePhotoInput = document.getElementById('profilePhotoInput');
+    const profilePhotoImg = document.getElementById('profilePhotoImg');
+    const photoCameraIcon = document.getElementById('photoCameraIcon');
+    const removePhotoBtn = document.getElementById('removePhotoBtn');
+
+    const savedPhoto = sessionStorage.getItem('adminPhoto');
+    if (savedPhoto && profilePhotoImg && photoCameraIcon) {
+        profilePhotoImg.src = savedPhoto;
+        profilePhotoImg.style.display = 'block';
+        photoCameraIcon.style.display = 'none';
+    }
+
+    if (profilePhoto && profilePhotoInput) {
+        profilePhoto.addEventListener('click', () => profilePhotoInput.click());
+
+        profilePhotoInput.addEventListener('change', () => {
+            const file = profilePhotoInput.files[0];
+            if (!file) return;
+            if (!file.type.startsWith('image/')) { alert('Selecciona un archivo de imagen.'); return; }
+            if (file.size > 2 * 1024 * 1024) { alert('La imagen no debe superar 2 MB.'); return; }
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                profilePhotoImg.src = ev.target.result;
+                profilePhotoImg.style.display = 'block';
+                photoCameraIcon.style.display = 'none';
+                sessionStorage.setItem('adminPhoto', ev.target.result);
+                if (avatarEl) avatarEl.innerHTML = '<img src="' + ev.target.result.replace(/"/g, '&quot;') + '" alt="avatar">';
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    if (removePhotoBtn) {
+        removePhotoBtn.addEventListener('click', () => {
+            profilePhotoImg.src = '';
+            profilePhotoImg.style.display = 'none';
+            photoCameraIcon.style.display = '';
+            profilePhotoInput.value = '';
+            sessionStorage.removeItem('adminPhoto');
+            const displayName = nameEl ? nameEl.textContent : 'U';
+            const initials = displayName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+            if (avatarEl) avatarEl.textContent = initials;
+        });
+    }
+
+    // Guardar perfil → PHP
+    const saveProfileBtn = document.getElementById('saveProfileBtn');
+    if (saveProfileBtn) {
+        saveProfileBtn.addEventListener('click', async () => {
+            const name = (userNameInput.value || '').trim();
+            if (name.length < 3) {
+                alert('El nombre debe tener al menos 3 letras.');
+                return;
+            }
+            const apellidos = (userSurnameInput.value || '').trim();
+            const email = (userEmailInput.value || '').trim();
+
+            try {
+                const data = await apiPost(`${API}/usuario/perfil`, {
+                    nombre: name,
+                    apellidos,
+                    email,
+                });
+
+                if (data.ok) {
+                    const fullName = name + (apellidos ? ' ' + apellidos : '');
+                    if (nameEl) nameEl.textContent = fullName;
+                    const newInitials = fullName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+                    if (avatarEl && !sessionStorage.getItem('adminPhoto')) avatarEl.textContent = newInitials;
+                    if (breadcrumbEl) breadcrumbEl.textContent = '› ' + fullName;
+                    alert('Perfil guardado correctamente.');
+                } else {
+                    alert(data.error || 'Error al guardar perfil.');
+                }
+            } catch (err) {
+                alert('Error de conexión.');
             }
         });
     }
 
-    /* --- MOCK DATA INJECTION --- */
+    // Password strength meter
+    const newPassInput = document.getElementById('newPass');
+    const strengthBars = document.querySelectorAll('#passwordStrength .strength-bar');
 
-    // 1. Reservas Web Mock Data
-    const mockReservas = [
-        { fecha: '18/03/2026 - 10:30', paciente: 'Laura Gómez', servicio: 'Osteopatía', tel: '654 321 098', status: 'pending', statusText: 'Pendiente' },
-        { fecha: '18/03/2026 - 12:00', paciente: 'Pedro Sánchez', servicio: 'Fisioterapia', tel: '643 210 987', status: 'confirmed', statusText: 'Confirmada' },
-        { fecha: '19/03/2026 - 09:00', paciente: 'Ana Ruiz', servicio: 'Pilates', tel: '632 109 876', status: 'pending', statusText: 'Pendiente' },
-        { fecha: '19/03/2026 - 16:30', paciente: 'Miguel Torres', servicio: 'Recuperación Pie', tel: '621 098 765', status: 'cancelled', statusText: 'Cancelada' },
-        { fecha: '20/03/2026 - 11:15', paciente: 'Sofía Martín', servicio: 'Psicología', tel: '610 987 654', status: 'confirmed', statusText: 'Confirmada' }
-    ];
+    if (newPassInput) {
+        newPassInput.addEventListener('input', () => {
+            const val = newPassInput.value;
+            let level = 0;
+            if (val.length >= 6) level++;
+            if (/[A-Z]/.test(val)) level++;
+            if (/\d/.test(val)) level++;
+            if (/[^A-Za-z0-9]/.test(val)) level++;
 
-    const reservasBody = document.getElementById('reservasTableBody');
-    if (reservasBody) {
-        let html = '';
-        mockReservas.forEach(r => {
-            html += `
-            <tr>
-                <td data-label="Fecha / Hora"><strong>${r.fecha}</strong></td>
-                <td data-label="Paciente">${r.paciente}</td>
-                <td data-label="Servicio">${r.servicio}</td>
-                <td data-label="Teléfono">${r.tel}</td>
-                <td data-label="Estado"><span class="status ${r.status}">${r.statusText}</span></td>
-                <td data-label="Acción">
-                    <button class="action-btn" title="Confirmar"><i class="fa-solid fa-check text-success" style="color:#15803d"></i></button>
-                    <button class="action-btn" title="Eliminar"><i class="fa-solid fa-trash text-danger"></i></button>
-                </td>
-            </tr>`;
+            strengthBars.forEach((bar, i) => {
+                bar.className = 'strength-bar';
+                if (i < level) bar.classList.add('level-' + level);
+            });
         });
-        reservasBody.innerHTML = html;
     }
 
-    // 2. Pacientes Mock Data
-    const mockPacientes = [
-        { id: '#00145', nombre: 'Carlos López Fernández', tel: '600 111 222', email: 'clopez@mail.com', visita: '10/03/2026' },
-        { id: '#00146', nombre: 'Elena Navarro Ruiz', tel: '600 222 333', email: 'elena.nr@mail.com', visita: '12/03/2026' },
-        { id: '#00147', nombre: 'Marcos Jiménez', tel: '600 333 444', email: 'mjimenez88@mail.com', visita: '15/03/2026' },
-        { id: '#00148', nombre: 'Lucía Ortega', tel: '600 444 555', email: 'lu.ortega@mail.com', visita: '16/03/2026' }
-    ];
+    // Cambiar contraseña → PHP
+    const changePassBtn = document.getElementById('changePassBtn');
+    if (changePassBtn) {
+        changePassBtn.addEventListener('click', async () => {
+            const current = document.getElementById('currentPass').value;
+            const next = newPassInput.value;
 
-    const pacientesBody = document.getElementById('pacientesTableBody');
-    if (pacientesBody) {
-        let html = '';
-        mockPacientes.forEach(p => {
-            html += `
-            <tr>
-                <td data-label="ID"><span style="color:var(--text-light); font-size:0.8rem;">${p.id}</span></td>
-                <td data-label="Nombre Completo"><strong>${p.nombre}</strong><br><span style="font-size:0.75rem; color:var(--text-light)">${p.email}</span></td>
-                <td data-label="Contacto">${p.tel}</td>
-                <td data-label="Última Visita">${p.visita}</td>
-                <td data-label="Acciones">
-                    <button class="action-btn" title="Ver Ficha"><i class="fa-regular fa-eye"></i></button>
-                    <button class="action-btn" title="Editar"><i class="fa-solid fa-pen"></i></button>
-                </td>
-            </tr>`;
-        });
-        pacientesBody.innerHTML = html;
-    }
+            if (!current || !next) {
+                alert('Rellena ambos campos.');
+                return;
+            }
+            if (next.length < 6) {
+                alert('La nueva contraseña debe tener al menos 6 caracteres.');
+                return;
+            }
 
-    // New patient button interaction
-    const addPatientBtn = document.getElementById('addPatientBtn');
-    if (addPatientBtn) {
-        addPatientBtn.addEventListener('click', () => {
-            alert('En una integración real con Base de Datos, esto abriría un formulario para añadir un nuevo paciente a la nube.');
+            try {
+                const data = await apiPost(`${API}/usuario/cambiar-password`, {
+                    current_password: current,
+                    new_password: next,
+                });
+
+                if (data.ok) {
+                    alert('Contraseña cambiada correctamente.');
+                    document.getElementById('currentPass').value = '';
+                    newPassInput.value = '';
+                    strengthBars.forEach(b => b.className = 'strength-bar');
+                } else {
+                    alert(data.error || 'Error al cambiar contraseña.');
+                }
+            } catch (err) {
+                alert('Error de conexión.');
+            }
         });
     }
 });
