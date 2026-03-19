@@ -117,7 +117,22 @@
           <div class="calendar-toolbar">
             <div class="calendar-toolbar-left">
               <div class="cal-dropdown">
-                <button>Semana 7 días <i class="fa-solid fa-caret-down"></i></button>
+                <div class="cal-dropdown-select">
+                  <button id="calendarViewBtn">Semana 7 días <i class="fa-solid fa-caret-down"></i></button>
+                  <ul class="cal-dropdown-menu" id="calendarViewMenu"
+                    style="display:none;position:absolute;z-index:10;background:#fff;border:1px solid #ddd;box-shadow:0 2px 8px #0001;padding:0;margin:0;list-style:none;min-width:180px;">
+                    <li data-view="mes" class="cal-dropdown-item">Mes</li>
+                    <li data-view="semana7" class="cal-dropdown-item active">Semana 7 días</li>
+                    <li data-view="semana7-listado" class="cal-dropdown-item">Semana 7 días <span
+                        style="color:#888;font-size:0.9em;">LISTADO</span></li>
+                    <li data-view="semana5" class="cal-dropdown-item">Semana 5 días</li>
+                    <li data-view="semana5-listado" class="cal-dropdown-item">Semana 5 días <span
+                        style="color:#888;font-size:0.9em;">LISTADO</span></li>
+                    <li data-view="dia" class="cal-dropdown-item">Día</li>
+                    <li data-view="dia-listado" class="cal-dropdown-item">Día <span
+                        style="color:#888;font-size:0.9em;">LISTADO</span></li>
+                  </ul>
+                </div>
               </div>
               <button class="cal-nav-btn" id="calPrev"><i class="fa-solid fa-chevron-left"></i></button>
               <button class="cal-today-btn" id="calToday">HOY</button>
@@ -266,7 +281,8 @@
                     <label for="currentPass">Contraseña actual</label>
                     <div style="position:relative;display:flex;align-items:center;">
                       <input type="password" id="currentPass" placeholder="Contraseña actual" style="flex:1;">
-                      <button type="button" id="toggleCurrentPass" tabindex="-1" style="position:absolute;right:8px;background:none;border:none;cursor:pointer;outline:none;">
+                      <button type="button" id="toggleCurrentPass" tabindex="-1"
+                        style="position:absolute;right:8px;background:none;border:none;cursor:pointer;outline:none;">
                         <i class="fa-solid fa-eye-slash" id="iconCurrentPass"></i>
                       </button>
                     </div>
@@ -275,7 +291,8 @@
                     <label for="newPass">Nueva contraseña</label>
                     <div style="position:relative;display:flex;align-items:center;">
                       <input type="password" id="newPass" placeholder="Nueva contraseña" style="flex:1;">
-                      <button type="button" id="toggleNewPass" tabindex="-1" style="position:absolute;right:8px;background:none;border:none;cursor:pointer;outline:none;">
+                      <button type="button" id="toggleNewPass" tabindex="-1"
+                        style="position:absolute;right:8px;background:none;border:none;cursor:pointer;outline:none;">
                         <i class="fa-solid fa-eye-slash" id="iconNewPass"></i>
                       </button>
                     </div>
