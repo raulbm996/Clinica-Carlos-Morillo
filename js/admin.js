@@ -97,14 +97,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const displayName = (currentUser.nombre + (currentUser.apellidos ? ' ' + currentUser.apellidos : '')) || 'Usuario';
             const initials = displayName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
 
-            // Foto: primero comprobar sessionStorage, luego la BD
-            const savedPhoto = sessionStorage.getItem('adminPhoto') || currentUser.foto;
-            if (avatarEl) {
-                if (savedPhoto) {
-                    avatarEl.innerHTML = '<img src="' + savedPhoto.replaceAll('"', '&quot;') + '" alt="avatar">';
-                } else {
-                    avatarEl.textContent = initials;
+            // Foto: siempre usar la de la BD y actualizar sessionStorage
+            if (currentUser.foto) {
+                sessionStorage.setItem('adminPhoto', currentUser.foto);
+                if (avatarEl) {
+                    avatarEl.innerHTML = '<img src="' + currentUser.foto.replaceAll('"', '&quot;') + '" alt="avatar">';
                 }
+            } else {
+                sessionStorage.removeItem('adminPhoto');
+                if (avatarEl) avatarEl.textContent = initials;
             }
             if (nameEl) nameEl.textContent = displayName;
             if (breadcrumbEl) breadcrumbEl.textContent = '› ' + displayName;
@@ -216,6 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 await apiPost(`${API}/auth`, { logout: true });
             } catch (_) { /* ignore */ }
+            sessionStorage.removeItem('adminPhoto');
             location.href = 'admin-login.html';
         });
     }
@@ -463,12 +465,17 @@ document.addEventListener('DOMContentLoaded', () => {
             if (userSurnameInput) userSurnameInput.value = currentUser.apellidos || '';
             if (userEmailInput) userEmailInput.value = currentUser.email || '';
 
-            // Cargar foto en la sección de perfil
-            const savedPhoto = sessionStorage.getItem('adminPhoto') || currentUser.foto;
-            if (savedPhoto && profilePhotoImg && photoCameraIcon) {
-                profilePhotoImg.src = savedPhoto;
+            // Cargar foto en la sección de perfil (siempre desde la BD)
+            if (currentUser.foto && profilePhotoImg && photoCameraIcon) {
+                sessionStorage.setItem('adminPhoto', currentUser.foto);
+                profilePhotoImg.src = currentUser.foto;
                 profilePhotoImg.style.display = 'block';
                 photoCameraIcon.style.display = 'none';
+            } else if (profilePhotoImg && photoCameraIcon) {
+                sessionStorage.removeItem('adminPhoto');
+                profilePhotoImg.src = '';
+                profilePhotoImg.style.display = 'none';
+                photoCameraIcon.style.display = '';
             }
         }
     };
