@@ -264,11 +264,21 @@
                 <div class="password-fields">
                   <div class="usuario-field">
                     <label for="currentPass">Contraseña actual</label>
-                    <input type="password" id="currentPass" placeholder="Contraseña actual">
+                    <div style="position:relative;display:flex;align-items:center;">
+                      <input type="password" id="currentPass" placeholder="Contraseña actual" style="flex:1;">
+                      <button type="button" id="toggleCurrentPass" tabindex="-1" style="position:absolute;right:8px;background:none;border:none;cursor:pointer;outline:none;">
+                        <i class="fa-solid fa-eye-slash" id="iconCurrentPass"></i>
+                      </button>
+                    </div>
                   </div>
                   <div class="usuario-field">
                     <label for="newPass">Nueva contraseña</label>
-                    <input type="password" id="newPass" placeholder="Nueva contraseña">
+                    <div style="position:relative;display:flex;align-items:center;">
+                      <input type="password" id="newPass" placeholder="Nueva contraseña" style="flex:1;">
+                      <button type="button" id="toggleNewPass" tabindex="-1" style="position:absolute;right:8px;background:none;border:none;cursor:pointer;outline:none;">
+                        <i class="fa-solid fa-eye-slash" id="iconNewPass"></i>
+                      </button>
+                    </div>
                     <div class="password-strength" id="passwordStrength">
                       <div class="strength-bar"></div>
                       <div class="strength-bar"></div>

@@ -1,3 +1,56 @@
+// Mostrar/ocultar contraseña en login
+document.addEventListener('DOMContentLoaded', () => {
+    const adminPass = document.getElementById('adminPass');
+    const toggleLoginPass = document.getElementById('toggleLoginPass');
+    const iconLoginPass = document.getElementById('iconLoginPass');
+    if (adminPass && toggleLoginPass && iconLoginPass) {
+        toggleLoginPass.addEventListener('click', () => {
+            if (adminPass.type === 'password') {
+                adminPass.type = 'text';
+                iconLoginPass.classList.remove('fa-eye-slash');
+                iconLoginPass.classList.add('fa-eye');
+            } else {
+                adminPass.type = 'password';
+                iconLoginPass.classList.remove('fa-eye');
+                iconLoginPass.classList.add('fa-eye-slash');
+            }
+        });
+    }
+
+    // Mostrar/ocultar contraseña en cambio de contraseña
+    const currentPass = document.getElementById('currentPass');
+    const toggleCurrentPass = document.getElementById('toggleCurrentPass');
+    const iconCurrentPass = document.getElementById('iconCurrentPass');
+    if (currentPass && toggleCurrentPass && iconCurrentPass) {
+        toggleCurrentPass.addEventListener('click', () => {
+            if (currentPass.type === 'password') {
+                currentPass.type = 'text';
+                iconCurrentPass.classList.remove('fa-eye-slash');
+                iconCurrentPass.classList.add('fa-eye');
+            } else {
+                currentPass.type = 'password';
+                iconCurrentPass.classList.remove('fa-eye');
+                iconCurrentPass.classList.add('fa-eye-slash');
+            }
+        });
+    }
+    const newPass = document.getElementById('newPass');
+    const toggleNewPass = document.getElementById('toggleNewPass');
+    const iconNewPass = document.getElementById('iconNewPass');
+    if (newPass && toggleNewPass && iconNewPass) {
+        toggleNewPass.addEventListener('click', () => {
+            if (newPass.type === 'password') {
+                newPass.type = 'text';
+                iconNewPass.classList.remove('fa-eye-slash');
+                iconNewPass.classList.add('fa-eye');
+            } else {
+                newPass.type = 'password';
+                iconNewPass.classList.remove('fa-eye');
+                iconNewPass.classList.add('fa-eye-slash');
+            }
+        });
+    }
+});
 /* =========================================
    ADMIN PANEL – Clínica Carlos Morillo
    Conectado a Vercel Serverless + TiDB Cloud
