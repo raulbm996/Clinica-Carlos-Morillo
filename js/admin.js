@@ -484,8 +484,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const url = buscar
-                ? `${API}/pacientes/listar?buscar=${encodeURIComponent(buscar)}`
-                : `${API}/pacientes/listar`;
+                ? `${API}/pacientes?buscar=${encodeURIComponent(buscar)}`
+                : `${API}/pacientes`;
             const data = await apiGet(url);
 
             if (data.ok && data.pacientes) {
