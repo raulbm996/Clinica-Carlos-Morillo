@@ -584,7 +584,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const fullName = nombre + (apellidos ? ' ' + apellidos : '');
 
             try {
-                const data = await apiPost(`${API}/pacientes/crear`, {
+                const data = await apiPost(`${API}/pacientes`, {
                     nombre: fullName,
                     telefono,
                     email,
