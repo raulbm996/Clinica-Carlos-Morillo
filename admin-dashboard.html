@@ -85,7 +85,7 @@
         <div class="topbar-search">
           <i class="fa-solid fa-search"></i>
           <input type="text" placeholder="buscar paciente…">
-          <button class="topbar-add-btn" title="Nuevo paciente"><i class="fa-solid fa-plus"></i></button>
+          <button class="topbar-add-btn" id="topbarAddPatientBtn" title="Nuevo paciente"><i class="fa-solid fa-plus"></i></button>
         </div>
 
         <h1 class="topbar-clinic-name">CLÍNICA Carlos Morillo</h1>
@@ -116,33 +116,26 @@
 
           <div class="calendar-toolbar">
             <div class="calendar-toolbar-left">
-              <div class="cal-dropdown">
-                <div class="cal-dropdown-select">
-                  <button id="calendarViewBtn">Semana 7 días <i class="fa-solid fa-caret-down"></i></button>
-                  <ul class="cal-dropdown-menu" id="calendarViewMenu"
-                    style="display:none;position:absolute;z-index:10;background:#fff;border:1px solid #ddd;box-shadow:0 2px 8px #0001;padding:0;margin:0;list-style:none;min-width:180px;">
-                    <li data-view="mes" class="cal-dropdown-item">Mes</li>
-                    <li data-view="semana7" class="cal-dropdown-item active">Semana 7 días</li>
-                    <li data-view="semana7-listado" class="cal-dropdown-item">Semana 7 días <span
-                        style="color:#888;font-size:0.9em;">LISTADO</span></li>
-                    <li data-view="semana5" class="cal-dropdown-item">Semana 5 días</li>
-                    <li data-view="semana5-listado" class="cal-dropdown-item">Semana 5 días <span
-                        style="color:#888;font-size:0.9em;">LISTADO</span></li>
-                    <li data-view="dia" class="cal-dropdown-item">Día</li>
-                    <li data-view="dia-listado" class="cal-dropdown-item">Día <span
-                        style="color:#888;font-size:0.9em;">LISTADO</span></li>
-                  </ul>
-                </div>
+              <div class="cal-month-picker">
+                <select id="calMonthSelect" class="cal-month-select">
+                  <option value="0">Enero</option>
+                  <option value="1">Febrero</option>
+                  <option value="2">Marzo</option>
+                  <option value="3">Abril</option>
+                  <option value="4">Mayo</option>
+                  <option value="5">Junio</option>
+                  <option value="6">Julio</option>
+                  <option value="7">Agosto</option>
+                  <option value="8">Septiembre</option>
+                  <option value="9">Octubre</option>
+                  <option value="10">Noviembre</option>
+                  <option value="11">Diciembre</option>
+                </select>
+                <select id="calYearSelect" class="cal-year-select"></select>
               </div>
               <button class="cal-nav-btn" id="calPrev"><i class="fa-solid fa-chevron-left"></i></button>
               <button class="cal-today-btn" id="calToday">HOY</button>
               <button class="cal-nav-btn" id="calNext"><i class="fa-solid fa-chevron-right"></i></button>
-              <div class="cal-dropdown">
-                <button>Miembros <i class="fa-solid fa-caret-down"></i></button>
-              </div>
-              <div class="cal-dropdown">
-                <button>Etiquetas <i class="fa-solid fa-caret-down"></i></button>
-              </div>
             </div>
             <div class="calendar-toolbar-right">
               <button class="import-google-btn">
@@ -314,6 +307,70 @@
 
       </div>
     </main>
+  </div>
+
+  <!-- ===== MODAL: Asistente pacientes y citas ===== -->
+  <div class="asistente-overlay" id="asistenteOverlay">
+    <div class="asistente-modal">
+      <button class="asistente-close" id="asistenteClose">&times;</button>
+      <h2 class="asistente-title">Asistente pacientes y citas</h2>
+
+      <div class="asistente-scroll">
+        <!-- Datos del paciente -->
+        <div class="asistente-card asistente-card-main">
+          <div class="asistente-card-icon"><i class="fa-solid fa-user"></i></div>
+          <div class="asistente-card-fields">
+            <div class="asistente-row">
+              <div class="asistente-field asistente-field-grow">
+                <label for="asiNombre">Nombre*</label>
+                <input type="text" id="asiNombre" placeholder=" ">
+              </div>
+              <div class="asistente-field asistente-field-grow">
+                <label for="asiApellidos">Apellidos</label>
+                <input type="text" id="asiApellidos" placeholder=" ">
+              </div>
+            </div>
+            <div class="asistente-row">
+              <div class="asistente-field asistente-field-pref">
+                <label for="asiPref">Pref</label>
+                <input type="text" id="asiPref" value="+" readonly>
+              </div>
+              <div class="asistente-field asistente-field-grow">
+                <label for="asiTelefono">Teléfono</label>
+                <input type="tel" id="asiTelefono" placeholder=" ">
+              </div>
+              <div class="asistente-field asistente-field-grow">
+                <label for="asiEmail">Email</label>
+                <input type="email" id="asiEmail" placeholder=" ">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Guardar -->
+        <div class="asistente-save-row">
+          <button class="asistente-save-btn" id="asistenteSaveBtn">Guardar</button>
+        </div>
+
+        <!-- Nuevo proceso -->
+        <div class="asistente-card asistente-card-info">
+          <div class="asistente-card-icon asistente-icon-teal"><i class="fa-solid fa-plus-circle"></i></div>
+          <div class="asistente-card-body">
+            <h3>¿Quieres crearle un nuevo proceso al paciente?</h3>
+            <p>Es necesario que indiques al menos el nombre del paciente.</p>
+          </div>
+        </div>
+
+        <!-- Asignar cita -->
+        <div class="asistente-card asistente-card-info">
+          <div class="asistente-card-icon asistente-icon-gray"><i class="fa-solid fa-calendar-plus"></i></div>
+          <div class="asistente-card-body">
+            <h3>¿Quieres asignarle una cita a este paciente?</h3>
+            <p>Es necesario que indiques al menos el nombre del paciente y un proceso al que asignar la cita.</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="js/admin.js"></script>

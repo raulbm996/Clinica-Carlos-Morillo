@@ -781,7 +781,40 @@
     align-items: center;
 }
 
-.cal-dropdown button,
+/* Month/Year picker */
+.cal-month-picker {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.cal-month-select,
+.cal-year-select {
+    font-family: inherit;
+    font-size: .8rem;
+    font-weight: 600;
+    border: 1px solid var(--ck-border);
+    border-radius: 6px;
+    background: var(--ck-white);
+    color: var(--ck-text);
+    cursor: pointer;
+    padding: 6px 10px;
+    transition: background .12s, border-color .15s;
+    appearance: auto;
+}
+
+.cal-month-select:hover,
+.cal-year-select:hover {
+    background: #f0f2f5;
+}
+
+.cal-month-select:focus,
+.cal-year-select:focus {
+    outline: none;
+    border-color: var(--ck-teal);
+    box-shadow: 0 0 0 3px rgba(59, 178, 184, .12);
+}
+
 .cal-nav-btn,
 .cal-today-btn {
     font-family: inherit;
@@ -796,7 +829,6 @@
     transition: background .12s;
 }
 
-.cal-dropdown button:hover,
 .cal-nav-btn:hover,
 .cal-today-btn:hover {
     background: #f0f2f5;
@@ -1527,5 +1559,260 @@
         text-transform: uppercase;
         letter-spacing: .4px;
         font-weight: 700;
+    }
+}
+
+/* ============================================================
+   MODAL – Asistente pacientes y citas
+   ============================================================ */
+.asistente-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    background: rgba(0, 0, 0, .35);
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn .2s ease;
+}
+
+.asistente-overlay.active {
+    display: flex;
+}
+
+.asistente-modal {
+    position: relative;
+    background: #fff;
+    border-radius: 14px;
+    width: 94%;
+    max-width: 680px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 12px 48px rgba(0, 0, 0, .2);
+    animation: slideUp .25s ease;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.asistente-close {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    background: none;
+    border: none;
+    font-size: 1.6rem;
+    color: #718096;
+    cursor: pointer;
+    line-height: 1;
+    z-index: 1;
+    transition: color .15s;
+}
+
+.asistente-close:hover {
+    color: #1a202c;
+}
+
+.asistente-title {
+    text-align: center;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #1a202c;
+    padding: 22px 20px 0;
+}
+
+.asistente-scroll {
+    padding: 16px 24px 24px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+/* Main patient card */
+.asistente-card-main {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 22px 20px;
+    background: #fff;
+}
+
+.asistente-card-main .asistente-card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #f0f2f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: #a0aec0;
+    flex-shrink: 0;
+    margin-top: 8px;
+}
+
+.asistente-card-fields {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.asistente-row {
+    display: flex;
+    gap: 12px;
+}
+
+.asistente-field {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.asistente-field-grow {
+    flex: 1;
+}
+
+.asistente-field-pref {
+    width: 56px;
+    flex-shrink: 0;
+}
+
+.asistente-field label {
+    position: absolute;
+    top: -8px;
+    left: 10px;
+    background: #fff;
+    padding: 0 4px;
+    font-size: .7rem;
+    font-weight: 600;
+    color: #718096;
+    z-index: 1;
+}
+
+.asistente-field input {
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+    padding: 12px 12px;
+    font-family: inherit;
+    font-size: .88rem;
+    color: #1a202c;
+    background: #fff;
+    transition: border-color .2s, box-shadow .2s;
+}
+
+.asistente-field input:focus {
+    outline: none;
+    border-color: var(--ck-teal, #3bb2b8);
+    box-shadow: 0 0 0 3px rgba(59, 178, 184, .12);
+}
+
+.asistente-field input:read-only {
+    background: #f7fafc;
+    color: #718096;
+}
+
+/* Save button */
+.asistente-save-row {
+    text-align: center;
+    padding: 16px 0;
+}
+
+.asistente-save-btn {
+    padding: 10px 36px;
+    border: none;
+    border-radius: 6px;
+    background: #e05458;
+    color: #fff;
+    font-family: inherit;
+    font-size: .9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .15s, transform .1s;
+}
+
+.asistente-save-btn:hover {
+    background: #c7444a;
+}
+
+.asistente-save-btn:active {
+    transform: scale(.97);
+}
+
+/* Info cards (proceso + cita) */
+.asistente-card-info {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-bottom: 12px;
+    background: #f9fbfd;
+    transition: border-color .2s, background .2s;
+    cursor: pointer;
+}
+
+.asistente-card-info:hover {
+    border-left-color: var(--ck-teal, #3bb2b8);
+    background: #f0f8f9;
+}
+
+.asistente-card-info .asistente-card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.asistente-icon-teal {
+    background: #e6f7f8;
+    color: #3bb2b8;
+}
+
+.asistente-icon-gray {
+    background: #f0f2f5;
+    color: #718096;
+}
+
+.asistente-card-body h3 {
+    font-size: .92rem;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 4px;
+}
+
+.asistente-card-body p {
+    font-size: .8rem;
+    color: #718096;
+    margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 540px) {
+    .asistente-row {
+        flex-direction: column;
+    }
+
+    .asistente-field-pref {
+        width: 100%;
+    }
+
+    .asistente-modal {
+        width: 98%;
+        max-height: 95vh;
+    }
+
+    .asistente-scroll {
+        padding: 12px 14px 18px;
     }
 }

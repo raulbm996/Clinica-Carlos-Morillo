@@ -1,27 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Dropdown de vista de calendario personalizado
-    const viewBtn = document.getElementById('calendarViewBtn');
-    const viewMenu = document.getElementById('calendarViewMenu');
-    if (viewBtn && viewMenu) {
-        viewBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            viewMenu.style.display = viewMenu.style.display === 'block' ? 'none' : 'block';
-        });
-        document.addEventListener('click', (e) => {
-            if (!viewBtn.contains(e.target) && !viewMenu.contains(e.target)) {
-                viewMenu.style.display = 'none';
-            }
-        });
-        viewMenu.querySelectorAll('.cal-dropdown-item').forEach(item => {
-            item.addEventListener('click', () => {
-                viewMenu.querySelectorAll('.cal-dropdown-item').forEach(i => i.classList.remove('active'));
-                item.classList.add('active');
-                viewBtn.innerHTML = item.innerHTML + ' <i class="fa-solid fa-caret-down"></i>';
-                viewMenu.style.display = 'none';
-                // Aquí puedes disparar el cambio de vista según item.dataset.view
-            });
-        });
-    }
 
     // Mostrar/ocultar contraseña en login
     const adminPass = document.getElementById('adminPass');
@@ -311,7 +288,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const HOUR_START = 8;
     const HOUR_END = 21;
 
-    let weekOffset = 0;
+    // Fecha de referencia para el calendario (lunes de la semana mostrada)
+    let calSelectedDate = new Date();
+
+    // Poblar selector de año (rango: año actual ± 5)
+    const calMonthSelect = document.getElementById('calMonthSelect');
+    const calYearSelect = document.getElementById('calYearSelect');
+    if (calYearSelect) {
+        const currentYear = new Date().getFullYear();
+        for (let y = currentYear - 5; y <= currentYear + 5; y++) {
+            const opt = document.createElement('option');
+            opt.value = y;
+            opt.textContent = y;
+            if (y === currentYear) opt.selected = true;
+            calYearSelect.appendChild(opt);
+        }
+    }
+    // Sincronizar selects con la fecha actual
+    function syncMonthYearSelects() {
+        if (calMonthSelect) calMonthSelect.value = calSelectedDate.getMonth();
+        if (calYearSelect) calYearSelect.value = calSelectedDate.getFullYear();
+    }
+    syncMonthYearSelects();
 
     // Colores por servicio
     const SERVICE_COLORS = {
@@ -333,9 +331,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function renderCalendar() {
         const now = new Date();
-        const base = new Date(now);
-        base.setDate(base.getDate() + weekOffset * 7);
-        const monday = getMonday(base);
+        const monday = getMonday(calSelectedDate);
 
         const days = [];
         for (let i = 0; i < 7; i++) {
@@ -447,9 +443,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const prevBtn = document.getElementById('calPrev');
     const nextBtn = document.getElementById('calNext');
     const todayBtn = document.getElementById('calToday');
-    if (prevBtn) prevBtn.addEventListener('click', () => { weekOffset--; renderCalendar(); });
-    if (nextBtn) nextBtn.addEventListener('click', () => { weekOffset++; renderCalendar(); });
-    if (todayBtn) todayBtn.addEventListener('click', () => { weekOffset = 0; renderCalendar(); });
+    if (prevBtn) prevBtn.addEventListener('click', () => {
+        calSelectedDate.setDate(calSelectedDate.getDate() - 7);
+        syncMonthYearSelects();
+        renderCalendar();
+    });
+    if (nextBtn) nextBtn.addEventListener('click', () => {
+        calSelectedDate.setDate(calSelectedDate.getDate() + 7);
+        syncMonthYearSelects();
+        renderCalendar();
+    });
+    if (todayBtn) todayBtn.addEventListener('click', () => {
+        calSelectedDate = new Date();
+        syncMonthYearSelects();
+        renderCalendar();
+    });
+
+    // Cambio de mes/año desde los selectores
+    if (calMonthSelect) calMonthSelect.addEventListener('change', () => {
+        const m = parseInt(calMonthSelect.value, 10);
+        const y = parseInt(calYearSelect.value, 10);
+        calSelectedDate = new Date(y, m, 1);
+        renderCalendar();
+    });
+    if (calYearSelect) calYearSelect.addEventListener('change', () => {
+        const m = parseInt(calMonthSelect.value, 10);
+        const y = parseInt(calYearSelect.value, 10);
+        calSelectedDate = new Date(y, m, 1);
+        renderCalendar();
+    });
 
     /* ======================================================
        PACIENTES – Datos reales desde PHP
@@ -506,25 +528,78 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Botón nuevo paciente
-    const addPatientBtn = document.getElementById('addPatientBtn');
-    if (addPatientBtn) {
-        addPatientBtn.addEventListener('click', () => {
-            const nombre = prompt('Nombre completo del paciente:');
-            if (!nombre || nombre.trim() === '') return;
-            const telefono = prompt('Teléfono:') || '';
-            const email = prompt('Email:') || '';
+    // ===== ASISTENTE MODAL =====
+    const asistenteOverlay = document.getElementById('asistenteOverlay');
+    const asistenteClose = document.getElementById('asistenteClose');
+    const asistenteSaveBtn = document.getElementById('asistenteSaveBtn');
+    const topbarAddBtn = document.getElementById('topbarAddPatientBtn');
 
-            apiPost(`${API}/pacientes/crear`, { nombre: nombre.trim(), telefono, email })
-                .then(data => {
-                    if (data.ok) {
-                        alert('Paciente creado correctamente.');
-                        loadPacientes();
-                    } else {
-                        alert(data.error || 'Error al crear paciente.');
-                    }
-                })
-                .catch(() => alert('Error de conexión.'));
+    function openAsistente() {
+        if (!asistenteOverlay) return;
+        // Limpiar campos
+        ['asiNombre', 'asiApellidos', 'asiTelefono', 'asiEmail'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = '';
+        });
+        asistenteOverlay.classList.add('active');
+        const nombreInput = document.getElementById('asiNombre');
+        if (nombreInput) setTimeout(() => nombreInput.focus(), 150);
+    }
+
+    function closeAsistente() {
+        if (asistenteOverlay) asistenteOverlay.classList.remove('active');
+    }
+
+    // Abrir desde botón + del topbar
+    if (topbarAddBtn) topbarAddBtn.addEventListener('click', openAsistente);
+
+    // Abrir desde botón "Nuevo paciente" en la sección Pacientes
+    const addPatientBtn = document.getElementById('addPatientBtn');
+    if (addPatientBtn) addPatientBtn.addEventListener('click', openAsistente);
+
+    // Cerrar modal
+    if (asistenteClose) asistenteClose.addEventListener('click', closeAsistente);
+    if (asistenteOverlay) {
+        asistenteOverlay.addEventListener('click', (e) => {
+            if (e.target === asistenteOverlay) closeAsistente();
+        });
+    }
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && asistenteOverlay?.classList.contains('active')) closeAsistente();
+    });
+
+    // Guardar paciente desde el modal
+    if (asistenteSaveBtn) {
+        asistenteSaveBtn.addEventListener('click', async () => {
+            const nombre = (document.getElementById('asiNombre')?.value || '').trim();
+            const apellidos = (document.getElementById('asiApellidos')?.value || '').trim();
+            const telefono = (document.getElementById('asiTelefono')?.value || '').trim();
+            const email = (document.getElementById('asiEmail')?.value || '').trim();
+
+            if (!nombre) {
+                alert('El nombre del paciente es obligatorio.');
+                return;
+            }
+
+            const fullName = nombre + (apellidos ? ' ' + apellidos : '');
+
+            try {
+                const data = await apiPost(`${API}/pacientes/crear`, {
+                    nombre: fullName,
+                    telefono,
+                    email,
+                });
+
+                if (data.ok) {
+                    alert('Paciente creado correctamente.');
+                    closeAsistente();
+                    loadPacientes();
+                } else {
+                    alert(data.error || 'Error al crear paciente.');
+                }
+            } catch (err) {
+                alert('Error de conexión.');
+            }
         });
     }
 
