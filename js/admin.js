@@ -506,6 +506,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         <td data-label="Acciones">
                             <button class="action-btn btn-ver-ficha" data-id="${p.id}" title="Ver Ficha"><i class="fa-regular fa-eye"></i></button>
                             <button class="action-btn" title="Editar" onclick="event.stopPropagation()"><i class="fa-solid fa-pen"></i></button>
+                            <!-- Nuevos botones directos en la tabla -->
+                            <button class="action-btn sms-icon js-table-sms" data-tel="${p.telefono || ''}" title="Enviar SMS" onclick="event.stopPropagation()"><i class="fa-solid fa-comment-sms"></i></button>
+                            <button class="action-btn wa-icon js-table-wa" data-tel="${p.telefono || ''}" title="Enviar WhatsApp" onclick="event.stopPropagation()"><i class="fa-brands fa-whatsapp"></i></button>
+                            <button class="action-btn cal-icon js-table-cal" title="Asignar Cita" onclick="event.stopPropagation()"><i class="fa-solid fa-calendar-plus"></i></button>
                         </td>
                     </tr>`;
                 });
