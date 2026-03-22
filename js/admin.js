@@ -477,6 +477,7 @@ document.addEventListener('DOMContentLoaded', () => {
        PACIENTES – Datos reales desde PHP
        ====================================================== */
     const pacientesBody = document.getElementById('pacientesTableBody');
+    let currentPacientes = [];
 
     async function loadPacientes(buscar = '') {
         if (!pacientesBody) return;
@@ -489,6 +490,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await apiGet(url);
 
             if (data.ok && data.pacientes) {
+                currentPacientes = data.pacientes;
                 if (data.pacientes.length === 0) {
                     pacientesBody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:#718096;">No se encontraron pacientes.</td></tr>';
                     return;
@@ -496,14 +498,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 let html = '';
                 data.pacientes.forEach(p => {
-                    html += `<tr>
+                    html += `<tr class="paciente-row" data-id="${p.id}" style="cursor:pointer;">
                         <td data-label="ID"><span style="color:#718096;font-size:.8rem">#${String(p.id).padStart(5, '0')}</span></td>
-                        <td data-label="Nombre"><strong>${p.nombre}</strong><br><span style="font-size:.75rem;color:#718096">${p.email || '—'}</span></td>
+                        <td data-label="Nombre"><strong>${p.nombre} ${p.apellidos || ''}</strong><br><span style="font-size:.75rem;color:#718096">${p.email || '—'}</span></td>
                         <td data-label="Contacto">${p.telefono || '—'}</td>
-                        <td data-label="Última Visita">${p.ultima_visita_fmt}</td>
+                        <td data-label="Última Visita">${p.ultima_visita_fmt || '—'}</td>
                         <td data-label="Acciones">
-                            <button class="action-btn" title="Ver Ficha"><i class="fa-regular fa-eye"></i></button>
-                            <button class="action-btn" title="Editar"><i class="fa-solid fa-pen"></i></button>
+                            <button class="action-btn btn-ver-ficha" data-id="${p.id}" title="Ver Ficha"><i class="fa-regular fa-eye"></i></button>
+                            <button class="action-btn" title="Editar" onclick="event.stopPropagation()"><i class="fa-solid fa-pen"></i></button>
                         </td>
                     </tr>`;
                 });
@@ -514,6 +516,181 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
             pacientesBody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:#e53e3e;">Error de conexión.</td></tr>';
         }
+    }
+
+    // Delegación de eventos para clics en la tabla
+    if (pacientesBody) {
+        pacientesBody.addEventListener('click', (e) => {
+            const row = e.target.closest('.paciente-row');
+            if (row) {
+                const id = row.getAttribute('data-id');
+                if (id) openFichaPaciente(id);
+            }
+        });
+    }
+
+    /* ======================================================
+       FICHA DE PACIENTE LOGIC
+       ====================================================== */
+    const secPacientes = document.getElementById('pacientes');
+    const secFicha = document.getElementById('fichaPaciente');
+    const btnBackToPacientes = document.getElementById('btnBackToPacientes');
+    const checkExclusivo = document.getElementById('fCheckExclusivo');
+    const boxExclusivo = document.getElementById('fBoxExclusivo');
+
+    if (btnBackToPacientes) {
+        btnBackToPacientes.addEventListener('click', () => {
+            secFicha.classList.remove('active');
+            secPacientes.classList.add('active');
+            loadPacientes(); // Reload just in case
+        });
+    }
+
+    if (checkExclusivo) {
+        checkExclusivo.addEventListener('change', (e) => {
+            boxExclusivo.style.display = e.target.checked ? 'block' : 'none';
+        });
+    }
+
+    window.openFichaPaciente = function(id) {
+        const paciente = currentPacientes.find(p => p.id == id);
+        if (!paciente) return;
+
+        // Hide list, show ficha
+        if (secPacientes) secPacientes.classList.remove('active');
+        if (secFicha) secFicha.classList.add('active');
+
+        // Populate fields
+        document.getElementById('fichaId').value = paciente.id;
+        document.getElementById('fichaMainName').textContent = `${paciente.nombre} ${paciente.apellidos || ''}`.trim();
+        document.getElementById('fNombre').value = paciente.nombre || '';
+        document.getElementById('fApellidos').value = paciente.apellidos || '';
+        document.getElementById('fNumHistoria').value = String(paciente.id).padStart(5, '0');
+        
+        document.getElementById('fTelefono').value = paciente.telefono || '';
+        document.getElementById('fEmail').value = paciente.email || '';
+        
+        document.getElementById('fTipoDoc').value = paciente.tipo_documento || 'DNI/NIF/CIF/NIE';
+        document.getElementById('fNumDoc').value = paciente.documento || '';
+        document.getElementById('fSexo').value = paciente.sexo || '';
+        
+        if (paciente.fecha_nacimiento) {
+            const dStr = typeof paciente.fecha_nacimiento === 'string' ? paciente.fecha_nacimiento.substring(0, 10) : '';
+            document.getElementById('fNacimiento').value = dStr;
+        } else {
+            document.getElementById('fNacimiento').value = '';
+        }
+
+        document.getElementById('fOcupacion').value = paciente.ocupacion || '';
+        document.getElementById('fDirFacturacion').value = paciente.direccion_facturacion || '';
+        document.getElementById('fDirAdicional').value = paciente.direccion_adicional || '';
+        document.getElementById('fCodPostal').value = paciente.codigo_postal || '';
+        document.getElementById('fLocalidad').value = paciente.localidad || '';
+        document.getElementById('fProvincia').value = paciente.provincia || '';
+        document.getElementById('fPais').value = paciente.pais || '';
+        document.getElementById('fObservaciones').value = paciente.notas || '';
+
+        // Checkboxes
+        if (checkExclusivo) {
+            const ex = (paciente.exclusivo_profesionales && paciente.exclusivo_profesionales !== '');
+            checkExclusivo.checked = ex;
+            if (boxExclusivo) boxExclusivo.style.display = ex ? 'block' : 'none';
+            if (ex && document.getElementById('fSelectExclusivo')) {
+                document.getElementById('fSelectExclusivo').value = paciente.exclusivo_profesionales;
+            }
+        }
+
+        const chkProt = document.getElementById('fCheckProteccion');
+        if (chkProt) chkProt.checked = !!paciente.firmado_proteccion_datos;
+        
+        const chkPub = document.getElementById('fCheckPublicidad');
+        if (chkPub) chkPub.checked = !!paciente.recibir_publicidad;
+
+        const chkRec = document.getElementById('fCheckRecordatorios');
+        // By default should be true based on the DB or design, but we map to DB
+        if (chkRec) chkRec.checked = paciente.recordatorios_automaticos !== 0; // Assuming default 1 or true
+    };
+
+    // Icons Logic
+    const fichaIconSMS = document.getElementById('fichaIconSMS');
+    const fichaIconWA = document.getElementById('fichaIconWA');
+    const fichaIconCal = document.getElementById('fichaIconCal');
+
+    if (fichaIconSMS) {
+        fichaIconSMS.addEventListener('click', () => {
+            const t = document.getElementById('fTelefono').value.trim();
+            if (t) window.location.href = `sms:+34${t}`;
+            else alert('El paciente no tiene teléfono guardado.');
+        });
+    }
+
+    if (fichaIconWA) {
+        fichaIconWA.addEventListener('click', () => {
+            const t = document.getElementById('fTelefono').value.trim().replace(/\\D/g, '');
+            if (t) window.open(`https://wa.me/34${t}`, '_blank');
+            else alert('El paciente no tiene teléfono válido.');
+        });
+    }
+
+    if (fichaIconCal) {
+        fichaIconCal.addEventListener('click', () => {
+            alert('Funcionalidad de Asignar Cita directa. ¡Próximamente conectada al calendario!');
+        });
+    }
+
+    // Save Ficha
+    const btnGuardarFicha = document.getElementById('btnGuardarFicha');
+    if (btnGuardarFicha) {
+        btnGuardarFicha.addEventListener('click', async () => {
+            const id = document.getElementById('fichaId').value;
+            const payload = {
+                id,
+                nombre: document.getElementById('fNombre').value.trim(),
+                apellidos: document.getElementById('fApellidos').value.trim(),
+                telefono: document.getElementById('fTelefono').value.trim(),
+                email: document.getElementById('fEmail').value.trim(),
+                tipo_documento: document.getElementById('fTipoDoc').value,
+                documento: document.getElementById('fNumDoc').value.trim(),
+                sexo: document.getElementById('fSexo').value,
+                fecha_nacimiento: document.getElementById('fNacimiento').value || null,
+                ocupacion: document.getElementById('fOcupacion').value.trim(),
+                direccion_facturacion: document.getElementById('fDirFacturacion').value.trim(),
+                direccion_adicional: document.getElementById('fDirAdicional').value.trim(),
+                codigo_postal: document.getElementById('fCodPostal').value.trim(),
+                localidad: document.getElementById('fLocalidad').value.trim(),
+                provincia: document.getElementById('fProvincia').value.trim(),
+                pais: document.getElementById('fPais').value.trim(),
+                notas: document.getElementById('fObservaciones').value.trim(),
+                exclusivo_profesionales: document.getElementById('fCheckExclusivo').checked ? document.getElementById('fSelectExclusivo').value : '',
+                firmado_proteccion_datos: document.getElementById('fCheckProteccion').checked ? 1 : 0,
+                recibir_publicidad: document.getElementById('fCheckPublicidad').checked ? 1 : 0,
+                recordatorios_automaticos: document.getElementById('fCheckRecordatorios').checked ? 1 : 0
+            };
+
+            const btn = btnGuardarFicha;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = 'Guardando...';
+            btn.disabled = true;
+
+            try {
+                // We reuse the POST endpoint to update by passing an ID
+                const res = await apiPost(`${API}/pacientes`, payload);
+                if (res.ok) {
+                    alert('Ficha guardada exitosamente.');
+                    document.getElementById('fichaMainName').textContent = `${payload.nombre} ${payload.apellidos}`.trim();
+                    // Refetch current patient data locally to avoid re-fetching all
+                    const idx = currentPacientes.findIndex(p => p.id == id);
+                    if (idx > -1) currentPacientes[idx] = { ...currentPacientes[idx], ...payload };
+                } else {
+                    alert('Error: ' + res.error);
+                }
+            } catch (err) {
+                alert('Error de conexión al guardar la ficha.');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        });
     }
 
     // Búsqueda de pacientes

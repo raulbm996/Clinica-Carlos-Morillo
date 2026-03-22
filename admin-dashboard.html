@@ -196,6 +196,226 @@
                 <tbody id="pacientesTableBody"></tbody>
               </table>
             </div>
+        <!-- ===== FICHA DE PACIENTE ===== -->
+        <section id="fichaPaciente" class="view-section">
+          <!-- Header Ficha -->
+          <div class="ficha-top">
+            <div class="ficha-top-left">
+              <button class="btn-back" id="btnBackToPacientes" title="Volver"><i class="fa-solid fa-arrow-left"></i></button>
+              <h3 id="fichaMainName">Nombre del Paciente</h3>
+            </div>
+            <div class="ficha-top-right">
+              <button class="action-icon sms-icon" id="fichaIconSMS" title="Enviar SMS"><i class="fa-solid fa-comment-sms"></i></button>
+              <button class="action-icon wa-icon" id="fichaIconWA" title="Enviar WhatsApp"><i class="fa-brands fa-whatsapp"></i></button>
+              <button class="action-icon cal-icon" id="fichaIconCal" title="Asignar Cita"><i class="fa-solid fa-calendar-plus"></i></button>
+            </div>
+          </div>
+
+          <div class="ficha-body">
+            <input type="hidden" id="fichaId">
+            
+            <!-- Bloque principal de datos -->
+            <div class="ficha-form-grid">
+              <!-- Nombre y Apellidos / Número de Historia -->
+              <div class="ficha-row">
+                <div class="ficha-field">
+                  <label for="fNombre">Nombre *</label>
+                  <input type="text" id="fNombre" placeholder=" ">
+                </div>
+                <div class="ficha-field">
+                  <label for="fApellidos">Apellidos</label>
+                  <input type="text" id="fApellidos" placeholder=" ">
+                </div>
+                <div class="ficha-field">
+                  <label for="fNumHistoria">Número de historia de paciente *</label>
+                  <input type="text" id="fNumHistoria" readonly placeholder=" " style="background:#f9fafb;">
+                </div>
+              </div>
+
+              <!-- Teléfono, Email, Referido -->
+              <div class="ficha-row">
+                <div class="ficha-field" style="flex:0.1; min-width:60px;">
+                  <label for="fPrefijo">Pref</label>
+                  <input type="text" id="fPrefijo" value="+34" readonly style="background:#f9fafb; text-align:center;">
+                </div>
+                <div class="ficha-field" style="flex:0.9;">
+                  <label for="fTelefono">Teléfono</label>
+                  <input type="text" id="fTelefono" placeholder=" ">
+                </div>
+                <div class="ficha-field">
+                  <label for="fReferido">Derivado por</label>
+                  <input type="text" id="fReferido" placeholder=" " disabled>
+                </div>
+              </div>
+
+              <!-- Email y Etiquetas -->
+              <div class="ficha-row">
+                <div class="ficha-field">
+                  <label for="fEmail">Email</label>
+                  <input type="email" id="fEmail" placeholder=" ">
+                </div>
+                <div class="ficha-field">
+                  <label for="fEtiquetas">Etiquetas</label>
+                  <input type="text" id="fEtiquetas" placeholder="Buscar etiqueta..." disabled>
+                </div>
+              </div>
+
+              <!-- Documento y Fecha de Nacimiento -->
+              <div class="ficha-row">
+                <div class="ficha-field">
+                  <label for="fTipoDoc">Tipo de documento identificativo</label>
+                  <select id="fTipoDoc">
+                    <option value="DNI/NIF/CIF/NIE">DNI/NIF/CIF/NIE</option>
+                    <option value="Pasaporte">Pasaporte</option>
+                  </select>
+                </div>
+                <div class="ficha-field">
+                  <label for="fNumDoc">Documento identificativo</label>
+                  <input type="text" id="fNumDoc" placeholder=" ">
+                </div>
+                <div class="ficha-field" style="flex:0.3; min-width:100px;">
+                  <label for="fSexo">Sexo</label>
+                  <select id="fSexo">
+                    <option value=""></option>
+                    <option value="H">H</option>
+                    <option value="M">M</option>
+                  </select>
+                </div>
+                <div class="ficha-field">
+                  <label for="fNacimiento">Fecha de nacimiento</label>
+                  <input type="date" id="fNacimiento">
+                </div>
+              </div>
+
+              <!-- Ocupación -->
+              <div class="ficha-row">
+                <div class="ficha-field">
+                  <label for="fOcupacion">Ocupación</label>
+                  <input type="text" id="fOcupacion" placeholder=" ">
+                </div>
+                <div class="ficha-field" style="flex:1;">
+                  <!-- Spacing -->
+                </div>
+              </div>
+              
+              <!-- Divider Dirección -->
+              <hr class="ficha-divider">
+
+              <!-- Dirección Facturación -->
+              <div class="ficha-row">
+                <div class="ficha-field" style="flex: 1;">
+                  <label for="fDirFacturacion">Dirección de facturación</label>
+                  <input type="text" id="fDirFacturacion" placeholder="Introduce una ubicación">
+                </div>
+              </div>
+
+              <div class="ficha-row">
+                <div class="ficha-field" style="flex: 1;">
+                  <label for="fDirAdicional">Dirección adicional (escalera, pta...)</label>
+                  <input type="text" id="fDirAdicional" placeholder=" ">
+                </div>
+              </div>
+
+              <div class="ficha-row">
+                <div class="ficha-field">
+                  <label for="fCodPostal">Código postal</label>
+                  <input type="text" id="fCodPostal" placeholder=" ">
+                </div>
+                <div class="ficha-field">
+                  <label for="fLocalidad">Localidad</label>
+                  <input type="text" id="fLocalidad" placeholder=" ">
+                </div>
+              </div>
+
+              <div class="ficha-row">
+                <div class="ficha-field">
+                  <label for="fProvincia">Provincia</label>
+                  <input type="text" id="fProvincia" placeholder=" ">
+                </div>
+                <div class="ficha-field">
+                  <label for="fPais">País</label>
+                  <input type="text" id="fPais" placeholder=" ">
+                </div>
+              </div>
+              
+              <hr class="ficha-divider">
+
+              <!-- Observaciones -->
+              <div class="ficha-editor-container">
+                <label>Observaciones</label>
+                <div class="ficha-editor-toolbar">
+                  <button type="button"><i class="fa-solid fa-bold"></i></button>
+                  <button type="button"><i class="fa-solid fa-italic"></i></button>
+                  <button type="button"><i class="fa-solid fa-underline"></i></button>
+                  <div class="toolbar-sep"></div>
+                  <button type="button"><i class="fa-solid fa-link"></i></button>
+                  <button type="button"><i class="fa-solid fa-quote-right"></i></button>
+                  <div class="toolbar-sep"></div>
+                  <button type="button"><i class="fa-solid fa-list-ul"></i></button>
+                  <button type="button"><i class="fa-solid fa-list-ol"></i></button>
+                  <div class="toolbar-sep"></div>
+                  <span style="font-size:0.8rem; color:#718096; padding:0 8px;">Normal <i class="fa-solid fa-caret-down"></i></span>
+                </div>
+                <textarea id="fObservaciones" placeholder="Escribe aquí tu contenido..."></textarea>
+              </div>
+
+              <!-- Tarjetas Sanitarias -->
+              <div class="ficha-card-block">
+                <div class="ficha-card-header">
+                  <i class="fa-regular fa-credit-card c-teal"></i>
+                  <span style="color:#3bb2b8; font-size:0.8rem; font-weight:700;">TARJETAS SANITARIAS</span>
+                </div>
+                <button type="button" class="btn-card-add"><i class="fa-solid fa-plus"></i></button>
+              </div>
+
+              <!-- Configuración final -->
+              <div class="ficha-config-box">
+                <!-- Profesional Exclusivo -->
+                <label class="ficha-check-label">
+                  <input type="checkbox" id="fCheckExclusivo">
+                  <span class="chk-text">Paciente exclusivo para los siguientes profesionales</span>
+                </label>
+                <div class="ficha-field select-exclusivo" id="fBoxExclusivo">
+                  <label for="fSelectExclusivo">Profesionales asignados</label>
+                  <select id="fSelectExclusivo">
+                    <!-- Dinámico -->
+                    <option value="Carlos Morillo">Carlos Morillo Sicilia</option>
+                  </select>
+                </div>
+                <p class="ficha-hint">Si marcas esta casilla, sólo los profesionales seleccionados verán a este paciente. Para todos los demás, será invisible, salvo que tengan el permiso Ver todos los pacientes.</p>
+
+                <!-- Protección de datos -->
+                <label class="ficha-check-label mt-3">
+                  <input type="checkbox" id="fCheckProteccion">
+                  <span class="chk-text" style="font-weight:700; text-transform:uppercase;">El paciente ha firmado el documento de protección de datos.</span>
+                </label>
+                <p class="ficha-hint ml-28">Por favor, asegúrate de haber incluido el documento firmado en la lista de adjuntos del paciente.</p>
+
+                <!-- Publicidad -->
+                <label class="ficha-check-label mt-3">
+                  <input type="checkbox" id="fCheckPublicidad">
+                  <span class="chk-text" style="font-weight:700; text-transform:uppercase;">Recibir publicidad.</span>
+                </label>
+                <p class="ficha-hint ml-28">El paciente da su consentimiento para que se le pueda enviar información promocional y ofertas publicitarias.</p>
+
+                <!-- Recordatorios -->
+                <label class="ficha-check-label mt-3">
+                  <input type="checkbox" id="fCheckRecordatorios" checked>
+                  <span class="chk-text" style="font-weight:700; text-transform:uppercase;">Recordatorios automáticos</span>
+                </label>
+                <p class="ficha-hint ml-28">Con la casilla marcada, la configuración de recordatorios del centro se aplicará a las citas de este paciente. Con la casilla desmarcada, las citas que se creen para este paciente no llevarán recordatorios de ningún tipo.</p>
+
+                <!-- Botón de firmar -->
+                <button type="button" class="btn-firmar-doc mt-4">Firmar un documento</button>
+                <p class="ficha-hint text-red">Para firmar un documento debes rellenar antes NOMBRE, APELLIDOS y NIF/DNI del paciente</p>
+              </div>
+
+              <!-- Acciones guardado -->
+              <div class="ficha-bottom-actions">
+                <button type="button" class="btn-clinni-primary" id="btnGuardarFicha"><i class="fa-solid fa-floppy-disk"></i> Guardar Ficha</button>
+              </div>
+
+            </div>
           </div>
         </section>
 

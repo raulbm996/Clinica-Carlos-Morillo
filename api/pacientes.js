@@ -7,26 +7,70 @@ const { requireAuth } = require('../lib/auth');
 module.exports = async function handler(req, res) {
     if (req.method === 'OPTIONS') return res.status(200).end();
 
-    // --- CREAR PACIENTE (admin, protegido) ---
+    // --- CREAR/ACTUALIZAR PACIENTE (admin, protegido) ---
     if (req.method === 'POST') {
         const user = requireAuth(req, res);
         if (!user) return;
-        const { nombre, telefono, email, fecha_nacimiento, notas } = req.body || {};
+        
+        const { id, nombre, apellidos, telefono, email, fecha_nacimiento, notas, 
+                tipo_documento, documento, sexo, ocupacion, direccion_facturacion, 
+                direccion_adicional, codigo_postal, localidad, provincia, pais, 
+                exclusivo_profesionales, firmado_proteccion_datos, 
+                recibir_publicidad, recordatorios_automaticos } = req.body || {};
+
         if (!nombre?.trim()) {
             return res.status(400).json({ ok: false, error: 'El nombre es obligatorio.' });
         }
+        
         try {
-            const result = await query(
-                'INSERT INTO pacientes (nombre, telefono, email, fecha_nacimiento, notas) VALUES (?, ?, ?, ?, ?)',
-                [nombre.trim(), (telefono || '').trim(), (email || '').trim(), fecha_nacimiento || null, notas || null]
-            );
-            return res.status(200).json({
-                ok: true,
-                message: 'Paciente creado correctamente.',
-                id: result.insertId,
-            });
+            if (id) {
+                // UPDATE
+                await query(
+                    `UPDATE pacientes SET 
+                        nombre=?, apellidos=?, telefono=?, email=?, fecha_nacimiento=?, notas=?,
+                        tipo_documento=?, documento=?, sexo=?, ocupacion=?, direccion_facturacion=?,
+                        direccion_adicional=?, codigo_postal=?, localidad=?, provincia=?, pais=?,
+                        exclusivo_profesionales=?, firmado_proteccion_datos=?,
+                        recibir_publicidad=?, recordatorios_automaticos=?
+                     WHERE id=?`,
+                    [
+                        nombre.trim(), (apellidos||'').trim(), (telefono||'').trim(), (email||'').trim(), fecha_nacimiento || null, notas || null,
+                        tipo_documento||'DNI/NIF/CIF/NIE', documento||'', sexo||'', ocupacion||'', direccion_facturacion||'',
+                        direccion_adicional||'', codigo_postal||'', localidad||'', provincia||'', pais||'',
+                        exclusivo_profesionales||'', firmado_proteccion_datos?1:0, recibir_publicidad?1:0, recordatorios_automaticos?1:0,
+                        id
+                    ]
+                );
+                return res.status(200).json({
+                    ok: true,
+                    message: 'Paciente actualizado correctamente.',
+                    id: id,
+                });
+            } else {
+                // INSERT
+                const result = await query(
+                    `INSERT INTO pacientes (
+                        nombre, apellidos, telefono, email, fecha_nacimiento, notas,
+                        tipo_documento, documento, sexo, ocupacion, direccion_facturacion,
+                        direccion_adicional, codigo_postal, localidad, provincia, pais,
+                        exclusivo_profesionales, firmado_proteccion_datos,
+                        recibir_publicidad, recordatorios_automaticos
+                    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+                    [
+                        nombre.trim(), (apellidos||'').trim(), (telefono||'').trim(), (email||'').trim(), fecha_nacimiento || null, notas || null,
+                        tipo_documento||'DNI/NIF/CIF/NIE', documento||'', sexo||'', ocupacion||'', direccion_facturacion||'',
+                        direccion_adicional||'', codigo_postal||'', localidad||'', provincia||'', pais||'',
+                        exclusivo_profesionales||'', firmado_proteccion_datos?1:0, recibir_publicidad?1:0, recordatorios_automaticos?1:0
+                    ]
+                );
+                return res.status(200).json({
+                    ok: true,
+                    message: 'Paciente creado correctamente.',
+                    id: result.insertId,
+                });
+            }
         } catch (err) {
-            console.error('Error creando paciente:', err);
+            console.error('Error guardando paciente:', err);
             return res.status(500).json({ ok: false, error: 'Error interno del servidor.' });
         }
     }

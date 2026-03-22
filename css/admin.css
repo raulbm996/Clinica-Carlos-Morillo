@@ -1816,3 +1816,391 @@
         padding: 12px 14px 18px;
     }
 }
+
+/* ============================================================
+   FICHA DE PACIENTE
+   ============================================================ */
+#fichaPaciente {
+    display: none;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 24px;
+    flex-direction: column;
+}
+
+#fichaPaciente.active {
+    display: flex;
+}
+
+/* Header de la Ficha */
+.ficha-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 20px;
+    margin-bottom: 24px;
+}
+
+.ficha-top-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.btn-back {
+    background: #f0f2f5;
+    color: #4a5568;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.2s, color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-back:hover {
+    background: #e2e8f0;
+    color: #1a202c;
+}
+
+#fichaMainName {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a202c;
+    margin: 0;
+}
+
+/* Iconos de Ficha */
+.ficha-top-right {
+    display: flex;
+    gap: 12px;
+}
+
+.action-icon {
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: filter 0.2s, transform 0.1s;
+    background: transparent;
+}
+
+.action-icon:hover {
+    filter: brightness(0.9);
+}
+
+.action-icon:active {
+    transform: scale(0.96);
+}
+
+.sms-icon {
+    background: #f1c40f;
+    color: #fff;
+}
+
+.wa-icon {
+    background: #25d366;
+    color: #fff;
+}
+
+.cal-icon {
+    background: #a0aec0;
+    color: #fff;
+}
+
+/* Cuerpo de la Ficha */
+.ficha-body {
+    flex: 1;
+}
+
+.ficha-form-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Filas y Campos Ficha */
+.ficha-row {
+    display: flex;
+    gap: 20px;
+}
+
+.ficha-field {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.ficha-field label {
+    position: absolute;
+    top: -8px;
+    left: 10px;
+    background: #fff;
+    padding: 0 4px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #718096;
+    z-index: 1;
+    white-space: nowrap;
+}
+
+.ficha-field input,
+.ficha-field select {
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+    padding: 14px 12px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: #1a202c;
+    background: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.ficha-field input:focus,
+.ficha-field select:focus {
+    outline: none;
+    border-color: var(--ck-teal, #3bb2b8);
+    box-shadow: 0 0 0 3px rgba(59, 178, 184, 0.12);
+}
+
+.ficha-field input:disabled,
+.ficha-field select:disabled {
+    background: #f7fafc;
+    color: #a0aec0;
+    cursor: not-allowed;
+}
+
+/* Divisores */
+.ficha-divider {
+    border: 0;
+    border-top: 1px dashed #e2e8f0;
+    margin: 12px 0;
+}
+
+/* Observaciones Editor Mockup */
+.ficha-editor-container {
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+    margin-top: 8px;
+}
+
+.ficha-editor-container > label {
+    position: absolute;
+    top: -8px;
+    left: 10px;
+    background: #fff;
+    padding: 0 4px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #718096;
+    z-index: 1;
+}
+
+.ficha-editor-toolbar {
+    display: flex;
+    align-items: center;
+    background: #f7fafc;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 8px;
+    gap: 4px;
+    padding-top: 14px; /* Space for label */
+}
+
+.ficha-editor-toolbar button {
+    background: none;
+    border: none;
+    color: #4a5568;
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ficha-editor-toolbar button:hover {
+    background: #e2e8f0;
+}
+
+.toolbar-sep {
+    width: 1px;
+    height: 18px;
+    background: #cbd5e0;
+    margin: 0 4px;
+}
+
+.ficha-editor-container textarea {
+    width: 100%;
+    min-height: 140px;
+    border: none;
+    padding: 12px;
+    resize: vertical;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: #1a202c;
+}
+
+.ficha-editor-container textarea:focus {
+    outline: none;
+}
+
+/* Tarjetas Sanitarias Block */
+.ficha-card-block {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+    padding: 12px 16px;
+}
+
+.ficha-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.c-teal {
+    color: #3bb2b8;
+}
+
+.btn-card-add {
+    background: none;
+    border: 1px solid #3bb2b8;
+    color: #3bb2b8;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s;
+}
+
+.btn-card-add:hover {
+    background: #3bb2b8;
+    color: #fff;
+}
+
+/* Checkboxes & Config */
+.ficha-config-box {
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+    padding: 24px;
+    background: #fff;
+}
+
+.ficha-check-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.ficha-check-label input[type="checkbox"] {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #cbd5e0;
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+    background: #fff;
+    flex-shrink: 0;
+}
+
+.ficha-check-label input[type="checkbox"]:checked {
+    background: #3bb2b8;
+    border-color: #3bb2b8;
+}
+
+.ficha-check-label input[type="checkbox"]:checked::after {
+    content: "✓";
+    position: absolute;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 900;
+    left: 2px;
+    top: -2px;
+}
+
+.chk-text {
+    font-size: 0.9rem;
+    color: #3bb2b8; /* Match screenshot color for the first element, handled generally here */
+    font-weight: 600;
+}
+
+.mt-3 { margin-top: 20px; }
+.mt-4 { margin-top: 24px; }
+.ml-28 { margin-left: 28px; }
+
+.ficha-hint {
+    font-size: 0.75rem;
+    color: #a0aec0;
+    margin-top: 4px;
+    margin-bottom: 0;
+}
+
+.text-red {
+    color: #e53e3e !important;
+}
+
+.select-exclusivo {
+    margin-top: 12px;
+    display: none; /* Only show when checked */
+}
+
+.btn-firmar-doc {
+    width: 100%;
+    background: #bee3f8;
+    color: #2b6cb0;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+/* Bottom Save Actions */
+.ficha-bottom-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+}
+
+/* Responsive Ficha */
+@media (max-width: 768px) {
+    .ficha-row {
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .ficha-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+}
