@@ -202,115 +202,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loadSession();
 
-    let selectedMemberId = null;
-    let selectedMemberName = '';
-
-    const membersButton = document.getElementById('membersButton');
-    const membersPanel = document.getElementById('membersPanel');
-    const membersList = document.getElementById('membersList');
-    const selectedMemberLabel = document.getElementById('selectedMemberLabel');
-    const clearMemberFilterButton = document.getElementById('clearMemberFilter');
-
-    function updateSelectedMemberLabel() {
-        if (selectedMemberName) {
-            selectedMemberLabel.textContent = `(${selectedMemberName})`;
-            membersButton.setAttribute('aria-expanded', 'true');
-        } else {
-            selectedMemberLabel.textContent = '';
-            membersButton.setAttribute('aria-expanded', 'false');
-        }
-    }
-
-    function closeMembersPanel() {
-        if (membersPanel) {
-            membersPanel.classList.remove('open');
-            membersPanel.setAttribute('aria-hidden', 'true');
-        }
-    }
-
-    function renderMembersList(usuarios) {
-        if (!membersList) return;
-        if (!usuarios || usuarios.length === 0) {
-            membersList.innerHTML = '<div class="members-loading">No hay miembros disponibles.</div>';
-            return;
-        }
-
-        membersList.innerHTML = '';
-        usuarios.forEach(u => {
-            const item = document.createElement('div');
-            item.className = 'member-item';
-            item.innerHTML = `
-                <div class="member-meta">
-                    <span class="member-name">${u.nombre} ${u.apellidos}</span>
-                    <span class="member-role">${u.rol || 'Área no definida'}</span>
-                </div>
-                <button type="button" class="member-select-btn" data-id="${u.id}" data-name="${u.nombre} ${u.apellidos}">Ver citas</button>
-            `;
-            membersList.appendChild(item);
-        });
-    }
-
-    async function loadMembersPanel() {
-        if (!membersList) return;
-        membersList.innerHTML = '<div class="members-loading">Cargando…</div>';
-        try {
-            const data = await apiGet(`${API}/usuario`);
-            if (!data?.ok || !Array.isArray(data.usuarios)) {
-                membersList.innerHTML = '<div class="members-loading">No se pudieron cargar los miembros.</div>';
-                return;
-            }
-            renderMembersList(data.usuarios);
-        } catch (err) {
-            membersList.innerHTML = '<div class="members-loading">Error cargando miembros.</div>';
-            console.warn('Error cargando miembros:', err);
-        }
-    }
-
-    if (membersButton) {
-        membersButton.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (membersPanel) {
-                const isOpen = membersPanel.classList.toggle('open');
-                membersPanel.setAttribute('aria-hidden', (!isOpen).toString());
-                if (isOpen) loadMembersPanel();
-            }
-        });
-    }
-
-    if (clearMemberFilterButton) {
-        clearMemberFilterButton.addEventListener('click', (e) => {
-            e.stopPropagation();
-            selectedMemberId = null;
-            selectedMemberName = '';
-            updateSelectedMemberLabel();
-            closeMembersPanel();
-            renderCalendar();
-        });
-    }
-
-    document.addEventListener('click', (e) => {
-        if (membersPanel && membersButton && !membersPanel.contains(e.target) && !membersButton.contains(e.target)) {
-            closeMembersPanel();
-        }
-    });
-
-    document.addEventListener('click', (e) => {
-        const button = e.target.closest('.member-select-btn');
-        if (button) {
-            const id = button.dataset.id;
-            const name = button.dataset.name;
-            if (id) {
-                selectedMemberId = id;
-                selectedMemberName = name || '';
-                updateSelectedMemberLabel();
-                closeMembersPanel();
-                renderCalendar();
-            }
-        }
-    });
-
-    updateSelectedMemberLabel();
-
     /* --- Member tooltips --- */
     const tooltip = document.createElement('div');
     tooltip.className = 'member-tooltip';
@@ -575,8 +466,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const data = await apiGet(`${API}/citas/listar?fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}`);
             if (data.ok && data.citas) {
-                const citas = selectedMemberId ? data.citas.filter(cita => String(cita.usuario_id) === String(selectedMemberId)) : data.citas;
-                citas.forEach(cita => {
+                data.citas.forEach(cita => {
                     const citaFecha = formatLocalDate(cita.fecha);
                     const horaNum = parseInt(cita.hora.split(':')[0], 10);
                     const cell = calGrid.querySelector(`.cal-cell[data-date="${citaFecha}"][data-hour="${horaNum}"]`);
