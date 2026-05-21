@@ -350,23 +350,26 @@
               <hr class="ficha-divider">
 
               <!-- Observaciones -->
-              <div class="ficha-editor-container">
-                <label>Observaciones</label>
-                <div class="ficha-editor-toolbar">
-                  <button type="button"><i class="fa-solid fa-bold"></i></button>
-                  <button type="button"><i class="fa-solid fa-italic"></i></button>
-                  <button type="button"><i class="fa-solid fa-underline"></i></button>
-                  <div class="toolbar-sep"></div>
-                  <button type="button"><i class="fa-solid fa-link"></i></button>
-                  <button type="button"><i class="fa-solid fa-quote-right"></i></button>
-                  <div class="toolbar-sep"></div>
-                  <button type="button"><i class="fa-solid fa-list-ul"></i></button>
-                  <button type="button"><i class="fa-solid fa-list-ol"></i></button>
-                  <div class="toolbar-sep"></div>
-                  <span style="font-size:0.8rem; color:#718096; padding:0 8px;">Normal <i
-                      class="fa-solid fa-caret-down"></i></span>
+              <div class="ficha-observaciones-section">
+                <div class="ficha-section-header">
+                  <h3>Observaciones</h3>
                 </div>
-                <textarea id="fObservaciones" placeholder="Escribe aquí tu contenido..."></textarea>
+                <div class="ficha-observaciones-box">
+                  <div class="ficha-editor-toolbar">
+                    <button type="button"><i class="fa-solid fa-bold"></i></button>
+                    <button type="button"><i class="fa-solid fa-italic"></i></button>
+                    <button type="button"><i class="fa-solid fa-underline"></i></button>
+                    <div class="toolbar-sep"></div>
+                    <button type="button"><i class="fa-solid fa-link"></i></button>
+                    <button type="button"><i class="fa-solid fa-quote-right"></i></button>
+                    <div class="toolbar-sep"></div>
+                    <button type="button"><i class="fa-solid fa-list-ul"></i></button>
+                    <button type="button"><i class="fa-solid fa-list-ol"></i></button>
+                    <div class="toolbar-sep"></div>
+                    <span class="toolbar-label">Normal <i class="fa-solid fa-caret-down"></i></span>
+                  </div>
+                  <textarea id="fObservaciones" placeholder="Escribe aquí tu contenido..."></textarea>
+                </div>
               </div>
 
               <!-- Citas del paciente -->
@@ -440,12 +443,12 @@
                 <button type="button" class="btn-clinni-primary" id="btnGuardarFicha"><i
                     class="fa-solid fa-floppy-disk"></i> Guardar Ficha</button>
                 <div class="lopd-panel" style="display:inline-block;margin-left:12px;vertical-align:middle;">
-                    <div class="lopd-card">
+                  <div class="lopd-card">
                     <button type="button" class="btn btn-sm" id="btnExportarPaciente"><i
-                      class="fa-solid fa-file-export"></i> Exportar datos</button>
+                        class="fa-solid fa-file-export"></i> Exportar datos</button>
                     <button type="button" class="btn btn-sm btn-danger" id="btnEliminarPaciente"><i
-                      class="fa-solid fa-trash"></i> Eliminar paciente</button>
-                    </div>
+                        class="fa-solid fa-trash"></i> Eliminar paciente</button>
+                  </div>
                 </div>
               </div>
 

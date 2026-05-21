@@ -1999,27 +1999,23 @@
 }
 
 /* Observaciones Editor Mockup */
-.ficha-editor-container {
-    border: 1px solid #cbd5e0;
-    border-radius: 6px;
-    overflow: hidden;
-    position: relative;
-    margin-top: 8px;
-    background: #fff;
+.ficha-observaciones-section {
+    margin-top: 18px;
 }
 
-.ficha-editor-container>label {
-    position: absolute;
-    top: -14px;
-    left: 14px;
-    background: #fff;
-    padding: 0 10px;
-    font-size: 1rem;
+.ficha-section-header h3 {
+    margin: 0 0 10px;
+    font-size: 1.05rem;
     font-weight: 800;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
     color: #1f2937;
-    z-index: 2;
+    letter-spacing: 0.01em;
+}
+
+.ficha-observaciones-box {
+    border: 1px solid #cbd5e0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
 }
 
 .ficha-editor-toolbar {
@@ -2028,8 +2024,8 @@
     background: #f7fafc;
     border-bottom: 1px solid #e2e8f0;
     padding: 12px 14px;
-    gap: 8px;
-    min-height: 50px;
+    gap: 10px;
+    min-height: 52px;
 }
 
 .ficha-editor-toolbar button {
@@ -2057,23 +2053,28 @@
     margin: 0 4px;
 }
 
-.ficha-editor-container textarea {
+.ficha-observaciones-box textarea {
     width: 100%;
-    min-height: 240px;
+    min-height: 260px;
     border: none;
-    padding: 16px;
+    padding: 18px 16px;
     resize: vertical;
     font-family: inherit;
     font-size: 1rem;
-    line-height: 1.6;
+    line-height: 1.7;
     color: #1a202c;
-    background: #fff;
+    background: #fbfcfd;
     overflow: auto;
 }
 
-.ficha-editor-container textarea:focus {
+.ficha-observaciones-box textarea:focus {
     outline: none;
     background: #fff;
+}
+
+.toolbar-label {
+    font-size: 0.9rem;
+    color: #475569;
 }
 
 /* Tarjetas Sanitarias Block */
