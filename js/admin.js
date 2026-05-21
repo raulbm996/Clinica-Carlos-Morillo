@@ -699,7 +699,91 @@ document.addEventListener('DOMContentLoaded', () => {
         const chkRec = document.getElementById('fCheckRecordatorios');
         // By default should be true based on the DB or design, but we map to DB
         if (chkRec) chkRec.checked = paciente.recordatorios_automaticos !== 0; // Assuming default 1 or true
+
+        // Cargar citas del paciente
+        const citasContainer = document.getElementById('fPacienteCitas');
+        if (citasContainer) {
+            citasContainer.innerHTML = 'Cargando…';
+            loadFichaCitas(paciente.id, paciente.telefono || '');
+        }
     };
+
+    async function loadFichaCitas(pacienteId, telefono) {
+        const container = document.getElementById('fPacienteCitas');
+        if (!container) return;
+        try {
+            let url = `${API}/citas/listar`;
+            if (telefono && telefono.trim()) {
+                url += `?telefono=${encodeURIComponent(telefono.trim())}`;
+            } else if (pacienteId) {
+                url += `?paciente_id=${encodeURIComponent(pacienteId)}`;
+            }
+            const data = await apiGet(url);
+            if (!data.ok || !data.citas) {
+                container.innerHTML = '<div style="color:#e53e3e;">Error al cargar citas.</div>';
+                return;
+            }
+            if (data.citas.length === 0) {
+                container.innerHTML = '<div style="color:#718096;">No hay citas para este paciente.</div>';
+                return;
+            }
+            const list = document.createElement('div');
+            list.style.display = 'grid';
+            list.style.gap = '8px';
+            data.citas.forEach(c => {
+                const colors = SERVICE_COLORS[c.servicio] || SERVICE_COLORS.otro;
+                const item = document.createElement('div');
+                item.style.border = '1px solid #e6eef4';
+                item.style.padding = '8px';
+                item.style.borderRadius = '6px';
+                item.style.display = 'flex';
+                item.style.justifyContent = 'space-between';
+                item.style.alignItems = 'center';
+
+                const left = document.createElement('div');
+                left.innerHTML = `<strong style="display:block;color:${colors.text}">${c.fecha} ${c.hora}</strong><small style="color:#718096">${c.servicio}</small><div style="font-size:.85rem;color:#2d3748;margin-top:6px">${c.paciente_nombre}</div>`;
+
+                const right = document.createElement('div');
+                right.style.display = 'flex';
+                right.style.gap = '6px';
+
+                const status = document.createElement('span');
+                status.textContent = STATUS_LABELS[c.estado] || c.estado;
+
+                const btnConfirm = document.createElement('button');
+                btnConfirm.className = 'btn btn-sm';
+                btnConfirm.textContent = 'Confirmar';
+                btnConfirm.addEventListener('click', async () => {
+                    const res = await apiPost(`${API}/citas/actualizar`, { id: c.id, estado: 'confirmada' });
+                    if (res.ok) loadFichaCitas(pacienteId, telefono);
+                    renderCalendar();
+                });
+
+                const btnCancel = document.createElement('button');
+                btnCancel.className = 'btn btn-sm btn-danger';
+                btnCancel.textContent = 'Cancelar';
+                btnCancel.addEventListener('click', async () => {
+                    if (!confirm('¿Confirmas cancelar esta cita?')) return;
+                    const res = await apiPost(`${API}/citas/actualizar`, { id: c.id, estado: 'cancelada' });
+                    if (res.ok) loadFichaCitas(pacienteId, telefono);
+                    renderCalendar();
+                });
+
+                right.appendChild(status);
+                right.appendChild(btnConfirm);
+                right.appendChild(btnCancel);
+
+                item.appendChild(left);
+                item.appendChild(right);
+                list.appendChild(item);
+            });
+            container.innerHTML = '';
+            container.appendChild(list);
+        } catch (err) {
+            console.error('Error cargando citas paciente:', err);
+            container.innerHTML = '<div style="color:#e53e3e;">Error de conexión.</div>';
+        }
+    }
 
     // Icons Logic
     const fichaIconSMS = document.getElementById('fichaIconSMS');

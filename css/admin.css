@@ -1594,8 +1594,15 @@
 }
 
 @keyframes slideUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .asistente-close {
@@ -2000,7 +2007,7 @@
     margin-top: 8px;
 }
 
-.ficha-editor-container > label {
+.ficha-editor-container>label {
     position: absolute;
     top: -8px;
     left: 10px;
@@ -2019,7 +2026,8 @@
     border-bottom: 1px solid #e2e8f0;
     padding: 8px;
     gap: 4px;
-    padding-top: 14px; /* Space for label */
+    padding-top: 14px;
+    /* Space for label */
 }
 
 .ficha-editor-toolbar button {
@@ -2049,7 +2057,7 @@
 
 .ficha-editor-container textarea {
     width: 100%;
-    min-height: 140px;
+    min-height: 180px;
     border: none;
     padding: 12px;
     resize: vertical;
@@ -2123,17 +2131,24 @@
     color: var(--ck-text);
 }
 
-.btn-sm { padding: 6px 10px; font-size: .82rem; }
+.btn-sm {
+    padding: 6px 10px;
+    font-size: .82rem;
+}
 
-.btn:hover { box-shadow: 0 6px 18px rgba(17,49,75,.06); }
+.btn:hover {
+    box-shadow: 0 6px 18px rgba(17, 49, 75, .06);
+}
 
 .btn-danger {
     background: #fff;
     color: #b91c1c;
-    border-color: rgba(185,28,28,.12);
+    border-color: rgba(185, 28, 28, .12);
 }
 
-.btn-danger:hover { background: #fee2e2; }
+.btn-danger:hover {
+    background: #fee2e2;
+}
 
 .btn-outline {
     background: transparent;
@@ -2158,12 +2173,16 @@
     background: var(--ck-white);
     border-radius: 12px;
     padding: 18px;
-    box-shadow: 0 30px 80px rgba(17,49,75,.16);
+    box-shadow: 0 30px 80px rgba(17, 49, 75, .16);
     border: 1px solid var(--ck-border);
     position: relative;
 }
 
-.modal-content h2 { margin: 0 0 8px; font-size: 1.05rem; color: var(--ck-text); }
+.modal-content h2 {
+    margin: 0 0 8px;
+    font-size: 1.05rem;
+    color: var(--ck-text);
+}
 
 .modal-close {
     position: absolute;
@@ -2175,11 +2194,16 @@
     cursor: pointer;
 }
 
-#auditList div { background: transparent; }
+#auditList div {
+    background: transparent;
+}
 
 /* Mobile tweaks */
 @media (max-width: 900px) {
-    .modal-content { width: calc(100% - 32px); padding: 12px; }
+    .modal-content {
+        width: calc(100% - 32px);
+        padding: 12px;
+    }
 }
 
 /* Checkboxes & Config */
@@ -2227,13 +2251,22 @@
 
 .chk-text {
     font-size: 0.9rem;
-    color: #3bb2b8; /* Match screenshot color for the first element, handled generally here */
+    color: #3bb2b8;
+    /* Match screenshot color for the first element, handled generally here */
     font-weight: 600;
 }
 
-.mt-3 { margin-top: 20px; }
-.mt-4 { margin-top: 24px; }
-.ml-28 { margin-left: 28px; }
+.mt-3 {
+    margin-top: 20px;
+}
+
+.mt-4 {
+    margin-top: 24px;
+}
+
+.ml-28 {
+    margin-left: 28px;
+}
 
 .ficha-hint {
     font-size: 0.75rem;
@@ -2248,7 +2281,8 @@
 
 .select-exclusivo {
     margin-top: 12px;
-    display: none; /* Only show when checked */
+    display: none;
+    /* Only show when checked */
 }
 
 .btn-firmar-doc {
@@ -2278,7 +2312,7 @@
         flex-direction: column;
         gap: 16px;
     }
-    
+
     .ficha-top {
         flex-direction: column;
         align-items: flex-start;
@@ -2404,6 +2438,7 @@
         opacity: 0;
         transform: translateY(24px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -2456,11 +2491,16 @@
    SLATE DARK THEME STYLING
    ============================================================ */
 body.dark-theme {
-    --ck-bg: #0f172a; /* Slate 900 */
-    --ck-white: #1e293b; /* Slate 800 */
-    --ck-border: #334155; /* Slate 700 */
-    --ck-text: #f8fafc; /* Slate 50 */
-    --ck-text-light: #94a3b8; /* Slate 400 */
+    --ck-bg: #0f172a;
+    /* Slate 900 */
+    --ck-white: #1e293b;
+    /* Slate 800 */
+    --ck-border: #334155;
+    /* Slate 700 */
+    --ck-text: #f8fafc;
+    /* Slate 50 */
+    --ck-text-light: #94a3b8;
+    /* Slate 400 */
     --ck-today-bg: #1e293b;
     --ck-sidebar-bg: #1e293b;
     --ck-sidebar-hover: rgba(255, 255, 255, 0.06);
@@ -2592,4 +2632,3 @@ body.dark-theme .asistente-field-pref input {
 body.dark-theme .strength-bar {
     background: #334155;
 }
-
