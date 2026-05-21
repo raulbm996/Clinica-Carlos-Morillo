@@ -119,6 +119,21 @@
                 </select>
                 <select id="calYearSelect" class="cal-year-select"></select>
               </div>
+              <div class="members-picker">
+                <button type="button" id="membersButton" class="members-btn">
+                  <i class="fa-solid fa-users"></i> Miembros
+                  <span id="selectedMemberLabel" class="selected-member-label"></span>
+                </button>
+                <div id="membersPanel" class="members-dropdown" aria-hidden="true">
+                  <div class="members-panel-header">
+                    <span>Miembros de la clínica</span>
+                    <button type="button" id="clearMemberFilter" class="members-clear-btn">Ver todos</button>
+                  </div>
+                  <div id="membersList" class="members-list">
+                    <div class="members-loading">Cargando…</div>
+                  </div>
+                </div>
+              </div>
               <button class="cal-nav-btn" id="calPrev"><i class="fa-solid fa-chevron-left"></i></button>
               <button class="cal-today-btn" id="calToday">HOY</button>
               <button class="cal-nav-btn" id="calNext"><i class="fa-solid fa-chevron-right"></i></button>
