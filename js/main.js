@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await res.json();
 
                 if (data.ok) {
-                    btn.innerHTML = '<i class="fa-solid fa-check"></i> ¡Cita solicitada!';
+                    btn.innerHTML = '<i class="fa-solid fa-check"></i> ¡Cita confirmada!';
                     btn.style.background = '#25D366';
                     contactForm.reset();
                 } else {

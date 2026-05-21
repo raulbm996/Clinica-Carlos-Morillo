@@ -23,10 +23,10 @@ module.exports = async function handler(req, res) {
     }
 
     const result = await query('INSERT INTO citas (paciente_nombre, telefono, servicio, fecha, hora, mensaje, estado) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [paciente_nombre.trim(), telefono.trim(), servicio.trim(), fecha, hora, mensaje || '', 'pendiente']
+      [paciente_nombre.trim(), telefono.trim(), servicio.trim(), fecha, hora, mensaje || '', 'confirmada']
     );
 
-    return res.status(200).json({ ok: true, message: 'Cita solicitada correctamente.', id: result.insertId });
+    return res.status(200).json({ ok: true, message: 'Cita confirmada correctamente.', id: result.insertId });
   } catch (err) {
     console.error('Error creando cita:', err);
     return res.status(500).json({ ok: false, error: 'Error interno del servidor.' });
