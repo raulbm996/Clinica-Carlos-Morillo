@@ -78,6 +78,24 @@ function isSameDay(a, b) {
         a.getDate() === b.getDate();
 }
 
+function formatLocalDate(value) {
+    if (value instanceof Date) {
+        const year = value.getFullYear();
+        const month = String(value.getMonth() + 1).padStart(2, '0');
+        const day = String(value.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+    if (typeof value === 'string') {
+        const match = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+        if (match) return `${match[1]}-${match[2]}-${match[3]}`;
+    }
+    const parsed = new Date(value);
+    if (!Number.isNaN(parsed.getTime())) {
+        return formatLocalDate(parsed);
+    }
+    return '';
+}
+
 /* ======== Utilidad fetch ======== */
 async function apiPost(url, body = {}) {
     const res = await fetch(url, {
@@ -428,7 +446,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const label = String(h).padStart(2, '0') + ':00';
             html += `<div class="cal-time-label">${label}</div>`;
             days.forEach(d => {
-                html += `<div class="cal-cell" data-hour="${h}" data-date="${d.toISOString().slice(0, 10)}"></div>`;
+                html += `<div class="cal-cell" data-hour="${h}" data-date="${formatLocalDate(d)}"></div>`;
             });
         }
 
@@ -442,12 +460,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await apiGet(`${API}/citas/listar?fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}`);
             if (data.ok && data.citas) {
                 data.citas.forEach(cita => {
-                    let citaFecha = cita.fecha;
-                    if (citaFecha instanceof Date) {
-                        citaFecha = citaFecha.toISOString().slice(0, 10);
-                    } else if (typeof citaFecha === 'string') {
-                        citaFecha = citaFecha.slice(0, 10);
-                    }
+                    const citaFecha = formatLocalDate(cita.fecha);
                     const horaNum = parseInt(cita.hora.split(':')[0], 10);
                     const cell = calGrid.querySelector(`.cal-cell[data-date="${citaFecha}"][data-hour="${horaNum}"]`);
                     if (cell) {
