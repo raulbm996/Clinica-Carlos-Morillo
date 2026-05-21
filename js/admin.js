@@ -96,6 +96,13 @@ function formatLocalDate(value) {
     return '';
 }
 
+function formatDisplayDate(value) {
+    const local = formatLocalDate(value);
+    if (!local) return '';
+    const [year, month, day] = local.split('-');
+    return `${day}/${month}/${year}`;
+}
+
 /* ======== Utilidad fetch ======== */
 async function apiPost(url, body = {}) {
     const res = await fetch(url, {
@@ -732,6 +739,10 @@ document.addEventListener('DOMContentLoaded', () => {
             list.style.gap = '8px';
             // Mostrar sólo citas confirmadas
             const confirmed = data.citas.filter(x => x.estado === 'confirmada');
+            if (confirmed.length === 0) {
+                container.innerHTML = '<div style="color:#718096;">No hay citas confirmadas para este paciente.</div>';
+                return;
+            }
             confirmed.sort((a,b) => (a.fecha > b.fecha) ? 1 : (a.fecha < b.fecha) ? -1 : (a.hora > b.hora ? 1 : -1));
             confirmed.forEach(c => {
                 const colors = SERVICE_COLORS[c.servicio] || SERVICE_COLORS.otro;
@@ -744,7 +755,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 item.style.alignItems = 'center';
 
                 const left = document.createElement('div');
-                const fechaFmt = formatLocalDate(c.fecha);
+                const fechaFmt = formatDisplayDate(c.fecha);
                 left.innerHTML = `<strong style="display:block;color:${colors.text}">${fechaFmt} ${c.hora}</strong><small style="color:#718096">${c.servicio}</small><div style="font-size:.85rem;color:#2d3748;margin-top:6px">${c.paciente_nombre}</div>`;
 
                 const right = document.createElement('div');
