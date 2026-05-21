@@ -442,8 +442,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await apiGet(`${API}/citas/listar?fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}`);
             if (data.ok && data.citas) {
                 data.citas.forEach(cita => {
+                    let citaFecha = cita.fecha;
+                    if (citaFecha instanceof Date) {
+                        citaFecha = citaFecha.toISOString().slice(0, 10);
+                    } else if (typeof citaFecha === 'string') {
+                        citaFecha = citaFecha.slice(0, 10);
+                    }
                     const horaNum = parseInt(cita.hora.split(':')[0], 10);
-                    const cell = calGrid.querySelector(`.cal-cell[data-date="${cita.fecha}"][data-hour="${horaNum}"]`);
+                    const cell = calGrid.querySelector(`.cal-cell[data-date="${citaFecha}"][data-hour="${horaNum}"]`);
                     if (cell) {
                         const colors = SERVICE_COLORS[cita.servicio] || SERVICE_COLORS.otro;
                         const statusIcon = STATUS_LABELS[cita.estado] || '';
