@@ -730,7 +730,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const list = document.createElement('div');
             list.style.display = 'grid';
             list.style.gap = '8px';
-            data.citas.forEach(c => {
+            // Mostrar sólo citas confirmadas
+            const confirmed = data.citas.filter(x => x.estado === 'confirmada');
+            confirmed.sort((a,b) => (a.fecha > b.fecha) ? 1 : (a.fecha < b.fecha) ? -1 : (a.hora > b.hora ? 1 : -1));
+            confirmed.forEach(c => {
                 const colors = SERVICE_COLORS[c.servicio] || SERVICE_COLORS.otro;
                 const item = document.createElement('div');
                 item.style.border = '1px solid #e6eef4';
@@ -741,7 +744,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 item.style.alignItems = 'center';
 
                 const left = document.createElement('div');
-                left.innerHTML = `<strong style="display:block;color:${colors.text}">${c.fecha} ${c.hora}</strong><small style="color:#718096">${c.servicio}</small><div style="font-size:.85rem;color:#2d3748;margin-top:6px">${c.paciente_nombre}</div>`;
+                const fechaFmt = formatLocalDate(c.fecha);
+                left.innerHTML = `<strong style="display:block;color:${colors.text}">${fechaFmt} ${c.hora}</strong><small style="color:#718096">${c.servicio}</small><div style="font-size:.85rem;color:#2d3748;margin-top:6px">${c.paciente_nombre}</div>`;
 
                 const right = document.createElement('div');
                 right.style.display = 'flex';
@@ -749,15 +753,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const status = document.createElement('span');
                 status.textContent = STATUS_LABELS[c.estado] || c.estado;
-
-                const btnConfirm = document.createElement('button');
-                btnConfirm.className = 'btn btn-sm';
-                btnConfirm.textContent = 'Confirmar';
-                btnConfirm.addEventListener('click', async () => {
-                    const res = await apiPost(`${API}/citas/actualizar`, { id: c.id, estado: 'confirmada' });
-                    if (res.ok) loadFichaCitas(pacienteId, telefono);
-                    renderCalendar();
-                });
 
                 const btnCancel = document.createElement('button');
                 btnCancel.className = 'btn btn-sm btn-danger';
@@ -770,7 +765,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 right.appendChild(status);
-                right.appendChild(btnConfirm);
                 right.appendChild(btnCancel);
 
                 item.appendChild(left);

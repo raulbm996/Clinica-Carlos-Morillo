@@ -2009,14 +2009,14 @@
 
 .ficha-editor-container>label {
     position: absolute;
-    top: -8px;
-    left: 10px;
-    background: #fff;
-    padding: 0 4px;
-    font-size: 0.72rem;
-    font-weight: 600;
-    color: #718096;
-    z-index: 1;
+    top: -10px;
+    left: 12px;
+    background: var(--ck-bg);
+    padding: 0 6px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #4a5568;
+    z-index: 2;
 }
 
 .ficha-editor-toolbar {
@@ -2025,8 +2025,8 @@
     background: #f7fafc;
     border-bottom: 1px solid #e2e8f0;
     padding: 8px;
-    gap: 4px;
-    padding-top: 14px;
+    gap: 6px;
+    padding-top: 10px;
     /* Space for label */
 }
 
