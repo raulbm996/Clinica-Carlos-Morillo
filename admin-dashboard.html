@@ -29,27 +29,28 @@
       </div>
 
       <div class="sidebar-mode-toggle">
-        <button class="mode-btn active" data-mode="light"><i class="fa-regular fa-sun"></i> Modo Claro</button>
-        <button class="mode-btn" data-mode="dark"><i class="fa-regular fa-moon"></i> Modo Oscuro</button>
+        <button class="mode-btn active" data-mode="light"><i class="fa-regular fa-sun"></i> <span>Modo
+            Claro</span></button>
+        <button class="mode-btn" data-mode="dark"><i class="fa-regular fa-moon"></i> <span>Modo Oscuro</span></button>
       </div>
 
       <nav class="sidebar-nav">
         <ul>
           <li class="nav-item active" data-target="calendario">
-            <a href="#"><i class="fa-solid fa-table-columns"></i> General</a>
+            <a href="#"><i class="fa-solid fa-table-columns"></i> <span>General</span></a>
           </li>
           <li class="nav-item" data-target="usuario">
-            <a href="#"><i class="fa-solid fa-user"></i> Usuario</a>
+            <a href="#"><i class="fa-solid fa-user"></i> <span>Usuario</span></a>
           </li>
-          <li class="nav-item">
-            <a href="#"><i class="fa-regular fa-envelope"></i> Mensajería interna</a>
+          <li class="nav-item" data-target="mensajeria">
+            <a href="#"><i class="fa-regular fa-envelope"></i> <span>Mensajería interna</span></a>
           </li>
-          <li class="nav-item">
-            <a href="#"><i class="fa-solid fa-laptop-medical"></i> Portal del paciente
+          <li class="nav-item" data-target="portal">
+            <a href="#"><i class="fa-solid fa-laptop-medical"></i> <span>Portal del paciente</span>
               <span class="badge-on">ON</span></a>
           </li>
-          <li class="nav-item">
-            <a href="#"><i class="fa-solid fa-key"></i> Autorizaciones soporte</a>
+          <li class="nav-item" data-target="autorizaciones">
+            <a href="#"><i class="fa-solid fa-key"></i> <span>Autorizaciones soporte</span></a>
           </li>
         </ul>
       </nav>
@@ -66,10 +67,10 @@
       </div>
 
       <div class="sidebar-footer">
-        <a href="#"><i class="fa-solid fa-people-group"></i> Comunidad</a>
-        <a href="#"><i class="fa-solid fa-wrench"></i> Soporte</a>
-        <a href="#" class="logout-link"><i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar
-          Sesión</a>
+        <a href="#"><i class="fa-solid fa-people-group"></i> <span>Comunidad</span></a>
+        <a href="#"><i class="fa-solid fa-wrench"></i> <span>Soporte</span></a>
+        <a href="#" class="logout-link"><i class="fa-solid fa-arrow-right-from-bracket"></i> <span>Cerrar
+            Sesión</span></a>
       </div>
     </aside>
 
@@ -85,7 +86,8 @@
         <div class="topbar-search">
           <i class="fa-solid fa-search"></i>
           <input type="text" placeholder="buscar paciente…">
-          <button class="topbar-add-btn" id="topbarAddPatientBtn" title="Nuevo paciente"><i class="fa-solid fa-plus"></i></button>
+          <button class="topbar-add-btn" id="topbarAddPatientBtn" title="Nuevo paciente"><i
+              class="fa-solid fa-plus"></i></button>
         </div>
 
         <h1 class="topbar-clinic-name">CLÍNICA Carlos Morillo</h1>
@@ -204,19 +206,23 @@
           <!-- Header Ficha -->
           <div class="ficha-top">
             <div class="ficha-top-left">
-              <button class="btn-back" id="btnBackToPacientes" title="Volver"><i class="fa-solid fa-arrow-left"></i></button>
+              <button class="btn-back" id="btnBackToPacientes" title="Volver"><i
+                  class="fa-solid fa-arrow-left"></i></button>
               <h3 id="fichaMainName">Nombre del Paciente</h3>
             </div>
             <div class="ficha-top-right">
-              <button class="action-icon sms-icon" id="fichaIconSMS" title="Enviar SMS"><i class="fa-solid fa-comment-sms"></i></button>
-              <button class="action-icon wa-icon" id="fichaIconWA" title="Enviar WhatsApp"><i class="fa-brands fa-whatsapp"></i></button>
-              <button class="action-icon cal-icon" id="fichaIconCal" title="Asignar Cita"><i class="fa-solid fa-calendar-plus"></i></button>
+              <button class="action-icon sms-icon" id="fichaIconSMS" title="Enviar SMS"><i
+                  class="fa-solid fa-comment-sms"></i></button>
+              <button class="action-icon wa-icon" id="fichaIconWA" title="Enviar WhatsApp"><i
+                  class="fa-brands fa-whatsapp"></i></button>
+              <button class="action-icon cal-icon" id="fichaIconCal" title="Asignar Cita"><i
+                  class="fa-solid fa-calendar-plus"></i></button>
             </div>
           </div>
 
           <div class="ficha-body">
             <input type="hidden" id="fichaId">
-            
+
             <!-- Bloque principal de datos -->
             <div class="ficha-form-grid">
               <!-- Nombre y Apellidos / Número de Historia -->
@@ -300,7 +306,7 @@
                   <!-- Spacing -->
                 </div>
               </div>
-              
+
               <!-- Divider Dirección -->
               <hr class="ficha-divider">
 
@@ -340,7 +346,7 @@
                   <input type="text" id="fPais" placeholder=" ">
                 </div>
               </div>
-              
+
               <hr class="ficha-divider">
 
               <!-- Observaciones -->
@@ -357,7 +363,8 @@
                   <button type="button"><i class="fa-solid fa-list-ul"></i></button>
                   <button type="button"><i class="fa-solid fa-list-ol"></i></button>
                   <div class="toolbar-sep"></div>
-                  <span style="font-size:0.8rem; color:#718096; padding:0 8px;">Normal <i class="fa-solid fa-caret-down"></i></span>
+                  <span style="font-size:0.8rem; color:#718096; padding:0 8px;">Normal <i
+                      class="fa-solid fa-caret-down"></i></span>
                 </div>
                 <textarea id="fObservaciones" placeholder="Escribe aquí tu contenido..."></textarea>
               </div>
@@ -385,37 +392,57 @@
                     <option value="Carlos Morillo">Carlos Morillo Sicilia</option>
                   </select>
                 </div>
-                <p class="ficha-hint">Si marcas esta casilla, sólo los profesionales seleccionados verán a este paciente. Para todos los demás, será invisible, salvo que tengan el permiso Ver todos los pacientes.</p>
+                <p class="ficha-hint">Si marcas esta casilla, sólo los profesionales seleccionados verán a este
+                  paciente. Para todos los demás, será invisible, salvo que tengan el permiso Ver todos los pacientes.
+                </p>
 
                 <!-- Protección de datos -->
                 <label class="ficha-check-label mt-3">
                   <input type="checkbox" id="fCheckProteccion">
-                  <span class="chk-text" style="font-weight:700; text-transform:uppercase;">El paciente ha firmado el documento de protección de datos.</span>
+                  <span class="chk-text" style="font-weight:700; text-transform:uppercase;">El paciente ha firmado el
+                    documento de protección de datos.</span>
                 </label>
-                <p class="ficha-hint ml-28">Por favor, asegúrate de haber incluido el documento firmado en la lista de adjuntos del paciente.</p>
+                <p class="ficha-hint ml-28">Por favor, asegúrate de haber incluido el documento firmado en la lista de
+                  adjuntos del paciente.</p>
 
                 <!-- Publicidad -->
                 <label class="ficha-check-label mt-3">
                   <input type="checkbox" id="fCheckPublicidad">
                   <span class="chk-text" style="font-weight:700; text-transform:uppercase;">Recibir publicidad.</span>
                 </label>
-                <p class="ficha-hint ml-28">El paciente da su consentimiento para que se le pueda enviar información promocional y ofertas publicitarias.</p>
+                <p class="ficha-hint ml-28">El paciente da su consentimiento para que se le pueda enviar información
+                  promocional y ofertas publicitarias.</p>
 
                 <!-- Recordatorios -->
                 <label class="ficha-check-label mt-3">
                   <input type="checkbox" id="fCheckRecordatorios" checked>
-                  <span class="chk-text" style="font-weight:700; text-transform:uppercase;">Recordatorios automáticos</span>
+                  <span class="chk-text" style="font-weight:700; text-transform:uppercase;">Recordatorios
+                    automáticos</span>
                 </label>
-                <p class="ficha-hint ml-28">Con la casilla marcada, la configuración de recordatorios del centro se aplicará a las citas de este paciente. Con la casilla desmarcada, las citas que se creen para este paciente no llevarán recordatorios de ningún tipo.</p>
+                <p class="ficha-hint ml-28">Con la casilla marcada, la configuración de recordatorios del centro se
+                  aplicará a las citas de este paciente. Con la casilla desmarcada, las citas que se creen para este
+                  paciente no llevarán recordatorios de ningún tipo.</p>
 
                 <!-- Botón de firmar -->
                 <button type="button" class="btn-firmar-doc mt-4">Firmar un documento</button>
-                <p class="ficha-hint text-red">Para firmar un documento debes rellenar antes NOMBRE, APELLIDOS y NIF/DNI del paciente</p>
+                <p class="ficha-hint text-red">Para firmar un documento debes rellenar antes NOMBRE, APELLIDOS y NIF/DNI
+                  del paciente</p>
               </div>
 
               <!-- Acciones guardado -->
               <div class="ficha-bottom-actions">
-                <button type="button" class="btn-clinni-primary" id="btnGuardarFicha"><i class="fa-solid fa-floppy-disk"></i> Guardar Ficha</button>
+                <button type="button" class="btn-clinni-primary" id="btnGuardarFicha"><i
+                    class="fa-solid fa-floppy-disk"></i> Guardar Ficha</button>
+                <div class="lopd-panel" style="display:inline-block;margin-left:12px;vertical-align:middle;">
+                  <div class="lopd-card">
+                    <button type="button" class="btn btn-sm" id="btnHistorialAccesos"><i
+                        class="fa-solid fa-clock-rotate-left"></i> Historial de accesos</button>
+                    <button type="button" class="btn btn-sm" id="btnExportarPaciente"><i
+                        class="fa-solid fa-file-export"></i> Exportar datos</button>
+                    <button type="button" class="btn btn-sm btn-danger" id="btnEliminarPaciente"><i
+                        class="fa-solid fa-trash"></i> Eliminar paciente</button>
+                  </div>
+                </div>
               </div>
 
             </div>
@@ -528,6 +555,46 @@
           </div>
         </section>
 
+        <!-- ===== MENSAJERÍA INTERNA ===== -->
+        <section id="mensajeria" class="view-section">
+          <div class="proximamente-container">
+            <div class="proximamente-card">
+              <div class="proximamente-icon"><i class="fa-regular fa-envelope"></i></div>
+              <h3>Mensajería Interna</h3>
+              <p>Estamos diseñando un canal de comunicación directo y seguro para el equipo de Clínica Carlos Morillo.
+                Muy pronto podrás enviar mensajes, compartir informes y coordinar tareas directamente desde tu panel.
+              </p>
+              <span class="proximamente-badge">Próximamente</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== PORTAL DEL PACIENTE ===== -->
+        <section id="portal" class="view-section">
+          <div class="proximamente-container">
+            <div class="proximamente-card">
+              <div class="proximamente-icon"><i class="fa-solid fa-laptop-medical"></i></div>
+              <h3>Portal del Paciente</h3>
+              <p>Una zona exclusiva para tus pacientes donde podrán solicitar citas online, ver sus facturas y descargar
+                ejercicios pautados. La integración con la base de datos de pacientes está en desarrollo.</p>
+              <span class="proximamente-badge">Próximamente</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== AUTORIZACIONES SOPORTE ===== -->
+        <section id="autorizaciones" class="view-section">
+          <div class="proximamente-container">
+            <div class="proximamente-card">
+              <div class="proximamente-icon"><i class="fa-solid fa-key"></i></div>
+              <h3>Autorizaciones y Soporte</h3>
+              <p>Controla los niveles de acceso de cada profesional, genera claves temporales para auditorías de
+                protección de datos (LOPD) y autoriza el soporte remoto con un solo clic.</p>
+              <span class="proximamente-badge">Próximamente</span>
+            </div>
+          </div>
+        </section>
+
       </div>
     </main>
   </div>
@@ -592,6 +659,27 @@
             <p>Es necesario que indiques al menos el nombre del paciente y un proceso al que asignar la cita.</p>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Auditoría LOPD ===== -->
+  <div class="modal-overlay" id="auditModal" style="display:none;">
+    <div class="modal-content">
+      <button class="modal-close" id="auditModalClose">&times;</button>
+      <h2>Historial de accesos</h2>
+      <div id="auditFilters" style="margin-bottom:10px;">
+        <input type="text" id="auditFilterUser" placeholder="Usuario (ID)" style="width:120px;margin-right:8px;">
+        <input type="text" id="auditFilterAction" placeholder="Acción" style="width:120px;margin-right:8px;">
+        <input type="date" id="auditDesde" style="margin-right:8px;">
+        <input type="date" id="auditHasta" style="margin-right:8px;">
+        <button id="auditApplyFilters" class="btn btn-sm">Aplicar</button>
+      </div>
+      <div id="auditList" style="max-height:400px;overflow:auto;border-top:1px solid #eee;padding-top:8px;"></div>
+      <div style="margin-top:8px;text-align:right;">
+        <button id="auditPrev" class="btn btn-sm">Anterior</button>
+        <span id="auditPageInfo" style="margin:0 8px"></span>
+        <button id="auditNext" class="btn btn-sm">Siguiente</button>
       </div>
     </div>
   </div>

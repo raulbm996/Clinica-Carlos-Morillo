@@ -259,12 +259,82 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /* --- Mode toggle --- */
+    const savedTheme = localStorage.getItem('adminTheme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-theme');
+        const darkBtn = document.querySelector('.mode-btn[data-mode="dark"]');
+        const lightBtn = document.querySelector('.mode-btn[data-mode="light"]');
+        if (darkBtn && lightBtn) {
+            lightBtn.classList.remove('active');
+            darkBtn.classList.add('active');
+        }
+    }
+
     document.querySelectorAll('.mode-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
+            const mode = btn.dataset.mode;
+            if (mode === 'dark') {
+                document.body.classList.add('dark-theme');
+                localStorage.setItem('adminTheme', 'dark');
+            } else {
+                document.body.classList.remove('dark-theme');
+                localStorage.setItem('adminTheme', 'light');
+            }
         });
     });
+
+    /* --- Collapsible Sidebar --- */
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const savedSidebarState = localStorage.getItem('sidebarCollapsed');
+
+    if (savedSidebarState === 'true') {
+        if (adminSidebar) adminSidebar.classList.add('collapsed');
+        const mainEl = document.querySelector('.admin-main');
+        if (mainEl) mainEl.classList.add('collapsed');
+    }
+
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            const mainEl = document.querySelector('.admin-main');
+
+            if (adminSidebar.classList.contains('collapsed')) {
+                adminSidebar.classList.remove('collapsed');
+                if (mainEl) mainEl.classList.remove('collapsed');
+                localStorage.setItem('sidebarCollapsed', 'false');
+            } else {
+                adminSidebar.classList.add('collapsed');
+                if (mainEl) mainEl.classList.add('collapsed');
+                localStorage.setItem('sidebarCollapsed', 'true');
+            }
+        });
+    }
+
+    /* --- Topbar Search --- */
+    const topbarSearchInput = document.querySelector('.topbar-search input');
+    if (topbarSearchInput) {
+        let topbarSearchTimeout;
+        topbarSearchInput.addEventListener('input', () => {
+            clearTimeout(topbarSearchTimeout);
+            topbarSearchTimeout = setTimeout(() => {
+                const query = topbarSearchInput.value.trim();
+
+                // Cambiar a la pestaña de pacientes
+                showView('pacientes');
+
+                // Actualizar el buscador de la sección de pacientes si existe
+                const secSearchInput = document.querySelector('.search-box input');
+                if (secSearchInput) {
+                    secSearchInput.value = query;
+                }
+
+                // Cargar los pacientes filtrados
+                loadPacientes(query);
+            }, 400);
+        });
+    }
 
     /* --- Logout --- */
     const logoutLink = document.querySelector('.logout-link');
@@ -553,7 +623,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    window.openFichaPaciente = function(id) {
+    window.openFichaPaciente = function (id) {
         const paciente = currentPacientes.find(p => p.id == id);
         if (!paciente) return;
 
@@ -567,14 +637,14 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('fNombre').value = paciente.nombre || '';
         document.getElementById('fApellidos').value = paciente.apellidos || '';
         document.getElementById('fNumHistoria').value = String(paciente.id).padStart(5, '0');
-        
+
         document.getElementById('fTelefono').value = paciente.telefono || '';
         document.getElementById('fEmail').value = paciente.email || '';
-        
+
         document.getElementById('fTipoDoc').value = paciente.tipo_documento || 'DNI/NIF/CIF/NIE';
         document.getElementById('fNumDoc').value = paciente.documento || '';
         document.getElementById('fSexo').value = paciente.sexo || '';
-        
+
         if (paciente.fecha_nacimiento) {
             const dStr = typeof paciente.fecha_nacimiento === 'string' ? paciente.fecha_nacimiento.substring(0, 10) : '';
             document.getElementById('fNacimiento').value = dStr;
@@ -603,7 +673,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const chkProt = document.getElementById('fCheckProteccion');
         if (chkProt) chkProt.checked = !!paciente.firmado_proteccion_datos;
-        
+
         const chkPub = document.getElementById('fCheckPublicidad');
         if (chkPub) chkPub.checked = !!paciente.recibir_publicidad;
 
@@ -635,7 +705,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (fichaIconCal) {
         fichaIconCal.addEventListener('click', () => {
-            alert('Funcionalidad de Asignar Cita directa. ¡Próximamente conectada al calendario!');
+            const nombre = document.getElementById('fNombre').value.trim();
+            const apellidos = document.getElementById('fApellidos').value.trim();
+            const telefono = document.getElementById('fTelefono').value.trim();
+            const email = document.getElementById('fEmail').value.trim();
+
+            openAsistente();
+
+            const asiNombre = document.getElementById('asiNombre');
+            const asiApellidos = document.getElementById('asiApellidos');
+            const asiTelefono = document.getElementById('asiTelefono');
+            const asiEmail = document.getElementById('asiEmail');
+
+            if (asiNombre) asiNombre.value = nombre;
+            if (asiApellidos) asiApellidos.value = apellidos;
+            if (asiTelefono) asiTelefono.value = telefono;
+            if (asiEmail) asiEmail.value = email;
         });
     }
 
@@ -814,6 +899,157 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     // Re-run con la nueva versión
     loadSession();
+
+    /* ======== Cargar profesionales para el select exclusivo ======== */
+    async function loadProfesionales() {
+        try {
+            const data = await apiGet(`${API}/usuario`);
+            const select = document.getElementById('fSelectExclusivo');
+            if (!select || !data?.ok) return;
+            select.innerHTML = '';
+            data.usuarios.forEach(u => {
+                const opt = document.createElement('option');
+                opt.value = u.username || u.id;
+                opt.textContent = (u.nombre || '') + (u.apellidos ? ' ' + u.apellidos : '') + (u.username ? ' (' + u.username + ')' : '');
+                select.appendChild(opt);
+            });
+        } catch (err) {
+            console.warn('No se pudieron cargar profesionales', err);
+        }
+    }
+    loadProfesionales();
+
+    /* ======== Auditoría: modal, fetch y paginación ======== */
+    let auditState = { page: 1, perPage: 20, pacienteId: null };
+
+    async function fetchAudit() {
+        try {
+            const params = new URLSearchParams();
+            if (auditState.pacienteId) params.set('pacienteId', auditState.pacienteId);
+            params.set('page', auditState.page);
+            params.set('perPage', auditState.perPage);
+            const u = `${API}/auditoria?` + params.toString();
+            const data = await apiGet(u);
+            return data;
+        } catch (err) {
+            console.error('Error fetching audit', err);
+            return null;
+        }
+    }
+
+    async function openAuditModal(pacienteId) {
+        auditState.pacienteId = pacienteId;
+        auditState.page = 1;
+        document.getElementById('auditModal').style.display = 'block';
+        await renderAuditPage();
+    }
+
+    async function renderAuditPage() {
+        const listEl = document.getElementById('auditList');
+        const infoEl = document.getElementById('auditPageInfo');
+        listEl.innerHTML = 'Cargando…';
+        const data = await fetchAudit();
+        if (!data || !data.ok) {
+            listEl.innerHTML = '<div class="text-red">Error cargando auditoría.</div>';
+            return;
+        }
+        if (!data.registros || data.registros.length === 0) {
+            listEl.innerHTML = '<div>No hay registros.</div>';
+        } else {
+            listEl.innerHTML = data.registros.map(r => {
+                const fecha = new Date(r.created_at).toLocaleString('es-ES');
+                return `<div style="padding:8px;border-bottom:1px solid #f0f0f0;"><strong>${r.accion}</strong> — <em>${r.usuario_nombre}</em> — <small>${r.paciente_nombre || ''}</small><div style="font-size:0.9rem;color:#555;">${r.detalles || ''}</div><div style="font-size:0.8rem;color:#999;">${fecha} — IP: ${r.ip_address || '—'}</div></div>`;
+            }).join('');
+        }
+        if (data.pagination) {
+            infoEl.textContent = `Página ${data.pagination.page} de ${data.pagination.totalPages} (total ${data.pagination.total})`;
+        } else {
+            infoEl.textContent = '';
+        }
+    }
+
+    // Modal controls
+    const auditModal = document.getElementById('auditModal');
+    const auditClose = document.getElementById('auditModalClose');
+    if (auditClose) auditClose.addEventListener('click', () => { auditModal.style.display = 'none'; });
+    document.getElementById('auditPrev').addEventListener('click', async () => {
+        if (auditState.page > 1) { auditState.page--; await renderAuditPage(); }
+    });
+    document.getElementById('auditNext').addEventListener('click', async () => {
+        auditState.page++; await renderAuditPage();
+    });
+
+    document.getElementById('btnHistorialAccesos')?.addEventListener('click', () => {
+        const pid = document.getElementById('fichaId')?.value;
+        if (!pid) return alert('ID de paciente no disponible');
+        openAuditModal(pid);
+    });
+
+    document.getElementById('auditApplyFilters')?.addEventListener('click', async () => {
+        const userFilter = document.getElementById('auditFilterUser').value.trim();
+        const actionFilter = document.getElementById('auditFilterAction').value.trim();
+        const desde = document.getElementById('auditDesde').value;
+        const hasta = document.getElementById('auditHasta').value;
+        auditState.page = 1;
+        // Build URL with extra params
+        const params = new URLSearchParams();
+        if (auditState.pacienteId) params.set('pacienteId', auditState.pacienteId);
+        if (userFilter) params.set('usuarioId', userFilter);
+        if (actionFilter) params.set('accion', actionFilter);
+        if (desde) params.set('desde', desde);
+        if (hasta) params.set('hasta', hasta);
+        params.set('page', auditState.page);
+        params.set('perPage', auditState.perPage);
+        const data = await apiGet(`${API}/auditoria?` + params.toString());
+        const listEl = document.getElementById('auditList');
+        const infoEl = document.getElementById('auditPageInfo');
+        if (!data || !data.ok) { listEl.innerHTML = 'Error aplicando filtros.'; return; }
+        listEl.innerHTML = data.registros.map(r => {
+            const fecha = new Date(r.created_at).toLocaleString('es-ES');
+            return `<div style="padding:8px;border-bottom:1px solid #f0f0f0;"><strong>${r.accion}</strong> — <em>${r.usuario_nombre}</em> — <small>${r.paciente_nombre || ''}</small><div style="font-size:0.9rem;color:#555;">${r.detalles || ''}</div><div style="font-size:0.8rem;color:#999;">${fecha} — IP: ${r.ip_address || '—'}</div></div>`;
+        }).join('');
+        if (data.pagination) infoEl.textContent = `Página ${data.pagination.page} de ${data.pagination.totalPages} (total ${data.pagination.total})`;
+    });
+
+    /* ======== Exportar y Eliminar paciente ======== */
+    document.getElementById('btnExportarPaciente')?.addEventListener('click', () => {
+        const id = document.getElementById('fichaId')?.value;
+        if (!id) return alert('ID de paciente no disponible');
+        // Construir HTML imprimible a partir de campos visibles
+        const parts = [];
+        const add = (label, value) => parts.push(`<p><strong>${label}:</strong> ${value || '—'}</p>`);
+        add('Nombre', document.getElementById('fNombre')?.value);
+        add('Apellidos', document.getElementById('fApellidos')?.value);
+        add('Teléfono', document.getElementById('fTelefono')?.value);
+        add('Email', document.getElementById('fEmail')?.value);
+        add('Documento', document.getElementById('fNumDoc')?.value);
+        add('Nacimiento', document.getElementById('fNacimiento')?.value);
+        add('Observaciones', document.getElementById('fObservaciones')?.value);
+        const popup = window.open('', '_blank', 'width=900,height=700');
+        const html = `<!doctype html><html><head><meta charset="utf-8"><title>Ficha paciente</title><style>body{font-family:Arial,Helvetica,sans-serif;padding:20px}h1{color:#0f766e}</style></head><body><h1>Ficha Paciente</h1>${parts.join('')}<hr><p>Exportado desde Clínica Carlos Morillo</p></body></html>`;
+        popup.document.open(); popup.document.write(html); popup.document.close();
+        setTimeout(() => popup.print(), 300);
+    });
+
+    document.getElementById('btnEliminarPaciente')?.addEventListener('click', async () => {
+        const id = document.getElementById('fichaId')?.value;
+        if (!id) return alert('ID de paciente no disponible');
+        if (!confirm('¿Estás seguro? Esta acción eliminará permanentemente la ficha.')) return;
+        if (!confirm('Confirmación final: eliminar paciente permanentemente. ¿Deseas continuar?')) return;
+        try {
+            const res = await fetch(`${API}/pacientes?id=${encodeURIComponent(id)}`, { method: 'DELETE', credentials: 'include' });
+            const data = await res.json();
+            if (data.ok) {
+                alert('Paciente eliminado.');
+                showView('pacientes');
+                loadPacientes();
+            } else {
+                alert('Error: ' + (data.error || 'no se pudo eliminar'));
+            }
+        } catch (err) {
+            alert('Error al eliminar paciente.');
+        }
+    });
 
     // Profile photo (mantener en sessionStorage para rapidez, no guardar en BD por tamaño)
     const profilePhoto = document.getElementById('profilePhoto');

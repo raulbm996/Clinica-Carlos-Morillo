@@ -8,6 +8,19 @@ const { requireAuth, createToken, setTokenCookie } = require('../lib/auth');
 module.exports = async function handler(req, res) {
     if (req.method === 'OPTIONS') return res.status(200).end();
 
+    // --- LISTAR PROFESIONALES (protegido) ---
+    if (req.method === 'GET') {
+        const user = requireAuth(req, res);
+        if (!user) return;
+        try {
+            const rows = await query('SELECT id, username, nombre, apellidos, rol FROM usuarios ORDER BY nombre ASC');
+            return res.status(200).json({ ok: true, usuarios: rows });
+        } catch (err) {
+            console.error('Error listando usuarios:', err);
+            return res.status(500).json({ ok: false, error: 'Error interno del servidor.' });
+        }
+    }
+
     // --- CAMBIAR CONTRASEÑA (protegido) ---
     if (req.method === 'POST' && req.body?.current_password && req.body?.new_password) {
         const user = requireAuth(req, res);
