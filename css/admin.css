@@ -2101,6 +2101,87 @@
     color: #fff;
 }
 
+/* ======== LOPD panel & modal styles (integración visual) ======== */
+.lopd-card {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Reutilizar estilo de botones del sistema pero adaptado a admin */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: .85rem;
+    font-weight: 700;
+    border: 1px solid transparent;
+    cursor: pointer;
+    background: #fff;
+    color: var(--ck-text);
+}
+
+.btn-sm { padding: 6px 10px; font-size: .82rem; }
+
+.btn:hover { box-shadow: 0 6px 18px rgba(17,49,75,.06); }
+
+.btn-danger {
+    background: #fff;
+    color: #b91c1c;
+    border-color: rgba(185,28,28,.12);
+}
+
+.btn-danger:hover { background: #fee2e2; }
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid var(--ck-border);
+}
+
+/* Modal overlay (centered panel) */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 15, 20, .45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal-content {
+    width: min(920px, 96%);
+    max-height: 85vh;
+    overflow: auto;
+    background: var(--ck-white);
+    border-radius: 12px;
+    padding: 18px;
+    box-shadow: 0 30px 80px rgba(17,49,75,.16);
+    border: 1px solid var(--ck-border);
+    position: relative;
+}
+
+.modal-content h2 { margin: 0 0 8px; font-size: 1.05rem; color: var(--ck-text); }
+
+.modal-close {
+    position: absolute;
+    right: 18px;
+    top: 14px;
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+#auditList div { background: transparent; }
+
+/* Mobile tweaks */
+@media (max-width: 900px) {
+    .modal-content { width: calc(100% - 32px); padding: 12px; }
+}
+
 /* Checkboxes & Config */
 .ficha-config-box {
     border: 1px solid #cbd5e0;
@@ -2511,4 +2592,4 @@ body.dark-theme .asistente-field-pref input {
 body.dark-theme .strength-bar {
     background: #334155;
 }
-
+
