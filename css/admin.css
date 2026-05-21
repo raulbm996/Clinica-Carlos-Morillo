@@ -548,6 +548,8 @@
     position: sticky;
     top: 0;
     z-index: 50;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .hamburger-menu {
@@ -568,7 +570,8 @@
     height: 34px;
     background: var(--ck-white);
     gap: 6px;
-    flex: 0 1 240px;
+    flex: 1 1 240px;
+    min-width: 0;
 }
 
 .topbar-search i {
@@ -1473,6 +1476,15 @@
         font-size: .88rem;
     }
 
+    .topbar-search {
+        flex: 1 1 180px;
+        min-width: 0;
+    }
+
+    .topbar-actions {
+        flex-shrink: 0;
+    }
+
     .user-name {
         display: none;
     }
@@ -1509,7 +1521,17 @@
     }
 
     .topbar-search {
-        flex: 1;
+        flex: 1 1 100%;
+        width: 100%;
+    }
+
+    .topbar-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .topbar-user {
+        justify-content: flex-end;
     }
 
     .topbar-clinic-name {
