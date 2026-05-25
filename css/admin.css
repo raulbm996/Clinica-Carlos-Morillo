@@ -2661,3 +2661,538 @@ body.dark-theme .asistente-field-pref input {
 body.dark-theme .strength-bar {
     background: #334155;
 }
+
+/* ============================================================
+   BOTÓN NUEVA CITA (barra calendario)
+   ============================================================ */
+.nueva-cita-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, var(--ck-teal) 0%, var(--ck-teal-dark) 100%);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: .84rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 3px 12px rgba(59,178,184,.35);
+    transition: transform .15s, box-shadow .15s, background .15s;
+    margin-right: 8px;
+}
+
+.nueva-cita-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(59,178,184,.45);
+    background: linear-gradient(135deg, var(--ck-teal-dark) 0%, var(--ck-teal-darker) 100%);
+}
+
+.nueva-cita-btn:active {
+    transform: translateY(0);
+}
+
+/* ============================================================
+   MODAL NUEVA CITA
+   ============================================================ */
+.nueva-cita-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15,23,42,.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 3000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: nciOverlayIn .2s ease;
+}
+
+.nueva-cita-overlay.active {
+    display: flex;
+}
+
+@keyframes nciOverlayIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.nueva-cita-modal {
+    background: #fff;
+    border-radius: 20px;
+    width: min(600px, 100%);
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 24px 64px rgba(15,23,42,.22), 0 4px 16px rgba(59,178,184,.12);
+    animation: nciModalIn .25s cubic-bezier(.34,1.56,.64,1);
+    overflow: hidden;
+}
+
+@keyframes nciModalIn {
+    from { transform: translateY(24px) scale(.97); opacity: 0; }
+    to   { transform: translateY(0)    scale(1);   opacity: 1; }
+}
+
+/* Header */
+.nci-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px 24px 18px;
+    border-bottom: 1px solid #e8edf3;
+    background: linear-gradient(135deg, #f0fbfc 0%, #fff 80%);
+}
+
+.nci-header-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--ck-teal) 0%, var(--ck-teal-dark) 100%);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(59,178,184,.3);
+}
+
+.nci-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #1a2a3a;
+    margin: 0 0 2px;
+    line-height: 1.2;
+}
+
+.nci-subtitle {
+    font-size: .78rem;
+    color: #718096;
+    margin: 0;
+}
+
+.nci-header > div:nth-child(2) {
+    flex: 1;
+}
+
+.nci-close {
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 8px;
+    background: #f1f5f9;
+    color: #64748b;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .15s, color .15s;
+    flex-shrink: 0;
+}
+
+.nci-close:hover {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+/* Body */
+.nci-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.nci-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nci-section-label {
+    font-size: .78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.nci-section-label i {
+    color: var(--ck-teal);
+}
+
+/* Patient search */
+.nci-patient-search {
+    position: relative;
+}
+
+.nci-patient-search input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: .9rem;
+    color: var(--ck-text);
+    transition: border-color .2s, box-shadow .2s;
+    background: #fafbfc;
+}
+
+.nci-patient-search input:focus {
+    outline: none;
+    border-color: var(--ck-teal);
+    box-shadow: 0 0 0 4px rgba(59,178,184,.1);
+    background: #fff;
+}
+
+.nci-patient-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(15,23,42,.12);
+    z-index: 100;
+    max-height: 220px;
+    overflow-y: auto;
+    display: none;
+}
+
+.nci-patient-dropdown.open {
+    display: block;
+}
+
+.nci-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: background .12s;
+    font-size: .88rem;
+}
+
+.nci-dropdown-item:hover {
+    background: #f0fbfc;
+}
+
+.nci-dropdown-item:not(:last-child) {
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.nci-dropdown-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--ck-teal), var(--ck-teal-dark));
+    color: #fff;
+    font-size: .68rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.nci-dropdown-info strong {
+    display: block;
+    font-weight: 700;
+    color: #1a2a3a;
+    font-size: .88rem;
+}
+
+.nci-dropdown-info small {
+    color: #718096;
+    font-size: .76rem;
+}
+
+.nci-dropdown-empty {
+    padding: 14px;
+    text-align: center;
+    color: #718096;
+    font-size: .84rem;
+}
+
+/* Patient chip */
+.nci-patient-chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: linear-gradient(135deg, #f0fbfc, #e6f7f8);
+    border: 2px solid var(--ck-teal);
+    border-radius: 10px;
+}
+
+.nci-patient-chip-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--ck-teal), var(--ck-teal-dark));
+    color: #fff;
+    font-size: .75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.nci-patient-chip > div:nth-child(2) {
+    flex: 1;
+}
+
+.nci-patient-chip strong {
+    display: block;
+    font-size: .9rem;
+    color: #1a2a3a;
+}
+
+.nci-patient-chip small {
+    font-size: .76rem;
+    color: #718096;
+}
+
+.nci-patient-chip-remove {
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 6px;
+    background: rgba(220,38,38,.1);
+    color: #dc2626;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .8rem;
+    transition: background .15s;
+}
+
+.nci-patient-chip-remove:hover {
+    background: rgba(220,38,38,.2);
+}
+
+/* Service grid */
+.nci-service-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 8px;
+}
+
+.nci-service-btn {
+    padding: 9px 10px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    background: #fafbfc;
+    font-family: inherit;
+    font-size: .8rem;
+    font-weight: 600;
+    color: #4a5568;
+    cursor: pointer;
+    transition: all .15s;
+    text-align: center;
+    line-height: 1.3;
+}
+
+.nci-service-btn:hover {
+    border-color: var(--ck-teal);
+    background: #f0fbfc;
+    color: var(--ck-teal-dark);
+}
+
+.nci-service-btn.selected {
+    border-color: var(--ck-teal);
+    background: linear-gradient(135deg, #e6f7f8, #d0f2f3);
+    color: var(--ck-teal-darker);
+    box-shadow: 0 2px 8px rgba(59,178,184,.2);
+    transform: scale(1.03);
+}
+
+/* Date/time row */
+.nci-datetime-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.nci-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.nci-field label {
+    font-size: .78rem;
+    font-weight: 700;
+    color: #4a5568;
+}
+
+.nci-field input {
+    padding: 10px 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: .9rem;
+    color: var(--ck-text);
+    transition: border-color .2s, box-shadow .2s;
+    background: #fafbfc;
+}
+
+.nci-field input:focus {
+    outline: none;
+    border-color: var(--ck-teal);
+    box-shadow: 0 0 0 4px rgba(59,178,184,.1);
+    background: #fff;
+}
+
+/* Textarea */
+.nci-textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: .88rem;
+    color: var(--ck-text);
+    resize: vertical;
+    min-height: 80px;
+    transition: border-color .2s, box-shadow .2s;
+    background: #fafbfc;
+}
+
+.nci-textarea:focus {
+    outline: none;
+    border-color: var(--ck-teal);
+    box-shadow: 0 0 0 4px rgba(59,178,184,.1);
+    background: #fff;
+}
+
+/* Feedback */
+.nci-feedback {
+    padding: 0 24px;
+    min-height: 24px;
+    font-size: .84rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.nci-feedback.error   { color: #dc2626; }
+.nci-feedback.success { color: #16a34a; }
+
+/* Footer */
+.nci-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 16px 24px;
+    border-top: 1px solid #e8edf3;
+    background: #fafbfc;
+}
+
+.nci-cancel-btn {
+    padding: 10px 20px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    background: #fff;
+    font-family: inherit;
+    font-size: .88rem;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    transition: all .15s;
+}
+
+.nci-cancel-btn:hover {
+    border-color: #94a3b8;
+    color: #1a2a3a;
+    background: #f8fafc;
+}
+
+.nci-save-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    background: linear-gradient(135deg, var(--ck-teal) 0%, var(--ck-teal-dark) 100%);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: .9rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(59,178,184,.35);
+    transition: transform .15s, box-shadow .15s, background .15s;
+}
+
+.nci-save-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(59,178,184,.45);
+    background: linear-gradient(135deg, var(--ck-teal-dark) 0%, var(--ck-teal-darker) 100%);
+}
+
+.nci-save-btn:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Dark mode */
+body.dark-theme .nueva-cita-modal {
+    background: #1e293b;
+    color: #f8fafc;
+}
+
+body.dark-theme .nci-header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 80%);
+    border-color: #334155;
+}
+
+body.dark-theme .nci-title { color: #f8fafc; }
+body.dark-theme .nci-body { background: #1e293b; }
+body.dark-theme .nci-footer { background: #0f172a; border-color: #334155; }
+
+body.dark-theme .nci-patient-search input,
+body.dark-theme .nci-field input,
+body.dark-theme .nci-textarea {
+    background: #0f172a;
+    border-color: #334155;
+    color: #f8fafc;
+}
+
+body.dark-theme .nci-service-btn {
+    background: #0f172a;
+    border-color: #334155;
+    color: #cbd5e1;
+}
+
+body.dark-theme .nci-service-btn.selected {
+    background: #164e63;
+    border-color: var(--ck-teal);
+    color: #7dd3fc;
+}
+
+body.dark-theme .nci-patient-dropdown {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+body.dark-theme .nci-dropdown-item:hover { background: #0f172a; }
+
+body.dark-theme .nci-cancel-btn {
+    background: #1e293b;
+    border-color: #334155;
+    color: #94a3b8;
+}

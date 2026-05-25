@@ -124,6 +124,9 @@
               <button class="cal-nav-btn" id="calNext"><i class="fa-solid fa-chevron-right"></i></button>
             </div>
             <div class="calendar-toolbar-right">
+              <button class="nueva-cita-btn" id="btnNuevaCita">
+                <i class="fa-solid fa-calendar-plus"></i> Nueva Cita
+              </button>
               <button class="import-google-btn">
                 <i class="fa-brands fa-google"></i> Importar Calendario Google
               </button>
@@ -610,6 +613,90 @@
             <p>Es necesario que indiques al menos el nombre del paciente y un proceso al que asignar la cita.</p>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL: Nueva Cita ===== -->
+  <div class="nueva-cita-overlay" id="nuevaCitaOverlay">
+    <div class="nueva-cita-modal">
+      <div class="nci-header">
+        <div class="nci-header-icon"><i class="fa-solid fa-calendar-plus"></i></div>
+        <div>
+          <h2 class="nci-title">Nueva Cita</h2>
+          <p class="nci-subtitle">Completa los datos para reservar la cita</p>
+        </div>
+        <button class="nci-close" id="nuevaCitaClose"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="nci-body">
+        <!-- Búsqueda de paciente -->
+        <div class="nci-section">
+          <div class="nci-section-label"><i class="fa-solid fa-user"></i> Paciente</div>
+          <div class="nci-patient-search">
+            <input type="text" id="nciPacienteSearch" placeholder="Buscar paciente por nombre o teléfono…" autocomplete="off">
+            <div class="nci-patient-dropdown" id="nciPacienteDropdown"></div>
+          </div>
+          <div class="nci-patient-selected" id="nciPacienteSelected" style="display:none;">
+            <div class="nci-patient-chip">
+              <span class="nci-patient-chip-avatar" id="nciPacienteAvatar">P</span>
+              <div>
+                <strong id="nciPacienteNombreDisplay"></strong>
+                <small id="nciPacienteTelDisplay"></small>
+              </div>
+              <button class="nci-patient-chip-remove" id="nciPacienteRemove" title="Cambiar paciente"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+          </div>
+          <!-- Campos ocultos -->
+          <input type="hidden" id="nciPacienteNombre">
+          <input type="hidden" id="nciPacienteTelefono">
+        </div>
+
+        <!-- Servicio -->
+        <div class="nci-section">
+          <div class="nci-section-label"><i class="fa-solid fa-stethoscope"></i> Servicio</div>
+          <div class="nci-service-grid" id="nciServiceGrid">
+            <button type="button" class="nci-service-btn" data-service="fisioterapia">💪 Fisioterapia</button>
+            <button type="button" class="nci-service-btn" data-service="osteopatia">🤲 Osteopatía</button>
+            <button type="button" class="nci-service-btn" data-service="neurofisioterapia">🧠 Neurofisioterapia</button>
+            <button type="button" class="nci-service-btn" data-service="uroginecologia">🌸 Uroginecología</button>
+            <button type="button" class="nci-service-btn" data-service="psicologia">🧘 Psicología</button>
+            <button type="button" class="nci-service-btn" data-service="nutricion">🥗 Nutrición</button>
+            <button type="button" class="nci-service-btn" data-service="pilates">🤸 Pilates</button>
+            <button type="button" class="nci-service-btn" data-service="otro">➕ Otro</button>
+          </div>
+          <input type="hidden" id="nciServicio">
+        </div>
+
+        <!-- Fecha y Hora -->
+        <div class="nci-section">
+          <div class="nci-section-label"><i class="fa-solid fa-clock"></i> Fecha y Hora</div>
+          <div class="nci-datetime-row">
+            <div class="nci-field">
+              <label for="nciFecha">Fecha *</label>
+              <input type="date" id="nciFecha">
+            </div>
+            <div class="nci-field">
+              <label for="nciHora">Hora *</label>
+              <input type="time" id="nciHora" step="900">
+            </div>
+          </div>
+        </div>
+
+        <!-- Mensaje / Notas -->
+        <div class="nci-section">
+          <div class="nci-section-label"><i class="fa-solid fa-comment"></i> Notas (opcional)</div>
+          <textarea id="nciMensaje" class="nci-textarea" placeholder="Motivo de la consulta, indicaciones especiales…" rows="3"></textarea>
+        </div>
+      </div>
+
+      <!-- Feedback -->
+      <div class="nci-feedback" id="nciFeedback"></div>
+
+      <!-- Footer -->
+      <div class="nci-footer">
+        <button class="nci-cancel-btn" id="nuevaCitaCancel">Cancelar</button>
+        <button class="nci-save-btn" id="nuevaCitaSave"><i class="fa-solid fa-calendar-check"></i> Confirmar Cita</button>
       </div>
     </div>
   </div>
