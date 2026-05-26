@@ -1492,9 +1492,18 @@
     .calendar-toolbar-left {
         flex-wrap: nowrap;
         overflow-x: auto;
+        min-width: 0;
     }
 
     .calendar-toolbar-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+        min-width: 0;
+    }
+
+    .calendar-toolbar-right .import-google-btn {
         display: none;
     }
 

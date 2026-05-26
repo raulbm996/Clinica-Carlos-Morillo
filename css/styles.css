@@ -2560,27 +2560,27 @@ select.form-control {
     }
 }
 
-    .services-grid {
-        max-width: 100%;
-    }
+.services-grid {
+    max-width: 100%;
+}
 
-    .services-grid .service-card {
-        min-width: unset;
-        width: 100%;
-    }
+.services-grid .service-card {
+    min-width: unset;
+    width: 100%;
+}
 
-    .reviews-arrow {
-        display: none;
-    }
+.reviews-arrow {
+    display: none;
+}
 
-    .hero-stat-number {
-        font-size: 2.2rem;
-    }
+.hero-stat-number {
+    font-size: 2.2rem;
+}
 
-    .services-page-grid {
-        grid-template-columns: 1fr;
-        max-width: 100%;
-    }
+.services-page-grid {
+    grid-template-columns: 1fr;
+    max-width: 100%;
+}
 }
 
 /* ============================================
