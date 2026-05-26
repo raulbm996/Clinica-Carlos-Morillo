@@ -813,10 +813,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (fichaIconCal) {
         fichaIconCal.addEventListener('click', () => {
-            const nombre    = document.getElementById('fNombre').value.trim();
+            const nombre = document.getElementById('fNombre').value.trim();
             const apellidos = document.getElementById('fApellidos').value.trim();
-            const telefono  = document.getElementById('fTelefono').value.trim();
-            const fullName  = [nombre, apellidos].filter(Boolean).join(' ');
+            const telefono = document.getElementById('fTelefono').value.trim();
+            const fullName = [nombre, apellidos].filter(Boolean).join(' ');
             // Abrir el modal de Nueva Cita con el paciente pre-seleccionado
             if (window.openNuevaCita) {
                 window.openNuevaCita({ nombre: fullName, telefono });
@@ -1313,27 +1313,27 @@ document.addEventListener('DOMContentLoaded', () => {
     /* ======================================================
        NUEVA CITA MODAL
        ====================================================== */
-    const nuevaCitaOverlay  = document.getElementById('nuevaCitaOverlay');
-    const btnNuevaCita      = document.getElementById('btnNuevaCita');
-    const nuevaCitaClose    = document.getElementById('nuevaCitaClose');
-    const nuevaCitaCancel   = document.getElementById('nuevaCitaCancel');
-    const nuevaCitaSave     = document.getElementById('nuevaCitaSave');
-    const nciFeedback       = document.getElementById('nciFeedback');
+    const nuevaCitaOverlay = document.getElementById('nuevaCitaOverlay');
+    const btnNuevaCita = document.getElementById('btnNuevaCita');
+    const nuevaCitaClose = document.getElementById('nuevaCitaClose');
+    const nuevaCitaCancel = document.getElementById('nuevaCitaCancel');
+    const nuevaCitaSave = document.getElementById('nuevaCitaSave');
+    const nciFeedback = document.getElementById('nciFeedback');
 
     // Campos del modal
-    const nciPacienteSearch    = document.getElementById('nciPacienteSearch');
-    const nciPacienteDropdown  = document.getElementById('nciPacienteDropdown');
-    const nciPacienteSelected  = document.getElementById('nciPacienteSelected');
-    const nciPacienteAvatar    = document.getElementById('nciPacienteAvatar');
+    const nciPacienteSearch = document.getElementById('nciPacienteSearch');
+    const nciPacienteDropdown = document.getElementById('nciPacienteDropdown');
+    const nciPacienteSelected = document.getElementById('nciPacienteSelected');
+    const nciPacienteAvatar = document.getElementById('nciPacienteAvatar');
     const nciPacienteNombreDisplay = document.getElementById('nciPacienteNombreDisplay');
-    const nciPacienteTelDisplay    = document.getElementById('nciPacienteTelDisplay');
-    const nciPacienteRemove    = document.getElementById('nciPacienteRemove');
-    const nciPacienteNombre    = document.getElementById('nciPacienteNombre');
-    const nciPacienteTelefono  = document.getElementById('nciPacienteTelefono');
-    const nciServicioInput     = document.getElementById('nciServicio');
-    const nciFecha             = document.getElementById('nciFecha');
-    const nciHora              = document.getElementById('nciHora');
-    const nciMensaje           = document.getElementById('nciMensaje');
+    const nciPacienteTelDisplay = document.getElementById('nciPacienteTelDisplay');
+    const nciPacienteRemove = document.getElementById('nciPacienteRemove');
+    const nciPacienteNombre = document.getElementById('nciPacienteNombre');
+    const nciPacienteTelefono = document.getElementById('nciPacienteTelefono');
+    const nciServicioInput = document.getElementById('nciServicio');
+    const nciFecha = document.getElementById('nciFecha');
+    const nciHora = document.getElementById('nciHora');
+    const nciMensaje = document.getElementById('nciMensaje');
 
     function openNuevaCita(opts = {}) {
         if (!nuevaCitaOverlay) return;
@@ -1349,7 +1349,7 @@ document.addEventListener('DOMContentLoaded', () => {
         nciServicioInput.value = '';
         // Pre-rellenar fecha si se pasa
         nciFecha.value = opts.fecha || formatLocalDate(new Date());
-        nciHora.value  = opts.hora  || '';
+        nciHora.value = opts.hora || '';
         nciMensaje.value = '';
         nciFeedback.textContent = '';
         nciFeedback.className = 'nci-feedback';
@@ -1357,7 +1357,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Pre-rellenar paciente si se pasa
         if (opts.nombre) {
-            nciPacienteNombre.value   = opts.nombre;
+            nciPacienteNombre.value = opts.nombre;
             nciPacienteTelefono.value = opts.telefono || '';
             _selectPatientChip(opts.nombre, opts.telefono || '');
         }
@@ -1384,7 +1384,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnNuevaCita) btnNuevaCita.addEventListener('click', () => openNuevaCita());
 
     // Cerrar modal
-    if (nuevaCitaClose)  nuevaCitaClose.addEventListener('click', closeNuevaCita);
+    if (nuevaCitaClose) nuevaCitaClose.addEventListener('click', closeNuevaCita);
     if (nuevaCitaCancel) nuevaCitaCancel.addEventListener('click', closeNuevaCita);
     if (nuevaCitaOverlay) {
         nuevaCitaOverlay.addEventListener('click', e => {
@@ -1398,7 +1398,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Quitar paciente seleccionado
     if (nciPacienteRemove) {
         nciPacienteRemove.addEventListener('click', () => {
-            nciPacienteNombre.value   = '';
+            nciPacienteNombre.value = '';
             nciPacienteTelefono.value = '';
             nciPacienteSelected.style.display = 'none';
             nciPacienteSearch.style.display = '';
@@ -1434,7 +1434,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </div>
                             </div>`;
                         document.getElementById('nciUseManual')?.addEventListener('click', () => {
-                            nciPacienteNombre.value   = q;
+                            nciPacienteNombre.value = q;
                             nciPacienteTelefono.value = '';
                             _selectPatientChip(q, '');
                         });
@@ -1451,7 +1451,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <small>${p.telefono || 'Sin teléfono'}</small>
                                 </div>`;
                             item.addEventListener('click', () => {
-                                nciPacienteNombre.value   = fullName;
+                                nciPacienteNombre.value = fullName;
                                 nciPacienteTelefono.value = p.telefono || '';
                                 _selectPatientChip(fullName, p.telefono || '');
                             });
@@ -1485,20 +1485,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // Guardar cita
     if (nuevaCitaSave) {
         nuevaCitaSave.addEventListener('click', async () => {
-            const nombre   = nciPacienteNombre.value.trim() || nciPacienteSearch.value.trim();
+            const nombre = nciPacienteNombre.value.trim() || nciPacienteSearch.value.trim();
             const telefono = nciPacienteTelefono.value.trim();
             const servicio = nciServicioInput.value.trim();
-            const fecha    = nciFecha.value.trim();
-            const hora     = nciHora.value.trim();
-            const mensaje  = nciMensaje.value.trim();
+            const fecha = nciFecha.value.trim();
+            const hora = nciHora.value.trim();
+            const mensaje = nciMensaje.value.trim();
 
             // Validaciones
             const errors = [];
-            if (!nombre)   errors.push('El nombre del paciente es obligatorio.');
+            if (!nombre) errors.push('El nombre del paciente es obligatorio.');
             if (!telefono) errors.push('El teléfono es obligatorio para crear la cita.');
             if (!servicio) errors.push('Selecciona un servicio.');
-            if (!fecha)    errors.push('La fecha es obligatoria.');
-            if (!hora)     errors.push('La hora es obligatoria.');
+            if (!fecha) errors.push('La fecha es obligatoria.');
+            if (!hora) errors.push('La hora es obligatoria.');
 
             if (errors.length) {
                 nciFeedback.textContent = errors[0];
@@ -1533,7 +1533,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     // Si hay una ficha de paciente abierta para ese teléfono, refrescar sus citas
                     const fichaId = document.getElementById('fichaId')?.value;
-                    const fTelEl  = document.getElementById('fTelefono');
+                    const fTelEl = document.getElementById('fTelefono');
                     if (fichaId && fTelEl && fTelEl.value.trim() === telefono) {
                         loadFichaCitas(fichaId, telefono);
                     }

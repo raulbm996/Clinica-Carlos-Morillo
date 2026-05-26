@@ -2322,14 +2322,30 @@ select.form-control {
 
     .contact-info-card {
         padding: var(--space-lg);
+        flex-wrap: wrap;
     }
 
     .contact-form-wrapper {
         padding: var(--space-xl);
     }
 
+    .contact-grid {
+        align-items: stretch;
+    }
+
+    .contact-form-wrapper,
+    .contact-info {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
     .form-control {
         padding: 14px 16px;
+        min-height: 52px;
     }
 
     .btn {
@@ -2502,6 +2518,47 @@ select.form-control {
     .hero-badge {
         font-size: 0.72rem;
     }
+
+    .contact {
+        padding: var(--space-5xl) 0;
+    }
+
+    .contact .container {
+        padding: 0 var(--space-md);
+    }
+
+    .contact-form-wrapper,
+    .contact-info {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .contact-form-wrapper {
+        padding: var(--space-xl);
+    }
+
+    .contact-info-card {
+        gap: var(--space-md);
+    }
+
+    .form-control {
+        font-size: 0.96rem;
+        line-height: 1.4;
+    }
+
+    input[type="date"],
+    select.form-control {
+        min-height: 54px;
+    }
+
+    .contact-info .section-title h2 {
+        font-size: 1.4rem;
+    }
+
+    .contact-info .section-title p {
+        font-size: 0.95rem;
+    }
+}
 
     .services-grid {
         max-width: 100%;

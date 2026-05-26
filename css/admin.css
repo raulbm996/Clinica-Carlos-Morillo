@@ -2678,14 +2678,14 @@ body.dark-theme .strength-bar {
     font-size: .84rem;
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 3px 12px rgba(59,178,184,.35);
+    box-shadow: 0 3px 12px rgba(59, 178, 184, .35);
     transition: transform .15s, box-shadow .15s, background .15s;
     margin-right: 8px;
 }
 
 .nueva-cita-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(59,178,184,.45);
+    box-shadow: 0 6px 20px rgba(59, 178, 184, .45);
     background: linear-gradient(135deg, var(--ck-teal-dark) 0%, var(--ck-teal-darker) 100%);
 }
 
@@ -2700,7 +2700,7 @@ body.dark-theme .strength-bar {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(15,23,42,.55);
+    background: rgba(15, 23, 42, .55);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
     z-index: 3000;
@@ -2715,8 +2715,13 @@ body.dark-theme .strength-bar {
 }
 
 @keyframes nciOverlayIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .nueva-cita-modal {
@@ -2726,14 +2731,21 @@ body.dark-theme .strength-bar {
     max-height: 90vh;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 24px 64px rgba(15,23,42,.22), 0 4px 16px rgba(59,178,184,.12);
-    animation: nciModalIn .25s cubic-bezier(.34,1.56,.64,1);
+    box-shadow: 0 24px 64px rgba(15, 23, 42, .22), 0 4px 16px rgba(59, 178, 184, .12);
+    animation: nciModalIn .25s cubic-bezier(.34, 1.56, .64, 1);
     overflow: hidden;
 }
 
 @keyframes nciModalIn {
-    from { transform: translateY(24px) scale(.97); opacity: 0; }
-    to   { transform: translateY(0)    scale(1);   opacity: 1; }
+    from {
+        transform: translateY(24px) scale(.97);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
 }
 
 /* Header */
@@ -2757,7 +2769,7 @@ body.dark-theme .strength-bar {
     justify-content: center;
     font-size: 1.2rem;
     flex-shrink: 0;
-    box-shadow: 0 4px 12px rgba(59,178,184,.3);
+    box-shadow: 0 4px 12px rgba(59, 178, 184, .3);
 }
 
 .nci-title {
@@ -2774,7 +2786,7 @@ body.dark-theme .strength-bar {
     margin: 0;
 }
 
-.nci-header > div:nth-child(2) {
+.nci-header>div:nth-child(2) {
     flex: 1;
 }
 
@@ -2850,7 +2862,7 @@ body.dark-theme .strength-bar {
 .nci-patient-search input:focus {
     outline: none;
     border-color: var(--ck-teal);
-    box-shadow: 0 0 0 4px rgba(59,178,184,.1);
+    box-shadow: 0 0 0 4px rgba(59, 178, 184, .1);
     background: #fff;
 }
 
@@ -2862,7 +2874,7 @@ body.dark-theme .strength-bar {
     background: #fff;
     border: 1px solid #e2e8f0;
     border-radius: 10px;
-    box-shadow: 0 8px 24px rgba(15,23,42,.12);
+    box-shadow: 0 8px 24px rgba(15, 23, 42, .12);
     z-index: 100;
     max-height: 220px;
     overflow-y: auto;
@@ -2949,7 +2961,7 @@ body.dark-theme .strength-bar {
     flex-shrink: 0;
 }
 
-.nci-patient-chip > div:nth-child(2) {
+.nci-patient-chip>div:nth-child(2) {
     flex: 1;
 }
 
@@ -2969,7 +2981,7 @@ body.dark-theme .strength-bar {
     height: 28px;
     border: none;
     border-radius: 6px;
-    background: rgba(220,38,38,.1);
+    background: rgba(220, 38, 38, .1);
     color: #dc2626;
     cursor: pointer;
     display: flex;
@@ -2980,7 +2992,7 @@ body.dark-theme .strength-bar {
 }
 
 .nci-patient-chip-remove:hover {
-    background: rgba(220,38,38,.2);
+    background: rgba(220, 38, 38, .2);
 }
 
 /* Service grid */
@@ -3015,7 +3027,7 @@ body.dark-theme .strength-bar {
     border-color: var(--ck-teal);
     background: linear-gradient(135deg, #e6f7f8, #d0f2f3);
     color: var(--ck-teal-darker);
-    box-shadow: 0 2px 8px rgba(59,178,184,.2);
+    box-shadow: 0 2px 8px rgba(59, 178, 184, .2);
     transform: scale(1.03);
 }
 
@@ -3052,7 +3064,7 @@ body.dark-theme .strength-bar {
 .nci-field input:focus {
     outline: none;
     border-color: var(--ck-teal);
-    box-shadow: 0 0 0 4px rgba(59,178,184,.1);
+    box-shadow: 0 0 0 4px rgba(59, 178, 184, .1);
     background: #fff;
 }
 
@@ -3074,7 +3086,7 @@ body.dark-theme .strength-bar {
 .nci-textarea:focus {
     outline: none;
     border-color: var(--ck-teal);
-    box-shadow: 0 0 0 4px rgba(59,178,184,.1);
+    box-shadow: 0 0 0 4px rgba(59, 178, 184, .1);
     background: #fff;
 }
 
@@ -3087,8 +3099,13 @@ body.dark-theme .strength-bar {
     text-align: center;
 }
 
-.nci-feedback.error   { color: #dc2626; }
-.nci-feedback.success { color: #16a34a; }
+.nci-feedback.error {
+    color: #dc2626;
+}
+
+.nci-feedback.success {
+    color: #16a34a;
+}
 
 /* Footer */
 .nci-footer {
@@ -3133,13 +3150,13 @@ body.dark-theme .strength-bar {
     font-size: .9rem;
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 4px 14px rgba(59,178,184,.35);
+    box-shadow: 0 4px 14px rgba(59, 178, 184, .35);
     transition: transform .15s, box-shadow .15s, background .15s;
 }
 
 .nci-save-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(59,178,184,.45);
+    box-shadow: 0 6px 20px rgba(59, 178, 184, .45);
     background: linear-gradient(135deg, var(--ck-teal-dark) 0%, var(--ck-teal-darker) 100%);
 }
 
@@ -3160,9 +3177,18 @@ body.dark-theme .nci-header {
     border-color: #334155;
 }
 
-body.dark-theme .nci-title { color: #f8fafc; }
-body.dark-theme .nci-body { background: #1e293b; }
-body.dark-theme .nci-footer { background: #0f172a; border-color: #334155; }
+body.dark-theme .nci-title {
+    color: #f8fafc;
+}
+
+body.dark-theme .nci-body {
+    background: #1e293b;
+}
+
+body.dark-theme .nci-footer {
+    background: #0f172a;
+    border-color: #334155;
+}
 
 body.dark-theme .nci-patient-search input,
 body.dark-theme .nci-field input,
@@ -3189,7 +3215,9 @@ body.dark-theme .nci-patient-dropdown {
     border-color: #334155;
 }
 
-body.dark-theme .nci-dropdown-item:hover { background: #0f172a; }
+body.dark-theme .nci-dropdown-item:hover {
+    background: #0f172a;
+}
 
 body.dark-theme .nci-cancel-btn {
     background: #1e293b;
