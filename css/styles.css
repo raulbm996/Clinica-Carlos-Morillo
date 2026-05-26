@@ -2016,6 +2016,7 @@ p {
     box-shadow: var(--shadow-md);
     position: relative;
     overflow: hidden;
+    min-width: 0;
 }
 
 .contact-form-wrapper::before {
@@ -2230,7 +2231,6 @@ select.form-control {
    ============================================ */
 @media (max-width: 1024px) {
     .hero .container {
-        display: grid;
         grid-template-columns: 1fr;
         text-align: center;
         padding-top: calc(var(--navbar-height) + var(--space-3xl));
@@ -2295,45 +2295,58 @@ select.form-control {
         display: none;
     }
 
+    .contact {
+        padding: var(--space-5xl) 0;
+    }
+
+    .contact .container {
+        max-width: 980px;
+    }
+
+    .contact-grid {
+        gap: var(--space-2xl);
+    }
+
+    .contact-form-wrapper,
+    .contact-info {
+        width: 100%;
+    }
+
+    .contact-info {
+        padding: 0 var(--space-sm);
+    }
+
+    .contact-info-cards {
+        gap: var(--space-md);
+    }
+
+    .contact-info-card {
+        padding: var(--space-lg);
+    }
+
+    .contact-form-wrapper {
+        padding: var(--space-xl);
+    }
+
+    .form-control {
+        padding: 14px 16px;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
     .nav-hamburger {
         display: flex;
     }
 
     .nav-mobile {
         display: flex;
-        padding: 70px 1.5rem;
-        align-items: flex-start;
-        overflow-y: auto;
-    }
-
-    .nav-mobile .btn {
-        width: min(260px, 100%);
     }
 
     .hero {
         min-height: 92vh;
-    }
-
-    .hero-content {
-        padding: 0 var(--space-lg);
-    }
-
-    .hero-text {
-        max-width: 100%;
-        font-size: 1rem;
-    }
-
-    .footer-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .contact-grid,
-    .services-page-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .team-list {
-        gap: var(--space-lg);
     }
 
     .hero-stats {
@@ -2442,29 +2455,6 @@ select.form-control {
         grid-template-columns: 1fr;
     }
 
-    .contact-form-wrapper {
-        padding: var(--space-xl);
-    }
-
-    .contact-info-card {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .contact-info-card .contact-info-icon {
-        width: 48px;
-        height: 48px;
-        min-width: 48px;
-    }
-
-    .contact-info-card h4 {
-        font-size: 0.98rem;
-    }
-
-    .contact-info-card p {
-        font-size: 0.95rem;
-    }
-
     .page-header {
         padding: calc(var(--navbar-height) + var(--space-2xl)) 0 var(--space-2xl);
     }
@@ -2496,10 +2486,6 @@ select.form-control {
 }
 
 @media (max-width: 480px) {
-    .container {
-        padding: 0 1rem;
-    }
-
     h1 {
         font-size: 2rem;
     }
