@@ -1945,7 +1945,7 @@
 }
 
 .asistente-card-table {
-    display: flex;
+    display: none;
     gap: 16px;
     align-items: flex-start;
     border: 1px solid #e2e8f0;
@@ -1953,6 +1953,10 @@
     padding: 18px 20px;
     margin-bottom: 12px;
     background: #f5fbff;
+}
+
+.asistente-card-table.visible {
+    display: flex;
 }
 
 .asistente-card-table .asistente-card-icon {

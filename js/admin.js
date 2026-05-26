@@ -904,12 +904,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const el = document.getElementById(id);
             if (el) el.value = '';
         });
+        const asistenteSummary = document.getElementById('asistentePatientSummary');
+        if (asistenteSummary) asistenteSummary.classList.add('visible');
         asistenteOverlay.classList.add('active');
         const nombreInput = document.getElementById('asiNombre');
         if (nombreInput) setTimeout(() => nombreInput.focus(), 150);
     }
 
     function closeAsistente() {
+        const asistenteSummary = document.getElementById('asistentePatientSummary');
+        if (asistenteSummary) asistenteSummary.classList.remove('visible');
         if (asistenteOverlay) asistenteOverlay.classList.remove('active');
     }
 
