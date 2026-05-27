@@ -1561,6 +1561,59 @@
         gap: 16px;
     }
 
+    /* Ensure tabs are scrollable and visible on small screens */
+    .admin-tabs {
+        display: flex;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        gap: 12px;
+        padding: 6px 10px;
+        background: var(--ck-white);
+        border-bottom: 1px solid var(--ck-border);
+        z-index: 60;
+    }
+
+    .admin-tabs::-webkit-scrollbar { height: 6px; }
+    .admin-tabs::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.08); border-radius: 4px; }
+
+    .tab-btn {
+        flex: 0 0 auto;
+        white-space: nowrap;
+        padding: 8px 10px;
+        font-size: .9rem;
+    }
+
+    /* Calendar toolbar: allow wrapping and shrink children to fit */
+    .calendar-toolbar {
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 8px 10px;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    .calendar-toolbar-left {
+        display: flex;
+        gap: 6px;
+        flex: 1 1 auto;
+        min-width: 0;
+        align-items: center;
+    }
+
+    .calendar-toolbar-right {
+        flex: 0 0 auto;
+        display: flex;
+        gap: 6px;
+        align-items: center;
+    }
+
+    .cal-month-select, .cal-year-select, .cal-expand-btn, .nueva-cita-btn, .cal-prev, .cal-next {
+        flex: 0 0 auto;
+        min-width: 0;
+    }
+
+    .nueva-cita-btn { padding: 7px 12px; font-size: .82rem; }
+
     #pacientes {
         padding: 12px;
     }
@@ -2574,6 +2627,20 @@
         gap: 8px;
         padding: 6px 10px;
     }
+
+    .admin-tabs {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .tab-btn { font-size: .86rem; padding: 7px 8px; }
+
+    .calendar-toolbar {
+        padding: 6px 8px;
+    }
+
+    /* Reduce select sizes */
+    .cal-month-select, .cal-year-select { padding: 6px 8px; font-size: .82rem; }
 
     .tab-btn {
         padding: 8px 8px;
