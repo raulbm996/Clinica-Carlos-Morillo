@@ -2448,6 +2448,89 @@
 }
 
 /* ============================================================
+   GLOBAL ADMIN RESPONSIVE IMPROVEMENTS
+   ============================================================ */
+.admin-main,
+.admin-sidebar,
+.admin-topbar,
+.admin-content,
+.table-responsive,
+.card-table,
+.search-box {
+    min-width: 0;
+}
+
+.data-table th,
+.data-table td {
+    white-space: normal;
+    word-break: break-word;
+}
+
+.asistente-modal,
+.nueva-cita-modal {
+    width: min(100%, 95%);
+    margin: 12px;
+}
+
+@media (max-width: 900px) {
+    .admin-main {
+        margin-left: 0;
+    }
+
+    .admin-sidebar {
+        width: 100%;
+        max-width: 100%;
+        transform: translateX(-100%);
+    }
+
+    .admin-sidebar.show {
+        transform: translateX(0);
+    }
+
+    .hamburger-menu {
+        display: block;
+    }
+
+    .topbar-search {
+        flex: 1 1 100%;
+        min-width: 0;
+    }
+
+    .topbar-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: flex-end;
+        width: 100%;
+    }
+
+    .section-top {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .card-table {
+        overflow-x: auto;
+    }
+}
+
+@media (max-width: 700px) {
+    .admin-topbar {
+        padding: 0 12px;
+    }
+
+    .topbar-search {
+        height: auto;
+        padding: 8px 10px;
+    }
+
+    .action-btn {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+}
+
+/* ============================================================
    PLACEHOLDER VIEW SECTIONS (PROXIMAMENTE)
    ============================================================ */
 .proximamente-container {

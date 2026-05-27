@@ -2583,6 +2583,108 @@ select.form-control {
 }
 }
 
+/* ============================================================
+   GLOBAL RESPONSIVE FIXES
+   ============================================================ */
+html,
+body {
+    min-width: 320px;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: var(--max-width);
+    padding-left: var(--space-xl);
+    padding-right: var(--space-xl);
+}
+
+img,
+picture,
+video,
+iframe,
+embed,
+object {
+    max-width: 100%;
+    height: auto;
+}
+
+@media (max-width: 1024px) {
+    .container {
+        padding-left: var(--space-lg);
+        padding-right: var(--space-lg);
+    }
+
+    .navbar .container,
+    .hero .container,
+    .about-preview .container,
+    .footer-grid,
+    .contact-grid,
+    .services-grid,
+    .team-list,
+    .page-header,
+    .reviews-google-header,
+    .reviews-rating-big,
+    .form-row,
+    .section-top {
+        min-width: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding-left: var(--space-md);
+        padding-right: var(--space-md);
+    }
+
+    .nav-hamburger {
+        display: flex;
+    }
+
+    .navbar .container {
+        flex-wrap: wrap;
+        gap: var(--space-md);
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+    .nav-mobile {
+        position: fixed;
+        top: var(--navbar-height);
+        height: calc(100vh - var(--navbar-height));
+        padding-top: var(--space-lg);
+    }
+
+    .nav-mobile .nav-link {
+        text-align: center;
+    }
+
+    .hero {
+        min-height: auto;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding-left: var(--space-sm);
+        padding-right: var(--space-sm);
+    }
+
+    .hero,
+    .contact,
+    .about,
+    .services,
+    .footer {
+        padding-left: var(--space-sm);
+        padding-right: var(--space-sm);
+    }
+}
+
 /* ============================================
    SMOOTH PAGE TRANSITIONS
    ============================================ */
