@@ -3468,8 +3468,9 @@ body.dark-theme .nci-cancel-btn {
         top: 54px; /* below topbar */
         z-index: 70;
         background: var(--ck-white);
-        margin: 0 -6px 8px -6px;
-        padding: 6px 8px;
+        margin: 0 0 8px 0;
+        padding: 6px 10px;
+        border-bottom: 1px solid var(--ck-border);
     }
 
     /* Ensure topbar is slightly smaller on very small screens */
@@ -3484,6 +3485,10 @@ body.dark-theme .nci-cancel-btn {
         gap: 6px;
         padding: 6px 10px;
         align-items: center;
+    }
+    /* add spacing so sticky tabs don't overlap content */
+    .view-section {
+        padding-top: 6px;
     }
 
     .calendar-toolbar-left {
