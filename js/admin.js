@@ -1496,13 +1496,13 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </div>
                             </div>`;
                         document.getElementById('nciUseManual')?.addEventListener('click', () => {
-                                nciPacienteNombre.value = q;
-                                nciPacienteTelefono.value = '';
-                                // Clear any existing selected paciente id (manual new patient)
-                                const pidEl = document.getElementById('nciPacienteId');
-                                if (pidEl) pidEl.value = '';
-                                _selectPatientChip(q, '');
-                            });
+                            nciPacienteNombre.value = q;
+                            nciPacienteTelefono.value = '';
+                            // Clear any existing selected paciente id (manual new patient)
+                            const pidEl = document.getElementById('nciPacienteId');
+                            if (pidEl) pidEl.value = '';
+                            _selectPatientChip(q, '');
+                        });
                     } else {
                         data.pacientes.slice(0, 8).forEach(p => {
                             const fullName = `${p.nombre || ''} ${p.apellidos || ''}`.trim();
