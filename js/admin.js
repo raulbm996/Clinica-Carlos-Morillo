@@ -1402,6 +1402,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const nciHora = document.getElementById('nciHora');
     const nciMensaje = document.getElementById('nciMensaje');
 
+    // Campos de paciente nuevo en Nueva Cita
+    const nciTogglePatientMode = document.getElementById('nciTogglePatientMode');
+    const nciNewPatientCard = document.getElementById('nciNewPatientCard');
+    const nciNewNombre = document.getElementById('nciNewNombre');
+    const nciNewApellidos = document.getElementById('nciNewApellidos');
+    const nciNewTelefono = document.getElementById('nciNewTelefono');
+    const nciNewEmail = document.getElementById('nciNewEmail');
+
     function openNuevaCita(opts = {}) {
         if (!nuevaCitaOverlay) return;
         // Limpiar estado
@@ -1414,6 +1422,21 @@ document.addEventListener('DOMContentLoaded', () => {
         nciPacienteSearch.style.display = '';
         document.querySelectorAll('.nci-service-btn').forEach(b => b.classList.remove('selected'));
         nciServicioInput.value = '';
+        
+        // Limpiar campos de paciente nuevo
+        if (nciNewPatientCard) nciNewPatientCard.style.display = 'none';
+        if (nciNewNombre) nciNewNombre.value = '';
+        if (nciNewApellidos) nciNewApellidos.value = '';
+        if (nciNewTelefono) nciNewTelefono.value = '';
+        if (nciNewEmail) nciNewEmail.value = '';
+        if (nciTogglePatientMode) {
+            nciTogglePatientMode.style.display = '';
+            nciTogglePatientMode.innerHTML = '<i class="fa-solid fa-user-plus"></i> <span>¿Es un paciente nuevo? Registrar y asignar cita</span>';
+        }
+        if (nciPacienteSearch) {
+            nciPacienteSearch.parentElement.style.display = '';
+        }
+
         // Pre-rellenar fecha si se pasa
         nciFecha.value = opts.fecha || formatLocalDate(new Date());
         nciHora.value = opts.hora || '';
@@ -1431,6 +1454,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
         nuevaCitaOverlay.classList.add('active');
         setTimeout(() => nciPacienteSearch.focus(), 150);
+    }
+
+    // Toggle de modo (buscar o nuevo) en Nueva Cita
+    if (nciTogglePatientMode) {
+        nciTogglePatientMode.addEventListener('click', () => {
+            const isSearching = (nciPacienteSearch.parentElement.style.display !== 'none');
+            if (isSearching) {
+                // Switch to new patient mode
+                nciPacienteSearch.parentElement.style.display = 'none';
+                nciPacienteSelected.style.display = 'none';
+                nciNewPatientCard.style.display = '';
+                nciTogglePatientMode.innerHTML = '<i class="fa-solid fa-search"></i> <span>¿Buscar un paciente existente?</span>';
+                if (nciNewNombre) setTimeout(() => nciNewNombre.focus(), 50);
+            } else {
+                // Switch to searching mode
+                nciPacienteSearch.parentElement.style.display = '';
+                if (nciPacienteNombre.value) {
+                    nciPacienteSelected.style.display = '';
+                } else {
+                    nciPacienteSearch.style.display = '';
+                }
+                nciNewPatientCard.style.display = 'none';
+                nciTogglePatientMode.innerHTML = '<i class="fa-solid fa-user-plus"></i> <span>¿Es un paciente nuevo? Registrar y asignar cita</span>';
+                setTimeout(() => nciPacienteSearch.focus(), 50);
+            }
+        });
     }
 
     function closeNuevaCita() {
@@ -1565,8 +1614,22 @@ document.addEventListener('DOMContentLoaded', () => {
     // Guardar cita
     if (nuevaCitaSave) {
         nuevaCitaSave.addEventListener('click', async () => {
-            const nombre = nciPacienteNombre.value.trim() || nciPacienteSearch.value.trim();
-            const telefono = nciPacienteTelefono.value.trim();
+            const isNewPatientMode = (nciNewPatientCard && nciNewPatientCard.style.display !== 'none');
+            let nombre = '';
+            let telefono = '';
+            let email = '';
+
+            if (isNewPatientMode) {
+                const newNombre = nciNewNombre.value.trim();
+                const newApellidos = nciNewApellidos.value.trim();
+                telefono = nciNewTelefono.value.trim();
+                email = nciNewEmail.value.trim();
+                nombre = newNombre + (newApellidos ? ' ' + newApellidos : '');
+            } else {
+                nombre = nciPacienteNombre.value.trim() || nciPacienteSearch.value.trim();
+                telefono = nciPacienteTelefono.value.trim();
+            }
+
             const servicio = nciServicioInput.value.trim();
             const fecha = nciFecha.value.trim();
             const hora = nciHora.value.trim();
@@ -1595,7 +1658,44 @@ document.addEventListener('DOMContentLoaded', () => {
                 // If patient not yet created (no id), create patient automatically
                 const pacienteIdEl = document.getElementById('nciPacienteId');
                 let pacienteId = pacienteIdEl?.value?.trim();
-                if (!pacienteId) {
+
+                if (isNewPatientMode) {
+                    nciFeedback.textContent = 'Guardando paciente nuevo…';
+                    nciFeedback.className = 'nci-feedback';
+                    try {
+                        const parts = nombre.split(' ');
+                        const first = parts.shift() || nombre;
+                        const last = parts.join(' ');
+
+                        const pRes = await apiPost(`${API}/pacientes`, {
+                            nombre: first,
+                            apellidos: last,
+                            telefono: telefono,
+                            email: email
+                        });
+                        if (pRes && pRes.ok) {
+                            pacienteId = pRes.id;
+                            if (pacienteIdEl) pacienteIdEl.value = pacienteId;
+                            // keep local list in sync
+                            try {
+                                currentPacientes.unshift({ id: pacienteId, nombre: first, apellidos: last, telefono, email });
+                            } catch (e) { /* ignore */ }
+                        } else {
+                            nciFeedback.textContent = (pRes && pRes.error) ? pRes.error : 'Error al registrar el paciente.';
+                            nciFeedback.className = 'nci-feedback error';
+                            nuevaCitaSave.disabled = false;
+                            nuevaCitaSave.innerHTML = '<i class="fa-solid fa-calendar-check"></i> Confirmar Cita';
+                            return;
+                        }
+                    } catch (err) {
+                        console.error('Error guardando paciente manual:', err);
+                        nciFeedback.textContent = 'Error al registrar el paciente. Inténtalo de nuevo.';
+                        nciFeedback.className = 'nci-feedback error';
+                        nuevaCitaSave.disabled = false;
+                        nuevaCitaSave.innerHTML = '<i class="fa-solid fa-calendar-check"></i> Confirmar Cita';
+                        return;
+                    }
+                } else if (!pacienteId) {
                     nciFeedback.textContent = 'Guardando paciente…';
                     nciFeedback.className = 'nci-feedback';
                     try {
