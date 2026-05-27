@@ -3460,3 +3460,55 @@ body.dark-theme .nci-cancel-btn {
     border-color: #334155;
     color: #94a3b8;
 }
+
+/* Further small-screen fixes: keep tabs visible and prevent overlap */
+@media (max-width: 900px) {
+    .admin-tabs {
+        position: sticky;
+        top: 54px; /* below topbar */
+        z-index: 70;
+        background: var(--ck-white);
+        margin: 0 -6px 8px -6px;
+        padding: 6px 8px;
+    }
+
+    /* Ensure topbar is slightly smaller on very small screens */
+    .admin-topbar {
+        height: 50px;
+        padding: 6px 12px;
+    }
+
+    .calendar-toolbar {
+        overflow-x: hidden;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 6px 10px;
+        align-items: center;
+    }
+
+    .calendar-toolbar-left {
+        min-width: 0;
+        flex: 1 1 auto;
+    }
+
+    .calendar-toolbar-right {
+        flex: 0 0 auto;
+    }
+
+    /* Slightly reduce selects and buttons */
+    .cal-month-select, .cal-year-select { padding: 6px 8px; font-size: .82rem; }
+    .nueva-cita-btn { padding: 6px 10px; font-size: .8rem; }
+}
+
+@media (max-width: 480px) {
+    /* Make tabs take only necessary space and be scrollable if needed */
+    .admin-tabs { padding: 6px 6px; gap: 8px; }
+    .tab-btn { padding: 6px 8px; font-size: .86rem; }
+
+    /* Allow toolbar to scroll horizontally if unavoidable but keep visible */
+    .calendar-toolbar { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .calendar-toolbar::-webkit-scrollbar { height: 6px; }
+
+    /* Reduce topbar search height to free space */
+    .topbar-search { height: 34px; padding: 6px 8px; }
+}
