@@ -895,6 +895,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const asistenteOverlay = document.getElementById('asistenteOverlay');
     const asistenteClose = document.getElementById('asistenteClose');
     const asistenteSaveBtn = document.getElementById('asistenteSaveBtn');
+    const asistenteAssignCitaCard = document.getElementById('asistenteAssignCitaCard');
     const topbarAddBtn = document.getElementById('topbarAddPatientBtn');
 
     function openAsistente() {
@@ -967,6 +968,23 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (err) {
                 alert('Error de conexión.');
             }
+        });
+    }
+
+    if (asistenteAssignCitaCard) {
+        asistenteAssignCitaCard.addEventListener('click', () => {
+            const nombre = (document.getElementById('asiNombre')?.value || '').trim();
+            const apellidos = (document.getElementById('asiApellidos')?.value || '').trim();
+            const telefono = (document.getElementById('asiTelefono')?.value || '').trim();
+
+            if (!nombre) {
+                alert('Es necesario indicar el nombre del paciente para asignar la cita.');
+                return;
+            }
+
+            const fullName = nombre + (apellidos ? ' ' + apellidos : '');
+            openNuevaCita({ nombre: fullName, telefono });
+            closeAsistente();
         });
     }
 

@@ -9,7 +9,7 @@ module.exports = async function handler(req, res) {
 
     // --- CREAR CITA (público) ---
     if (req.method === 'POST' && !req.body?.id && !req.body?.estado) {
-        const { paciente_nombre, telefono, servicio, fecha, hora, mensaje } = req.body || {};
+        const { paciente_nombre, telefono = '', servicio, fecha, hora, mensaje } = req.body || {};
         const errors = [];
         if (!paciente_nombre?.trim()) errors.push('El nombre es obligatorio.');
         if (!telefono?.trim()) errors.push('El teléfono es obligatorio.');
