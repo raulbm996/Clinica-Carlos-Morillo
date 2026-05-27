@@ -618,6 +618,43 @@ document.addEventListener('DOMContentLoaded', () => {
     // Delegación de eventos para clics en la tabla
     if (pacientesBody) {
         pacientesBody.addEventListener('click', (e) => {
+            const smsBtn = e.target.closest('.js-table-sms');
+            if (smsBtn) {
+                e.stopPropagation();
+                const tel = (smsBtn.dataset.tel || '').replace(/\D/g, '');
+                if (!tel) {
+                    alert('El paciente no tiene teléfono válido.');
+                    return;
+                }
+                window.location.href = `sms:+34${tel}`;
+                return;
+            }
+
+            const waBtn = e.target.closest('.js-table-wa');
+            if (waBtn) {
+                e.stopPropagation();
+                const tel = (waBtn.dataset.tel || '').replace(/\D/g, '');
+                if (!tel) {
+                    alert('El paciente no tiene teléfono válido.');
+                    return;
+                }
+                window.open(`https://wa.me/34${tel}`, '_blank');
+                return;
+            }
+
+            const calBtn = e.target.closest('.js-table-cal');
+            if (calBtn) {
+                e.stopPropagation();
+                const row = calBtn.closest('.paciente-row');
+                if (!row) return;
+                const id = row.getAttribute('data-id');
+                const paciente = currentPacientes.find(p => String(p.id) === String(id));
+                if (!paciente) return;
+                const fullName = `${paciente.nombre || ''} ${paciente.apellidos || ''}`.trim();
+                openNuevaCita({ nombre: fullName, telefono: paciente.telefono || '' });
+                return;
+            }
+
             const row = e.target.closest('.paciente-row');
             if (row) {
                 const id = row.getAttribute('data-id');
@@ -1388,7 +1425,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (nuevaCitaOverlay) nuevaCitaOverlay.classList.remove('active');
     }
 
-    function _selectPatientChip(nombre, telefono) {
+    function _selectPatientChip(nombre, telefono, pacienteId = '') {
         const initials = nombre.split(' ').map(w => w[0] || '').join('').toUpperCase().slice(0, 2) || 'P';
         nciPacienteAvatar.textContent = initials;
         nciPacienteNombreDisplay.textContent = nombre;
@@ -1396,6 +1433,11 @@ document.addEventListener('DOMContentLoaded', () => {
         nciPacienteSelected.style.display = '';
         nciPacienteSearch.style.display = 'none';
         nciPacienteDropdown.classList.remove('open');
+        // also populate hidden fields for form submission
+        nciPacienteNombre.value = nombre;
+        nciPacienteTelefono.value = telefono || '';
+        const pidEl = document.getElementById('nciPacienteId');
+        if (pidEl) pidEl.value = pacienteId || '';
     }
 
     // Abrir desde botón de la barra del calendario
@@ -1418,6 +1460,8 @@ document.addEventListener('DOMContentLoaded', () => {
         nciPacienteRemove.addEventListener('click', () => {
             nciPacienteNombre.value = '';
             nciPacienteTelefono.value = '';
+            const pidEl = document.getElementById('nciPacienteId');
+            if (pidEl) pidEl.value = '';
             nciPacienteSelected.style.display = 'none';
             nciPacienteSearch.style.display = '';
             nciPacienteSearch.value = '';
@@ -1452,10 +1496,13 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </div>
                             </div>`;
                         document.getElementById('nciUseManual')?.addEventListener('click', () => {
-                            nciPacienteNombre.value = q;
-                            nciPacienteTelefono.value = '';
-                            _selectPatientChip(q, '');
-                        });
+                                nciPacienteNombre.value = q;
+                                nciPacienteTelefono.value = '';
+                                // Clear any existing selected paciente id (manual new patient)
+                                const pidEl = document.getElementById('nciPacienteId');
+                                if (pidEl) pidEl.value = '';
+                                _selectPatientChip(q, '');
+                            });
                     } else {
                         data.pacientes.slice(0, 8).forEach(p => {
                             const fullName = `${p.nombre || ''} ${p.apellidos || ''}`.trim();
@@ -1471,7 +1518,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             item.addEventListener('click', () => {
                                 nciPacienteNombre.value = fullName;
                                 nciPacienteTelefono.value = p.telefono || '';
-                                _selectPatientChip(fullName, p.telefono || '');
+                                // store patient id so we know it's an existing ficha
+                                const pidEl = document.getElementById('nciPacienteId');
+                                if (pidEl) pidEl.value = p.id || '';
+                                _selectPatientChip(fullName, p.telefono || '', p.id || '');
                             });
                             nciPacienteDropdown.appendChild(item);
                         });
@@ -1530,6 +1580,45 @@ document.addEventListener('DOMContentLoaded', () => {
             nuevaCitaSave.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando…';
 
             try {
+                // If patient not yet created (no id), create patient automatically
+                const pacienteIdEl = document.getElementById('nciPacienteId');
+                let pacienteId = pacienteIdEl?.value?.trim();
+                if (!pacienteId) {
+                    nciFeedback.textContent = 'Guardando paciente…';
+                    nciFeedback.className = 'nci-feedback';
+                    try {
+                        const pRes = await apiPost(`${API}/pacientes`, {
+                            nombre: nombre,
+                            telefono: telefono,
+                            email: ''
+                        });
+                        if (pRes && pRes.ok) {
+                            pacienteId = pRes.id;
+                            if (pacienteIdEl) pacienteIdEl.value = pacienteId;
+                            // keep local list in sync
+                            try {
+                                const parts = nombre.split(' ');
+                                const first = parts.shift() || nombre;
+                                const last = parts.join(' ');
+                                currentPacientes.unshift({ id: pacienteId, nombre: first, apellidos: last, telefono });
+                            } catch (e) { /* ignore */ }
+                        } else {
+                            nciFeedback.textContent = (pRes && pRes.error) ? pRes.error : 'Error al guardar paciente.';
+                            nciFeedback.className = 'nci-feedback error';
+                            nuevaCitaSave.disabled = false;
+                            nuevaCitaSave.innerHTML = '<i class="fa-solid fa-calendar-check"></i> Confirmar Cita';
+                            return;
+                        }
+                    } catch (err) {
+                        console.error('Error guardando paciente automático:', err);
+                        nciFeedback.textContent = 'Error al guardar paciente. Inténtalo de nuevo.';
+                        nciFeedback.className = 'nci-feedback error';
+                        nuevaCitaSave.disabled = false;
+                        nuevaCitaSave.innerHTML = '<i class="fa-solid fa-calendar-check"></i> Confirmar Cita';
+                        return;
+                    }
+                }
+
                 const res = await apiPost(`${API}/citas/crear`, {
                     paciente_nombre: nombre,
                     telefono,
