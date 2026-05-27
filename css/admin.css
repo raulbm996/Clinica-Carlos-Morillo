@@ -975,9 +975,18 @@
     .cal-day-header .day-num {
         font-size: 1rem;
     }
-    .cal-time-label { font-size: .68rem; }
-    .cal-cell { min-height: 48px; }
-    .calendar-grid { grid-template-columns: 48px repeat(7, minmax(0, 1fr)); }
+
+    .cal-time-label {
+        font-size: .68rem;
+    }
+
+    .cal-cell {
+        min-height: 48px;
+    }
+
+    .calendar-grid {
+        grid-template-columns: 48px repeat(7, minmax(0, 1fr));
+    }
 }
 
 /* Expand button in corner */
@@ -1019,6 +1028,12 @@
     border-bottom: 1px solid var(--ck-border);
     min-height: 60px;
     position: relative;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.cal-cell:hover {
+    background-color: rgba(59, 178, 184, 0.05); /* very light teal */
 }
 
 /* ============================================================
@@ -1573,8 +1588,14 @@
         z-index: 60;
     }
 
-    .admin-tabs::-webkit-scrollbar { height: 6px; }
-    .admin-tabs::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.08); border-radius: 4px; }
+    .admin-tabs::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .admin-tabs::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.08);
+        border-radius: 4px;
+    }
 
     .tab-btn {
         flex: 0 0 auto;
@@ -1607,12 +1628,20 @@
         align-items: center;
     }
 
-    .cal-month-select, .cal-year-select, .cal-expand-btn, .nueva-cita-btn, .cal-prev, .cal-next {
+    .cal-month-select,
+    .cal-year-select,
+    .cal-expand-btn,
+    .nueva-cita-btn,
+    .cal-prev,
+    .cal-next {
         flex: 0 0 auto;
         min-width: 0;
     }
 
-    .nueva-cita-btn { padding: 7px 12px; font-size: .82rem; }
+    .nueva-cita-btn {
+        padding: 7px 12px;
+        font-size: .82rem;
+    }
 
     #pacientes {
         padding: 12px;
@@ -2492,6 +2521,10 @@
         padding: 8px 0;
     }
 
+    .admin-sidebar.collapsed .sidebar-footer {
+        padding-bottom: 50px;
+    }
+
     .admin-sidebar.collapsed .sidebar-nav .nav-item a,
     .admin-sidebar.collapsed .sidebar-footer a {
         justify-content: center;
@@ -2633,14 +2666,21 @@
         padding-right: 8px;
     }
 
-    .tab-btn { font-size: .86rem; padding: 7px 8px; }
+    .tab-btn {
+        font-size: .86rem;
+        padding: 7px 8px;
+    }
 
     .calendar-toolbar {
         padding: 6px 8px;
     }
 
     /* Reduce select sizes */
-    .cal-month-select, .cal-year-select { padding: 6px 8px; font-size: .82rem; }
+    .cal-month-select,
+    .cal-year-select {
+        padding: 6px 8px;
+        font-size: .82rem;
+    }
 
     .tab-btn {
         padding: 8px 8px;
@@ -3465,7 +3505,8 @@ body.dark-theme .nci-cancel-btn {
 @media (max-width: 900px) {
     .admin-tabs {
         position: sticky;
-        top: 54px; /* below topbar */
+        top: 54px;
+        /* below topbar */
         z-index: 70;
         background: var(--ck-white);
         margin: 0 0 8px 0;
@@ -3486,6 +3527,7 @@ body.dark-theme .nci-cancel-btn {
         padding: 6px 10px;
         align-items: center;
     }
+
     /* add spacing so sticky tabs don't overlap content */
     .view-section {
         padding-top: 6px;
@@ -3501,19 +3543,44 @@ body.dark-theme .nci-cancel-btn {
     }
 
     /* Slightly reduce selects and buttons */
-    .cal-month-select, .cal-year-select { padding: 6px 8px; font-size: .82rem; }
-    .nueva-cita-btn { padding: 6px 10px; font-size: .8rem; }
+    .cal-month-select,
+    .cal-year-select {
+        padding: 6px 8px;
+        font-size: .82rem;
+    }
+
+    .nueva-cita-btn {
+        padding: 6px 10px;
+        font-size: .8rem;
+    }
 }
 
 @media (max-width: 480px) {
+
     /* Make tabs take only necessary space and be scrollable if needed */
-    .admin-tabs { padding: 6px 6px; gap: 8px; }
-    .tab-btn { padding: 6px 8px; font-size: .86rem; }
+    .admin-tabs {
+        padding: 6px 6px;
+        gap: 8px;
+    }
+
+    .tab-btn {
+        padding: 6px 8px;
+        font-size: .86rem;
+    }
 
     /* Allow toolbar to scroll horizontally if unavoidable but keep visible */
-    .calendar-toolbar { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    .calendar-toolbar::-webkit-scrollbar { height: 6px; }
+    .calendar-toolbar {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .calendar-toolbar::-webkit-scrollbar {
+        height: 6px;
+    }
 
     /* Reduce topbar search height to free space */
-    .topbar-search { height: 34px; padding: 6px 8px; }
+    .topbar-search {
+        height: 34px;
+        padding: 6px 8px;
+    }
 }

@@ -459,6 +459,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         calGrid.innerHTML = html;
 
+        // Click en celda vacía para añadir cita
+        calGrid.querySelectorAll('.cal-cell').forEach(cell => {
+            cell.addEventListener('click', () => {
+                const date = cell.dataset.date;
+                const hour = String(cell.dataset.hour).padStart(2, '0') + ':00';
+                openNuevaCita({ fecha: date, hora: hour });
+            });
+        });
+
         // Cargar citas de la semana desde el backend
         const fechaInicio = days[0].toISOString().slice(0, 10);
         const fechaFin = days[6].toISOString().slice(0, 10);
@@ -479,8 +488,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         citaEl.innerHTML = `<strong>${cita.hora}</strong> ${statusIcon}<br>${cita.paciente_nombre}<br><em style="opacity:.7">${cita.servicio}</em>`;
                         citaEl.title = `${cita.paciente_nombre} — ${cita.servicio}\n${cita.hora} | ${cita.estado}\n${cita.mensaje || ''}`;
 
-                        // Click para cambiar estado
-                        citaEl.addEventListener('click', () => showCitaActions(cita, citaEl));
+                        // Click para cambiar estado (con stopPropagation para no abrir nueva cita)
+                        citaEl.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            showCitaActions(cita, citaEl);
+                        });
                         cell.appendChild(citaEl);
                     }
                 });
