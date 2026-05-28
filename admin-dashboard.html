@@ -713,9 +713,24 @@
           </div>
         </div>
 
-        <!-- Servicio -->
+        <!-- Profesional (obligatorio) -->
         <div class="nci-section">
-          <div class="nci-section-label"><i class="fa-solid fa-stethoscope"></i> Servicio</div>
+          <div class="nci-section-label"><i class="fa-solid fa-user-doctor"></i> Profesional *</div>
+          <div class="nci-profesional-select">
+            <select id="nciProfesional" class="nci-select" required>
+              <option value="">— Selecciona un profesional —</option>
+              <!-- Opciones cargadas dinámicamente -->
+            </select>
+            <div class="nci-profesional-preview" id="nciProfesionalPreview" style="display:none;">
+              <span class="nci-prof-color-dot" id="nciProfColorDot"></span>
+              <span id="nciProfName"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Servicio (opcional) -->
+        <div class="nci-section">
+          <div class="nci-section-label"><i class="fa-solid fa-stethoscope"></i> Servicio <span style="font-weight:400;color:#a0aec0;font-size:.8rem;">(opcional)</span></div>
           <div class="nci-service-grid" id="nciServiceGrid">
             <button type="button" class="nci-service-btn" data-service="fisioterapia">💪 Fisioterapia</button>
             <button type="button" class="nci-service-btn" data-service="osteopatia">🤲 Osteopatía</button>
@@ -727,21 +742,6 @@
             <button type="button" class="nci-service-btn" data-service="otro">➕ Otro</button>
           </div>
           <input type="hidden" id="nciServicio">
-        </div>
-
-        <!-- Profesional -->
-        <div class="nci-section">
-          <div class="nci-section-label"><i class="fa-solid fa-user-doctor"></i> Profesional</div>
-          <div class="nci-profesional-select">
-            <select id="nciProfesional" class="nci-select">
-              <option value="">— Sin asignar —</option>
-              <!-- Opciones cargadas dinámicamente -->
-            </select>
-            <div class="nci-profesional-preview" id="nciProfesionalPreview" style="display:none;">
-              <span class="nci-prof-color-dot" id="nciProfColorDot"></span>
-              <span id="nciProfName"></span>
-            </div>
-          </div>
         </div>
 
         <!-- Fecha y Hora -->

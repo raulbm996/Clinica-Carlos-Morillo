@@ -520,8 +520,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         const citaEl = document.createElement('div');
                         citaEl.className = 'cal-appointment';
                         citaEl.style.cssText = `background:${colors.bg};border-left:3px solid ${colors.border};color:${colors.text};padding:2px 6px;border-radius:4px;font-size:.75rem;cursor:pointer;margin-bottom:2px;`;
-                        citaEl.innerHTML = `<strong>${cita.hora}</strong> ${statusIcon}<br>${cita.paciente_nombre}<br><em style="opacity:.7">${cita.servicio}</em>${profName ? '<br><span style="font-size:.7rem;opacity:.8;">👤 ' + profName + '</span>' : ''}`;
-                        citaEl.title = `${cita.paciente_nombre} — ${cita.servicio}\n${cita.hora} | ${cita.estado}${profName ? '\nProfesional: ' + profName : ''}\n${cita.mensaje || ''}`;
+                        citaEl.innerHTML = `<strong>${cita.hora}</strong> ${statusIcon}<br>${cita.paciente_nombre}<br><em style="opacity:.7">${profName || 'Sin asignar'}</em>`;
+                        citaEl.title = `${cita.paciente_nombre}\n${cita.hora} | ${cita.estado}\nProfesional: ${profName || 'Sin asignar'}\nServicio: ${cita.servicio || '—'}\n${cita.mensaje || ''}`;
 
                         // Click para cambiar estado (con stopPropagation para no abrir nueva cita)
                         citaEl.addEventListener('click', (e) => {
@@ -1169,7 +1169,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const nciProfSelect = document.getElementById('nciProfesional');
             if (nciProfSelect) {
                 // Preservar la primera opción (sin asignar)
-                nciProfSelect.innerHTML = '<option value="">— Sin asignar —</option>';
+                nciProfSelect.innerHTML = '<option value="">— Selecciona un profesional —</option>';
                 data.usuarios.forEach(u => {
                     const opt = document.createElement('option');
                     opt.value = u.id;
@@ -1773,16 +1773,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 telefono = nciPacienteTelefono.value.trim();
             }
 
-            const servicio = nciServicioInput.value.trim();
+            const servicio = nciServicioInput.value.trim() || 'general';
             const fecha = nciFecha.value.trim();
             const hora = nciHora.value.trim();
             const mensaje = nciMensaje.value.trim();
+            const profesionalId = document.getElementById('nciProfesional')?.value || '';
 
             // Validaciones
             const errors = [];
             if (!nombre) errors.push('El nombre del paciente es obligatorio.');
             if (!telefono) errors.push('El teléfono es obligatorio para crear la cita.');
-            if (!servicio) errors.push('Selecciona un servicio.');
+            if (!profesionalId) errors.push('Selecciona un profesional.');
             if (!fecha) errors.push('La fecha es obligatoria.');
             if (!hora) errors.push('La hora es obligatoria.');
 
@@ -1874,7 +1875,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
 
-                const profesionalId = document.getElementById('nciProfesional')?.value || '';
                 const res = await apiPost(`${API}/citas/crear`, {
                     paciente_nombre: nombre,
                     telefono,
