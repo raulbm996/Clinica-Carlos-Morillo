@@ -13,7 +13,7 @@ module.exports = async function handler(req, res) {
         const user = requireAuth(req, res);
         if (!user) return;
         try {
-            const rows = await query('SELECT id, username, nombre, apellidos, rol FROM usuarios ORDER BY nombre ASC');
+            const rows = await query('SELECT id, username, nombre, apellidos, rol, color FROM usuarios ORDER BY nombre ASC');
             return res.status(200).json({ ok: true, usuarios: rows });
         } catch (err) {
             console.error('Error listando usuarios:', err);
@@ -51,17 +51,17 @@ module.exports = async function handler(req, res) {
     if (req.method === 'POST' && req.body?.nombre) {
         const user = requireAuth(req, res);
         if (!user) return;
-        const { nombre, apellidos, email, foto } = req.body || {};
+        const { nombre, apellidos, email, foto, color } = req.body || {};
         if (!nombre || nombre.trim().length < 3) {
             return res.status(400).json({ ok: false, error: 'El nombre debe tener al menos 3 letras.' });
         }
         try {
             await query(
-                'UPDATE usuarios SET nombre = ?, apellidos = ?, email = ?, foto = ? WHERE id = ?',
-                [nombre.trim(), (apellidos || '').trim(), (email || '').trim(), foto || null, user.id]
+                'UPDATE usuarios SET nombre = ?, apellidos = ?, email = ?, foto = ?, color = ? WHERE id = ?',
+                [nombre.trim(), (apellidos || '').trim(), (email || '').trim(), foto || null, (color || '').trim() || '#718096', user.id]
             );
             // Emitir un nuevo JWT con los datos actualizados
-            const updatedUserRows = await query('SELECT id, username, nombre, apellidos, email, rol, foto FROM usuarios WHERE id = ?', [user.id]);
+            const updatedUserRows = await query('SELECT id, username, nombre, apellidos, email, rol, foto, color FROM usuarios WHERE id = ?', [user.id]);
             const updatedUser = updatedUserRows[0] || {};
             const newToken = createToken(updatedUser);
             res.setHeader('Set-Cookie', setTokenCookie(newToken));

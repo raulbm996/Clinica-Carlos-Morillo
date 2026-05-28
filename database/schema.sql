@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
   password    VARCHAR(255) NOT NULL,
   rol         VARCHAR(80)  NOT NULL DEFAULT 'Fisioterapeuta',
   foto        LONGTEXT     DEFAULT NULL,
+  color       VARCHAR(20)  NOT NULL DEFAULT '#718096',
   created_at  TIMESTAMP    DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 

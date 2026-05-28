@@ -8,13 +8,13 @@
 USE clinica_carlos_morillo;
 
 -- ---- Usuarios del equipo ----
-INSERT INTO usuarios (username, nombre, apellidos, email, password, rol) VALUES
-('carlos',     'Carlos',    'Morillo',          'carlos@clinicacarlosmorillo.com',     '$2y$10$8KzQxH1wvG0GqJ6YR5V3xuKJq2lF0X3rN5yMpT7vL1wU9cB4mDfOe', 'Director / Fisioterapeuta'),
-('javi',       'Javi',      'Lerate',           'javi@clinicacarlosmorillo.com',       '$2y$10$8KzQxH1wvG0GqJ6YR5V3xuKJq2lF0X3rN5yMpT7vL1wU9cB4mDfOe', 'Fisioterapeuta'),
-('andrea',     'Andrea',    'Galvarro',         'andrea@clinicacarlosmorillo.com',     '$2y$10$8KzQxH1wvG0GqJ6YR5V3xuKJq2lF0X3rN5yMpT7vL1wU9cB4mDfOe', 'Psicóloga'),
-('maite',      'Maite',     'Lozano',           'maite@clinicacarlosmorillo.com',      '$2y$10$8KzQxH1wvG0GqJ6YR5V3xuKJq2lF0X3rN5yMpT7vL1wU9cB4mDfOe', 'Fisioterapeuta'),
-('alejandro',  'Alejandro', 'Ríos',             'alejandro@clinicacarlosmorillo.com',  '$2y$10$8KzQxH1wvG0GqJ6YR5V3xuKJq2lF0X3rN5yMpT7vL1wU9cB4mDfOe', 'Fisioterapeuta'),
-('codemetria', 'Codemetria','',                 'admin@clinicacarlosmorillo.com',      '$2y$10$8KzQxH1wvG0GqJ6YR5V3xuKJq2lF0X3rN5yMpT7vL1wU9cB4mDfOe', 'Administrador');
+INSERT INTO usuarios (username, nombre, apellidos, email, password, rol, color) VALUES
+('carlos',     'Carlos',    'Morillo',          'carlos@clinicacarlosmorillo.com',     '$2y$10$8KzQxH1wvG0GqJ6YR5V3xuKJq2lF0X3rN5yMpT7vL1wU9cB4mDfOe', 'Director / Fisioterapeuta', '#2e9ea3'),
+('javi',       'Javi',      'Lerate',           'javi@clinicacarlosmorillo.com',       '$2y$10$8KzQxH1wvG0GqJ6YR5V3xuKJq2lF0X3rN5yMpT7vL1wU9cB4mDfOe', 'Fisioterapeuta',            '#6b8394'),
+('andrea',     'Andrea',    'Galvarro',         'andrea@clinicacarlosmorillo.com',     '$2y$10$8KzQxH1wvG0GqJ6YR5V3xuKJq2lF0X3rN5yMpT7vL1wU9cB4mDfOe', 'Psicóloga',                 '#d4a017'),
+('maite',      'Maite',     'Lozano',           'maite@clinicacarlosmorillo.com',      '$2y$10$8KzQxH1wvG0GqJ6YR5V3xuKJq2lF0X3rN5yMpT7vL1wU9cB4mDfOe', 'Fisioterapeuta',            '#c05780'),
+('alejandro',  'Alejandro', 'Ríos',             'alejandro@clinicacarlosmorillo.com',  '$2y$10$8KzQxH1wvG0GqJ6YR5V3xuKJq2lF0X3rN5yMpT7vL1wU9cB4mDfOe', 'Fisioterapeuta',            '#5a7d4f'),
+('codemetria', 'Codemetria','',                 'admin@clinicacarlosmorillo.com',      '$2y$10$8KzQxH1wvG0GqJ6YR5V3xuKJq2lF0X3rN5yMpT7vL1wU9cB4mDfOe', 'Administrador',             '#718096');
 
 -- ---- Pacientes de ejemplo ----
 INSERT INTO pacientes (nombre, telefono, email, ultima_visita) VALUES

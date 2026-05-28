@@ -18,7 +18,7 @@ module.exports = async function handler(req, res) {
         }
         try {
             const rows = await query(
-                'SELECT id, username, nombre, apellidos, email, password, rol, foto FROM usuarios WHERE username = ? LIMIT 1',
+                'SELECT id, username, nombre, apellidos, email, password, rol, foto, color FROM usuarios WHERE username = ? LIMIT 1',
                 [username.trim().toLowerCase()]
             );
             const user = rows[0];
@@ -37,6 +37,7 @@ module.exports = async function handler(req, res) {
                     email: user.email,
                     rol: user.rol,
                     foto: user.foto,
+                    color: user.color || '#718096',
                 },
             });
         } catch (err) {
@@ -66,7 +67,7 @@ module.exports = async function handler(req, res) {
         // Leer datos FRESCOS de la base de datos
         try {
             const rows = await query(
-                'SELECT id, username, nombre, apellidos, email, rol, foto FROM usuarios WHERE id = ? LIMIT 1',
+                'SELECT id, username, nombre, apellidos, email, rol, foto, color FROM usuarios WHERE id = ? LIMIT 1',
                 [tokenData.id]
             );
             if (rows.length === 0) {
@@ -83,6 +84,7 @@ module.exports = async function handler(req, res) {
                     email: user.email || '',
                     rol: user.rol,
                     foto: user.foto || null,
+                    color: user.color || '#718096',
                 },
             });
         } catch (err) {

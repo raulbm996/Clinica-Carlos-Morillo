@@ -8,18 +8,18 @@ module.exports = async function handler(req, res) {
     const user = requireAuth(req, res);
     if (!user) return;
 
-    const { id, estado } = req.body || {};
+    const { id, estado, usuario_id } = req.body || {};
     const validStates = ['pendiente', 'confirmada', 'cancelada'];
     if (!id || !validStates.includes(estado)) {
         return res.status(400).json({ ok: false, error: 'ID o estado no válido.' });
     }
 
     try {
-        const result = await query('UPDATE citas SET estado = ? WHERE id = ?', [estado, id]);
+        const result = await query('UPDATE citas SET estado = ?, usuario_id = ? WHERE id = ?', [estado, usuario_id !== undefined ? (usuario_id || null) : null, id]);
         if (result.affectedRows === 0) {
             return res.status(404).json({ ok: false, error: 'Cita no encontrada.' });
         }
-        return res.status(200).json({ ok: true, message: 'Estado actualizado a ' + estado + '.' });
+        return res.status(200).json({ ok: true, message: 'Cita actualizada correctamente.' });
     } catch (err) {
         console.error('Error actualizando cita:', err);
         return res.status(500).json({ ok: false, error: 'Error interno del servidor.' });

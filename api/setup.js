@@ -29,6 +29,7 @@ module.exports = async function handler(req, res) {
         password    VARCHAR(255) NOT NULL,
         rol         VARCHAR(80)  NOT NULL DEFAULT 'Fisioterapeuta',
         foto        LONGTEXT     DEFAULT NULL,
+        color       VARCHAR(20)  NOT NULL DEFAULT '#718096',
         created_at  TIMESTAMP    DEFAULT CURRENT_TIMESTAMP
       )
     `);
@@ -84,17 +85,17 @@ module.exports = async function handler(req, res) {
       addLog('🔐 Contraseña por defecto: CarlosCM2026!');
 
       const usuarios = [
-        ['carlos',     'Carlos',     'Morillo',    'carlos@clinicacarlosmorillo.com',    hash, 'Director / Fisioterapeuta'],
-        ['javi',       'Javi',       'Lerate',     'javi@clinicacarlosmorillo.com',      hash, 'Fisioterapeuta'],
-        ['andrea',     'Andrea',     'Galvarro',   'andrea@clinicacarlosmorillo.com',    hash, 'Psicóloga'],
-        ['maite',      'Maite',      'Lozano',     'maite@clinicacarlosmorillo.com',     hash, 'Fisioterapeuta'],
-        ['alejandro',  'Alejandro',  'Ríos',       'alejandro@clinicacarlosmorillo.com', hash, 'Fisioterapeuta'],
-        ['codemetria', 'Codemetria', '',           'admin@clinicacarlosmorillo.com',     hash, 'Administrador'],
+        ['carlos',     'Carlos',     'Morillo',    'carlos@clinicacarlosmorillo.com',    hash, 'Director / Fisioterapeuta', '#2e9ea3'],
+        ['javi',       'Javi',       'Lerate',     'javi@clinicacarlosmorillo.com',      hash, 'Fisioterapeuta',            '#6b8394'],
+        ['andrea',     'Andrea',     'Galvarro',   'andrea@clinicacarlosmorillo.com',    hash, 'Psicóloga',                 '#d4a017'],
+        ['maite',      'Maite',      'Lozano',     'maite@clinicacarlosmorillo.com',     hash, 'Fisioterapeuta',            '#c05780'],
+        ['alejandro',  'Alejandro',  'Ríos',       'alejandro@clinicacarlosmorillo.com', hash, 'Fisioterapeuta',            '#5a7d4f'],
+        ['codemetria', 'Codemetria', '',           'admin@clinicacarlosmorillo.com',     hash, 'Administrador',             '#718096'],
       ];
 
       for (const u of usuarios) {
         await query(
-          'INSERT INTO usuarios (username, nombre, apellidos, email, password, rol) VALUES (?, ?, ?, ?, ?, ?)',
+          'INSERT INTO usuarios (username, nombre, apellidos, email, password, rol, color) VALUES (?, ?, ?, ?, ?, ?, ?)',
           u
         );
         addLog(`✅ Usuario '${u[0]}' creado`);

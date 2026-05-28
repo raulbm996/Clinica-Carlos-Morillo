@@ -406,7 +406,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     syncMonthYearSelects();
 
-    // Colores por servicio
+    // Colores por servicio (fallback para citas sin profesional)
     const SERVICE_COLORS = {
         fisioterapia: { bg: '#e6f7f8', border: '#3bb2b8', text: '#1a7a7e' },
         osteopatia: { bg: '#fef3e2', border: '#f0a030', text: '#8a5a10' },
@@ -417,6 +417,34 @@ document.addEventListener('DOMContentLoaded', () => {
         pilates: { bg: '#fff8e1', border: '#fbc02d', text: '#7a6a10' },
         otro: { bg: '#f0f0f0', border: '#999', text: '#555' },
     };
+
+    // Sin profesional asignado
+    const NO_PROF_COLORS = { bg: '#f0f0f0', border: '#999', text: '#555' };
+
+    // Genera colores claros a partir de un color hex de profesional
+    function profColorSet(hex) {
+        if (!hex) return NO_PROF_COLORS;
+        // Convertir hex a RGB
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+        // bg: mezcla con blanco al 85%
+        const bgR = Math.round(r + (255 - r) * 0.85);
+        const bgG = Math.round(g + (255 - g) * 0.85);
+        const bgB = Math.round(b + (255 - b) * 0.85);
+        // text: oscurecer al 40%
+        const tR = Math.round(r * 0.4);
+        const tG = Math.round(g * 0.4);
+        const tB = Math.round(b * 0.4);
+        return {
+            bg: `rgb(${bgR},${bgG},${bgB})`,
+            border: hex,
+            text: `rgb(${tR},${tG},${tB})`,
+        };
+    }
+
+    // Cache global de profesionales
+    let cachedProfesionales = [];
 
     const STATUS_LABELS = {
         pendiente: '⏳',
@@ -480,13 +508,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     const horaNum = parseInt(cita.hora.split(':')[0], 10);
                     const cell = calGrid.querySelector(`.cal-cell[data-date="${citaFecha}"][data-hour="${horaNum}"]`);
                     if (cell) {
-                        const colors = SERVICE_COLORS[cita.servicio] || SERVICE_COLORS.otro;
+                        // Color basado en profesional (si tiene), o servicio como fallback
+                        let colors;
+                        const profName = cita.usuario_nombre ? ((cita.usuario_nombre || '') + ' ' + (cita.usuario_apellidos || '')).trim() : '';
+                        if (cita.usuario_color) {
+                            colors = profColorSet(cita.usuario_color);
+                        } else {
+                            colors = SERVICE_COLORS[cita.servicio] || NO_PROF_COLORS;
+                        }
                         const statusIcon = STATUS_LABELS[cita.estado] || '';
                         const citaEl = document.createElement('div');
                         citaEl.className = 'cal-appointment';
                         citaEl.style.cssText = `background:${colors.bg};border-left:3px solid ${colors.border};color:${colors.text};padding:2px 6px;border-radius:4px;font-size:.75rem;cursor:pointer;margin-bottom:2px;`;
-                        citaEl.innerHTML = `<strong>${cita.hora}</strong> ${statusIcon}<br>${cita.paciente_nombre}<br><em style="opacity:.7">${cita.servicio}</em>`;
-                        citaEl.title = `${cita.paciente_nombre} — ${cita.servicio}\n${cita.hora} | ${cita.estado}\n${cita.mensaje || ''}`;
+                        citaEl.innerHTML = `<strong>${cita.hora}</strong> ${statusIcon}<br>${cita.paciente_nombre}<br><em style="opacity:.7">${cita.servicio}</em>${profName ? '<br><span style="font-size:.7rem;opacity:.8;">👤 ' + profName + '</span>' : ''}`;
+                        citaEl.title = `${cita.paciente_nombre} — ${cita.servicio}\n${cita.hora} | ${cita.estado}${profName ? '\nProfesional: ' + profName : ''}\n${cita.mensaje || ''}`;
 
                         // Click para cambiar estado (con stopPropagation para no abrir nueva cita)
                         citaEl.addEventListener('click', (e) => {
@@ -794,7 +829,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             confirmed.sort((a, b) => (a.fecha > b.fecha) ? 1 : (a.fecha < b.fecha) ? -1 : (a.hora > b.hora ? 1 : -1));
             confirmed.forEach(c => {
-                const colors = SERVICE_COLORS[c.servicio] || SERVICE_COLORS.otro;
+                const colors = c.usuario_color ? profColorSet(c.usuario_color) : (SERVICE_COLORS[c.servicio] || NO_PROF_COLORS);
+                const profName = c.usuario_nombre ? ((c.usuario_nombre || '') + ' ' + (c.usuario_apellidos || '')).trim() : '';
                 const item = document.createElement('div');
                 item.style.border = '1px solid #e6eef4';
                 item.style.padding = '8px';
@@ -805,7 +841,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const left = document.createElement('div');
                 const fechaFmt = formatDisplayDate(c.fecha);
-                left.innerHTML = `<strong style="display:block;color:${colors.text}">${fechaFmt} ${c.hora}</strong><small style="color:#718096">${c.servicio}</small><div style="font-size:.85rem;color:#2d3748;margin-top:6px">${c.paciente_nombre}</div>`;
+                left.innerHTML = `<strong style="display:block;color:${colors.text}">${fechaFmt} ${c.hora}</strong><small style="color:#718096">${c.servicio}</small>${profName ? '<br><small style="color:#4a5568;">👤 ' + profName + '</small>' : ''}<div style="font-size:.85rem;color:#2d3748;margin-top:6px">${c.paciente_nombre}</div>`;
 
                 const right = document.createElement('div');
                 right.style.display = 'flex';
@@ -1066,24 +1102,82 @@ document.addEventListener('DOMContentLoaded', () => {
                 profilePhotoImg.style.display = 'none';
                 photoCameraIcon.style.display = '';
             }
+
+            // Cargar color del profesional
+            const userColorInput = document.getElementById('userColor');
+            const colorPreviewDot = document.getElementById('colorPreviewDot');
+            const colorPreviewLabel = document.getElementById('colorPreviewLabel');
+            const userColor = currentUser.color || '#718096';
+            if (userColorInput) userColorInput.value = userColor;
+            if (colorPreviewDot) colorPreviewDot.style.background = userColor;
+            if (colorPreviewLabel) colorPreviewLabel.textContent = userColor;
         }
     };
     // Re-run con la nueva versión
     loadSession();
 
-    /* ======== Cargar profesionales para el select exclusivo ======== */
+    /* ======== Cargar profesionales para el select exclusivo + sidebar + nueva cita ======== */
     async function loadProfesionales() {
         try {
             const data = await apiGet(`${API}/usuario`);
             const select = document.getElementById('fSelectExclusivo');
-            if (!select || !data?.ok) return;
-            select.innerHTML = '';
-            data.usuarios.forEach(u => {
-                const opt = document.createElement('option');
-                opt.value = u.username || u.id;
-                opt.textContent = (u.nombre || '') + (u.apellidos ? ' ' + u.apellidos : '') + (u.username ? ' (' + u.username + ')' : '');
-                select.appendChild(opt);
-            });
+            if (!data?.ok) return;
+            cachedProfesionales = data.usuarios || [];
+
+            // Poblar select exclusivo en ficha paciente
+            if (select) {
+                select.innerHTML = '';
+                data.usuarios.forEach(u => {
+                    const opt = document.createElement('option');
+                    opt.value = u.username || u.id;
+                    opt.textContent = (u.nombre || '') + (u.apellidos ? ' ' + u.apellidos : '') + (u.username ? ' (' + u.username + ')' : '');
+                    select.appendChild(opt);
+                });
+            }
+
+            // Poblar sidebar MIEMBROS dinámicamente
+            const membersGrid = document.getElementById('membersGrid');
+            if (membersGrid) {
+                membersGrid.innerHTML = '';
+                data.usuarios.forEach(u => {
+                    if (u.username === 'codemetria') return; // Ocultar admin del sidebar
+                    const fullName = (u.nombre || '') + (u.apellidos ? ' ' + u.apellidos : '');
+                    const initials = fullName.split(' ').map(w => w[0] || '').join('').toUpperCase().slice(0, 2);
+                    const color = u.color || '#718096';
+                    const av = document.createElement('div');
+                    av.className = 'member-avatar';
+                    av.style.background = color;
+                    av.dataset.name = fullName;
+                    av.textContent = initials;
+                    // Tooltip
+                    av.addEventListener('mouseenter', () => {
+                        tooltip.textContent = fullName;
+                        const rect = av.getBoundingClientRect();
+                        tooltip.style.left = rect.left + 'px';
+                        tooltip.style.top = (rect.bottom + 6) + 'px';
+                        tooltip.style.transform = 'none';
+                        tooltip.classList.add('visible');
+                    });
+                    av.addEventListener('mouseleave', () => {
+                        tooltip.classList.remove('visible');
+                    });
+                    membersGrid.appendChild(av);
+                });
+            }
+
+            // Poblar select de profesional en modal Nueva Cita
+            const nciProfSelect = document.getElementById('nciProfesional');
+            if (nciProfSelect) {
+                // Preservar la primera opción (sin asignar)
+                nciProfSelect.innerHTML = '<option value="">— Sin asignar —</option>';
+                data.usuarios.forEach(u => {
+                    const opt = document.createElement('option');
+                    opt.value = u.id;
+                    opt.dataset.color = u.color || '#718096';
+                    opt.textContent = (u.nombre || '') + (u.apellidos ? ' ' + u.apellidos : '') + ' — ' + (u.rol || '');
+                    nciProfSelect.appendChild(opt);
+                });
+            }
         } catch (err) {
             console.warn('No se pudieron cargar profesionales', err);
         }
@@ -1269,6 +1363,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Color picker real-time preview
+    const userColorInput = document.getElementById('userColor');
+    if (userColorInput) {
+        userColorInput.addEventListener('input', () => {
+            const val = userColorInput.value;
+            const dot = document.getElementById('colorPreviewDot');
+            const label = document.getElementById('colorPreviewLabel');
+            if (dot) dot.style.background = val;
+            if (label) label.textContent = val;
+        });
+    }
+
     // Guardar perfil → PHP
     const saveProfileBtn = document.getElementById('saveProfileBtn');
     if (saveProfileBtn) {
@@ -1280,6 +1386,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const apellidos = (userSurnameInput.value || '').trim();
             const email = (userEmailInput.value || '').trim();
+            const colorVal = document.getElementById('userColor')?.value || '#718096';
 
             try {
                 // Tomar la foto actual del perfil (si existe)
@@ -1292,6 +1399,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     apellidos,
                     email,
                     foto,
+                    color: colorVal,
                 });
 
                 if (data.ok) {
@@ -1312,6 +1420,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (photoCameraIcon) photoCameraIcon.style.display = 'none';
                     }
                     if (breadcrumbEl) breadcrumbEl.textContent = '› ' + fullName;
+
+                    // Actualizar currentUser con nuevo color
+                    if (currentUser) currentUser.color = colorVal;
+
+                    // Recargar sidebar para reflejar el nuevo color
+                    loadProfesionales();
+
+                    // Recargar calendario para reflejar colores
+                    renderCalendar();
+
                     alert('Perfil guardado correctamente.');
                 } else {
                     alert(data.error || 'Error al guardar perfil.');
@@ -1444,6 +1562,12 @@ document.addEventListener('DOMContentLoaded', () => {
         nciFeedback.textContent = '';
         nciFeedback.className = 'nci-feedback';
         nuevaCitaSave.disabled = false;
+
+        // Resetear profesional
+        const nciProfSelect = document.getElementById('nciProfesional');
+        if (nciProfSelect) nciProfSelect.value = '';
+        const nciProfPreview = document.getElementById('nciProfesionalPreview');
+        if (nciProfPreview) nciProfPreview.style.display = 'none';
 
         // Pre-rellenar paciente si se pasa
         if (opts.nombre) {
@@ -1611,6 +1735,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Selección de profesional con preview de color
+    const nciProfesionalSelect = document.getElementById('nciProfesional');
+    if (nciProfesionalSelect) {
+        nciProfesionalSelect.addEventListener('change', () => {
+            const preview = document.getElementById('nciProfesionalPreview');
+            const dot = document.getElementById('nciProfColorDot');
+            const nameSpan = document.getElementById('nciProfName');
+            const selected = nciProfesionalSelect.options[nciProfesionalSelect.selectedIndex];
+            if (nciProfesionalSelect.value && selected) {
+                const color = selected.dataset.color || '#718096';
+                if (dot) dot.style.background = color;
+                if (nameSpan) nameSpan.textContent = selected.textContent;
+                if (preview) preview.style.display = '';
+            } else {
+                if (preview) preview.style.display = 'none';
+            }
+        });
+    }
+
     // Guardar cita
     if (nuevaCitaSave) {
         nuevaCitaSave.addEventListener('click', async () => {
@@ -1731,6 +1874,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
 
+                const profesionalId = document.getElementById('nciProfesional')?.value || '';
                 const res = await apiPost(`${API}/citas/crear`, {
                     paciente_nombre: nombre,
                     telefono,
@@ -1738,6 +1882,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     fecha,
                     hora,
                     mensaje,
+                    usuario_id: profesionalId ? parseInt(profesionalId, 10) : null,
                 });
 
                 if (res.ok) {

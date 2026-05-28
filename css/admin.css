@@ -1166,6 +1166,130 @@
     justify-content: flex-end;
 }
 
+/* Color del profesional */
+.usuario-color-section {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--ck-border);
+}
+
+.usuario-color-section h4 {
+    font-size: .95rem;
+    font-weight: 700;
+    color: var(--ck-text);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.usuario-color-section h4 i {
+    color: var(--ck-teal);
+}
+
+.usuario-color-hint {
+    font-size: .82rem;
+    color: var(--ck-text-light);
+    margin-bottom: 14px;
+}
+
+.usuario-color-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.usuario-color-picker {
+    width: 56px;
+    height: 56px;
+    border: 2px solid var(--ck-border);
+    border-radius: 12px;
+    cursor: pointer;
+    padding: 2px;
+    background: var(--ck-white);
+    transition: border-color .2s, box-shadow .2s;
+}
+
+.usuario-color-picker:hover {
+    border-color: var(--ck-teal);
+    box-shadow: 0 0 0 3px rgba(59, 178, 184, .12);
+}
+
+.usuario-color-preview {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 16px;
+    background: #f8fafc;
+    border: 1px solid var(--ck-border);
+    border-radius: 10px;
+}
+
+.color-preview-dot {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: inline-block;
+    border: 2px solid rgba(0,0,0,.08);
+    transition: background .15s;
+}
+
+.color-preview-label {
+    font-size: .85rem;
+    font-weight: 600;
+    color: var(--ck-text);
+    font-family: monospace;
+    letter-spacing: .5px;
+}
+
+/* Professional selector in Nueva Cita */
+.nci-profesional-select {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.nci-select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--ck-border);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: .9rem;
+    color: var(--ck-text);
+    background: var(--ck-white);
+    cursor: pointer;
+    transition: border-color .2s, box-shadow .2s;
+    appearance: auto;
+}
+
+.nci-select:focus {
+    outline: none;
+    border-color: var(--ck-teal);
+    box-shadow: 0 0 0 3px rgba(59, 178, 184, .12);
+}
+
+.nci-profesional-preview {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    font-size: .85rem;
+    color: var(--ck-text);
+    font-weight: 600;
+}
+
+.nci-prof-color-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: inline-block;
+    border: 2px solid rgba(0,0,0,.1);
+    flex-shrink: 0;
+}
+
 /* Notification & password cards */
 .usuario-notif-card,
 .usuario-password-card {
