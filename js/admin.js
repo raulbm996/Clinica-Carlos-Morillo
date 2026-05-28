@@ -544,27 +544,58 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const popup = document.createElement('div');
         popup.className = 'cita-actions-popup';
-        popup.style.cssText = 'position:absolute;z-index:999;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.15);padding:8px;min-width:160px;';
+        popup.style.cssText = 'position:absolute;z-index:999;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.15);padding:6px;min-width:170px;';
 
-        const states = ['pendiente', 'confirmada', 'cancelada'];
-        states.forEach(estado => {
+        const actions = [
+            { label: '✅ Confirmar', estado: 'confirmada', color: '#38a169' },
+            { label: '❌ Cancelar', estado: 'cancelada', color: '#e53e3e' },
+        ];
+
+        actions.forEach(({ label, estado, color }) => {
             const btn = document.createElement('button');
-            btn.style.cssText = 'display:block;width:100%;text-align:left;padding:6px 10px;border:none;background:none;cursor:pointer;border-radius:4px;font-size:.85rem;';
-            btn.textContent = `${STATUS_LABELS[estado]} ${estado.charAt(0).toUpperCase() + estado.slice(1)}`;
-            if (cita.estado === estado) btn.style.fontWeight = 'bold';
+            btn.style.cssText = `display:block;width:100%;text-align:left;padding:8px 12px;border:none;background:none;cursor:pointer;border-radius:6px;font-size:.85rem;color:${color};font-weight:600;`;
+            btn.textContent = label;
+            if (cita.estado === estado) btn.style.opacity = '0.5';
             btn.addEventListener('mouseenter', () => btn.style.background = '#f0f4f8');
             btn.addEventListener('mouseleave', () => btn.style.background = 'none');
             btn.addEventListener('click', async () => {
                 popup.remove();
                 const res = await apiPost(`${API}/citas/actualizar`, { id: cita.id, estado });
                 if (res.ok) {
-                    renderCalendar(); // Recargar
+                    renderCalendar();
                 } else {
                     alert(res.error || 'Error al actualizar la cita.');
                 }
             });
             popup.appendChild(btn);
         });
+
+        // Separador
+        const sep = document.createElement('div');
+        sep.style.cssText = 'height:1px;background:#e2e8f0;margin:4px 0;';
+        popup.appendChild(sep);
+
+        // Botón Borrar
+        const delBtn = document.createElement('button');
+        delBtn.style.cssText = 'display:block;width:100%;text-align:left;padding:8px 12px;border:none;background:none;cursor:pointer;border-radius:6px;font-size:.85rem;color:#e53e3e;font-weight:600;';
+        delBtn.textContent = '🗑️ Borrar cita';
+        delBtn.addEventListener('mouseenter', () => delBtn.style.background = '#fff5f5');
+        delBtn.addEventListener('mouseleave', () => delBtn.style.background = 'none');
+        delBtn.addEventListener('click', async () => {
+            if (!confirm('¿Estás seguro de que quieres borrar esta cita permanentemente?')) return;
+            popup.remove();
+            try {
+                const res = await apiPost(`${API}/citas/eliminar`, { id: cita.id });
+                if (res.ok) {
+                    renderCalendar();
+                } else {
+                    alert(res.error || 'Error al eliminar la cita.');
+                }
+            } catch {
+                alert('Error de conexión al eliminar la cita.');
+            }
+        });
+        popup.appendChild(delBtn);
 
         el.style.position = 'relative';
         el.appendChild(popup);
