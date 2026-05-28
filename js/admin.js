@@ -804,6 +804,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('fPais').value = paciente.pais || '';
         document.getElementById('fObservaciones').value = paciente.notas || '';
 
+        // Cargar historial clínico (citas + observaciones)
+        loadHistorial(paciente.id, paciente.telefono || '', paciente.notas || '');
+
         // Checkboxes
         if (checkExclusivo) {
             const ex = (paciente.exclusivo_profesionales && paciente.exclusivo_profesionales !== '');
@@ -906,6 +909,271 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error cargando citas paciente:', err);
             container.innerHTML = '<div style="color:#e53e3e;">Error de conexión.</div>';
         }
+    }
+
+    /* ======================================================
+       HISTORIAL CLÍNICO — Timeline de citas + observaciones
+       ====================================================== */
+    let historialCurrentFilter = 'todos';
+    let historialEntries = [];
+
+    // Tab switching for historial
+    document.querySelectorAll('.historial-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.historial-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            const target = tab.dataset.historialTab;
+            document.querySelectorAll('.historial-panel').forEach(p => p.classList.remove('active'));
+            if (target === 'timeline') {
+                document.getElementById('panelTimeline')?.classList.add('active');
+            } else if (target === 'nueva-obs') {
+                document.getElementById('panelNuevaObs')?.classList.add('active');
+                // Set current date/time and author
+                const obsAutorNombre = document.getElementById('obsAutorNombre');
+                const obsAutorFecha = document.getElementById('obsAutorFecha');
+                const obsAutorAvatar = document.getElementById('obsAutorAvatar');
+                if (currentUser && obsAutorNombre) {
+                    const fullName = ((currentUser.nombre || '') + ' ' + (currentUser.apellidos || '')).trim();
+                    obsAutorNombre.textContent = fullName;
+                    const initials = fullName.split(' ').map(w => w[0] || '').join('').toUpperCase().slice(0, 2);
+                    if (obsAutorAvatar) obsAutorAvatar.textContent = initials;
+                }
+                if (obsAutorFecha) {
+                    obsAutorFecha.textContent = new Date().toLocaleString('es-ES', {
+                        day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                    });
+                }
+            }
+        });
+    });
+
+    // Filter buttons
+    document.querySelectorAll('.historial-filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.historial-filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            historialCurrentFilter = btn.dataset.filter;
+            renderTimeline(historialEntries);
+        });
+    });
+
+    async function loadHistorial(pacienteId, telefono, notasAntiguas) {
+        const timelineEl = document.getElementById('historialTimeline');
+        if (!timelineEl) return;
+        timelineEl.innerHTML = '<div class="historial-empty"><i class="fa-solid fa-spinner fa-spin"></i><p>Cargando historial…</p></div>';
+
+        historialEntries = [];
+
+        try {
+            // Fetch citas
+            let citasUrl = `${API}/citas/listar`;
+            if (telefono && telefono.trim()) {
+                citasUrl += `?telefono=${encodeURIComponent(telefono.trim())}`;
+            } else if (pacienteId) {
+                citasUrl += `?paciente_id=${encodeURIComponent(pacienteId)}`;
+            }
+            const citasData = await apiGet(citasUrl);
+            if (citasData.ok && citasData.citas) {
+                citasData.citas.forEach(c => {
+                    const fechaStr = formatLocalDate(c.fecha);
+                    const dateObj = new Date(fechaStr + 'T' + (c.hora || '00:00'));
+                    const profName = c.usuario_nombre ? ((c.usuario_nombre || '') + ' ' + (c.usuario_apellidos || '')).trim() : '';
+                    historialEntries.push({
+                        tipo: 'cita',
+                        fecha: dateObj,
+                        fechaDisplay: formatDisplayDate(c.fecha),
+                        hora: c.hora,
+                        servicio: c.servicio || '',
+                        estado: c.estado || 'pendiente',
+                        profesional: profName,
+                        mensaje: c.mensaje || '',
+                        pacienteNombre: c.paciente_nombre || '',
+                        id: c.id
+                    });
+                });
+            }
+
+            // Fetch observaciones
+            try {
+                const obsData = await apiGet(`${API}/observaciones?paciente_id=${encodeURIComponent(pacienteId)}`);
+                if (obsData.ok && obsData.observaciones) {
+                    obsData.observaciones.forEach(o => {
+                        const dateObj = new Date(o.created_at);
+                        historialEntries.push({
+                            tipo: 'observacion',
+                            fecha: dateObj,
+                            fechaDisplay: dateObj.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+                            horaDisplay: dateObj.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
+                            contenido: o.contenido || '',
+                            autor: o.usuario_nombre || 'Sistema',
+                            id: o.id
+                        });
+                    });
+                }
+            } catch (obsErr) {
+                console.warn('No se pudieron cargar observaciones (tabla puede no existir aún):', obsErr);
+            }
+
+            // Add legacy notes as first entry if they exist and no observaciones exist yet
+            const hasObservaciones = historialEntries.some(e => e.tipo === 'observacion');
+            if (notasAntiguas && notasAntiguas.trim() && !hasObservaciones) {
+                historialEntries.push({
+                    tipo: 'nota-antigua',
+                    fecha: new Date(0), // oldest possible
+                    fechaDisplay: '—',
+                    contenido: notasAntiguas.trim(),
+                    autor: 'Notas anteriores'
+                });
+            }
+
+            // Sort by date descending (newest first)
+            historialEntries.sort((a, b) => b.fecha - a.fecha);
+
+            renderTimeline(historialEntries);
+        } catch (err) {
+            console.error('Error cargando historial:', err);
+            timelineEl.innerHTML = '<div class="historial-empty"><i class="fa-solid fa-exclamation-triangle"></i><p>Error al cargar el historial.</p></div>';
+        }
+    }
+
+    function renderTimeline(entries) {
+        const timelineEl = document.getElementById('historialTimeline');
+        if (!timelineEl) return;
+
+        // Apply filter
+        let filtered = entries;
+        if (historialCurrentFilter === 'observaciones') {
+            filtered = entries.filter(e => e.tipo === 'observacion' || e.tipo === 'nota-antigua');
+        } else if (historialCurrentFilter === 'citas') {
+            filtered = entries.filter(e => e.tipo === 'cita');
+        }
+
+        if (filtered.length === 0) {
+            const msgs = {
+                'todos': 'No hay registros en el historial de este paciente.',
+                'observaciones': 'No hay observaciones registradas.',
+                'citas': 'No hay citas registradas.'
+            };
+            timelineEl.innerHTML = `<div class="historial-empty"><i class="fa-solid fa-folder-open"></i><p>${msgs[historialCurrentFilter] || msgs.todos}</p></div>`;
+            return;
+        }
+
+        let html = '';
+        filtered.forEach((entry, idx) => {
+            const delay = Math.min(idx * 0.05, 0.3);
+
+            if (entry.tipo === 'cita') {
+                const statusClass = 'status-' + entry.estado;
+                const statusLabels = { pendiente: '⏳ Pendiente', confirmada: '✅ Confirmada', cancelada: '❌ Cancelada' };
+                html += `
+                <div class="timeline-entry tipo-cita" style="animation-delay:${delay}s" data-tipo="cita">
+                    <div class="timeline-dot dot-cita"></div>
+                    <div class="timeline-entry-header">
+                        <span class="timeline-entry-type type-cita"><i class="fa-solid fa-calendar-check"></i> Cita</span>
+                        <span class="timeline-entry-date">${entry.fechaDisplay} · ${entry.hora || ''}</span>
+                    </div>
+                    <div class="timeline-cita-details">
+                        ${entry.servicio ? `<span class="timeline-cita-detail"><i class="fa-solid fa-stethoscope"></i> ${entry.servicio}</span>` : ''}
+                        ${entry.profesional ? `<span class="timeline-cita-detail"><i class="fa-solid fa-user-doctor"></i> ${entry.profesional}</span>` : ''}
+                        <span class="timeline-cita-status ${statusClass}">${statusLabels[entry.estado] || entry.estado}</span>
+                    </div>
+                    ${entry.mensaje ? `<div class="timeline-entry-body" style="margin-top:8px;font-size:.85rem;color:#64748b;font-style:italic;">"${entry.mensaje}"</div>` : ''}
+                </div>`;
+            } else if (entry.tipo === 'observacion') {
+                html += `
+                <div class="timeline-entry tipo-observacion" style="animation-delay:${delay}s" data-tipo="observacion">
+                    <div class="timeline-dot dot-observacion"></div>
+                    <div class="timeline-entry-header">
+                        <span class="timeline-entry-type type-observacion"><i class="fa-solid fa-note-sticky"></i> Observación</span>
+                        <span class="timeline-entry-date">${entry.fechaDisplay} · ${entry.horaDisplay || ''}</span>
+                    </div>
+                    <div class="timeline-entry-body">${escapeHtml(entry.contenido)}</div>
+                    <div class="timeline-entry-author"><i class="fa-solid fa-user-pen"></i> ${escapeHtml(entry.autor)}</div>
+                </div>`;
+            } else if (entry.tipo === 'nota-antigua') {
+                html += `
+                <div class="timeline-entry tipo-nota-antigua" style="animation-delay:${delay}s" data-tipo="nota-antigua">
+                    <div class="timeline-dot dot-nota-antigua"></div>
+                    <div class="timeline-entry-header">
+                        <span class="timeline-entry-type type-nota-antigua"><i class="fa-solid fa-file-lines"></i> Notas anteriores</span>
+                        <span class="timeline-entry-date">Registro previo</span>
+                    </div>
+                    <div class="timeline-entry-body">${escapeHtml(entry.contenido)}</div>
+                    <div class="timeline-entry-author"><i class="fa-solid fa-clock-rotate-left"></i> Migrado del campo de notas original</div>
+                </div>`;
+            }
+        });
+
+        timelineEl.innerHTML = html;
+    }
+
+    function escapeHtml(text) {
+        if (!text) return '';
+        return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/\n/g, '<br>');
+    }
+
+    // Guardar nueva observación
+    const btnGuardarObservacion = document.getElementById('btnGuardarObservacion');
+    if (btnGuardarObservacion) {
+        btnGuardarObservacion.addEventListener('click', async () => {
+            const pacienteId = document.getElementById('fichaId')?.value;
+            const textarea = document.getElementById('fNuevaObservacion');
+            const contenido = textarea?.value?.trim();
+
+            if (!pacienteId) {
+                alert('No se ha seleccionado un paciente.');
+                return;
+            }
+            if (!contenido) {
+                alert('Escribe el contenido de la observación.');
+                textarea?.focus();
+                return;
+            }
+
+            const btn = btnGuardarObservacion;
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando…';
+            btn.disabled = true;
+
+            try {
+                const res = await apiPost(`${API}/observaciones`, {
+                    paciente_id: parseInt(pacienteId, 10),
+                    contenido
+                });
+
+                if (res.ok) {
+                    textarea.value = '';
+                    // Switch to timeline tab to see the new entry
+                    document.querySelectorAll('.historial-tab').forEach(t => t.classList.remove('active'));
+                    document.getElementById('tabTimeline')?.classList.add('active');
+                    document.querySelectorAll('.historial-panel').forEach(p => p.classList.remove('active'));
+                    document.getElementById('panelTimeline')?.classList.add('active');
+
+                    // Reload historial
+                    const telefono = document.getElementById('fTelefono')?.value?.trim() || '';
+                    const notas = document.getElementById('fObservaciones')?.value || '';
+                    await loadHistorial(pacienteId, telefono, notas);
+
+                    // Brief success feedback
+                    btn.innerHTML = '<i class="fa-solid fa-check"></i> ¡Guardada!';
+                    btn.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
+                    setTimeout(() => {
+                        btn.innerHTML = originalHTML;
+                        btn.style.background = '';
+                        btn.disabled = false;
+                    }, 1500);
+                } else {
+                    alert(res.error || 'Error al guardar la observación.');
+                    btn.innerHTML = originalHTML;
+                    btn.disabled = false;
+                }
+            } catch (err) {
+                console.error('Error guardando observación:', err);
+                alert('Error de conexión al guardar la observación.');
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+            }
+        });
     }
 
     // Icons Logic

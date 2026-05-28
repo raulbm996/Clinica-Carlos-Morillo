@@ -3708,3 +3708,575 @@ body.dark-theme .nci-cancel-btn {
         padding: 6px 8px;
     }
 }
+
+/* ============================================================
+   HISTORIAL CLÍNICO — Section Structure
+   ============================================================ */
+.historial-section {
+    border: 1px solid #e6eef4;
+    border-radius: 12px;
+    background: #fff;
+    margin-top: 18px;
+    box-shadow: 0 2px 12px rgba(15, 23, 42, .06);
+}
+
+.historial-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #e6eef4;
+}
+
+.historial-header h3 {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--ck-teal-dark);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.historial-header h3 i {
+    font-size: 1.05rem;
+    color: var(--ck-teal);
+}
+
+/* ============================================================
+   HISTORIAL CLÍNICO — Tabs
+   ============================================================ */
+.historial-tabs {
+    display: flex;
+    gap: 4px;
+    background: #f1f5f9;
+    border-radius: 8px;
+    padding: 3px;
+}
+
+.historial-tab {
+    border: none;
+    background: transparent;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: .82rem;
+    font-weight: 700;
+    color: #64748b;
+    cursor: pointer;
+    transition: all .2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.historial-tab:hover {
+    color: var(--ck-teal);
+    background: rgba(59, 178, 184, .08);
+}
+
+.historial-tab.active {
+    background: #fff;
+    color: var(--ck-teal);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .08);
+}
+
+/* ============================================================
+   HISTORIAL CLÍNICO — Panels
+   ============================================================ */
+.historial-panel {
+    display: none;
+    padding: 16px 20px;
+}
+
+.historial-panel.active {
+    display: block;
+    animation: historialFadeIn .25s ease;
+}
+
+/* ============================================================
+   HISTORIAL CLÍNICO — Filter Buttons
+   ============================================================ */
+.historial-filters {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+.historial-filter-btn {
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: .78rem;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    transition: all .2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.historial-filter-btn:hover {
+    border-color: var(--ck-teal);
+    color: var(--ck-teal);
+}
+
+.historial-filter-btn.active {
+    background: linear-gradient(135deg, #e6f7f8, #d0f2f3);
+    border-color: var(--ck-teal);
+    color: var(--ck-teal-dark);
+    font-weight: 700;
+}
+
+/* ============================================================
+   HISTORIAL CLÍNICO — Timeline
+   ============================================================ */
+.historial-timeline {
+    position: relative;
+    padding-left: 28px;
+    min-height: 100px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.historial-timeline::before {
+    content: '';
+    position: absolute;
+    left: 11px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--ck-teal), #e2e8f0);
+}
+
+.historial-timeline::-webkit-scrollbar {
+    width: 5px;
+}
+
+.historial-timeline::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 4px;
+}
+
+/* ============================================================
+   HISTORIAL CLÍNICO — Timeline Entries
+   ============================================================ */
+.timeline-entry {
+    position: relative;
+    margin-bottom: 16px;
+    padding: 14px 16px;
+    background: #f8fafc;
+    border: 1px solid #e6eef4;
+    border-radius: 10px;
+    transition: all .2s;
+    animation: timelineEntryIn .3s ease;
+}
+
+.timeline-entry:hover {
+    border-color: var(--ck-teal);
+    box-shadow: 0 4px 16px rgba(59, 178, 184, .08);
+    transform: translateX(4px);
+}
+
+.timeline-entry.tipo-observacion {
+    border-left: 3px solid #6366f1;
+}
+
+.timeline-entry.tipo-cita {
+    border-left: 3px solid var(--ck-teal);
+}
+
+.timeline-entry.tipo-nota-antigua {
+    border-left: 3px solid #f59e0b;
+}
+
+/* ============================================================
+   HISTORIAL CLÍNICO — Timeline Dot
+   ============================================================ */
+.timeline-dot {
+    position: absolute;
+    left: -22px;
+    top: 18px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px;
+    z-index: 1;
+}
+
+.timeline-dot.dot-observacion {
+    background: #6366f1;
+    box-shadow: 0 0 0 2px #6366f1;
+}
+
+.timeline-dot.dot-cita {
+    background: var(--ck-teal);
+    box-shadow: 0 0 0 2px var(--ck-teal);
+}
+
+.timeline-dot.dot-nota-antigua {
+    background: #f59e0b;
+    box-shadow: 0 0 0 2px #f59e0b;
+}
+
+/* ============================================================
+   HISTORIAL CLÍNICO — Timeline Entry Content
+   ============================================================ */
+.timeline-entry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.timeline-entry-type {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: .72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    padding: 3px 10px;
+    border-radius: 12px;
+}
+
+.timeline-entry-type.type-observacion {
+    background: #eef2ff;
+    color: #4f46e5;
+}
+
+.timeline-entry-type.type-cita {
+    background: #e6f7f8;
+    color: #0f766e;
+}
+
+.timeline-entry-type.type-nota-antigua {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.timeline-entry-date {
+    font-size: .78rem;
+    color: #94a3b8;
+    font-weight: 600;
+}
+
+.timeline-entry-body {
+    font-size: .9rem;
+    color: #1a202c;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+.timeline-entry-author {
+    font-size: .75rem;
+    color: #94a3b8;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.timeline-entry-author i {
+    color: var(--ck-teal);
+}
+
+/* ============================================================
+   HISTORIAL CLÍNICO — Cita Details inside Timeline
+   ============================================================ */
+.timeline-cita-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin-top: 6px;
+}
+
+.timeline-cita-detail {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: .8rem;
+    color: #4a5568;
+}
+
+.timeline-cita-detail i {
+    color: var(--ck-teal);
+    font-size: .75rem;
+}
+
+.timeline-cita-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: .72rem;
+    font-weight: 700;
+}
+
+.timeline-cita-status.status-confirmada {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.timeline-cita-status.status-pendiente {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.timeline-cita-status.status-cancelada {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* ============================================================
+   HISTORIAL CLÍNICO — Empty State
+   ============================================================ */
+.historial-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: #94a3b8;
+}
+
+.historial-empty i {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+    display: block;
+    opacity: .4;
+}
+
+.historial-empty p {
+    font-size: .9rem;
+    margin: 0;
+}
+
+/* ============================================================
+   HISTORIAL CLÍNICO — Nueva Observación Form
+   ============================================================ */
+.nueva-obs-form {
+    background: #f8fafc;
+    border: 1px solid #e6eef4;
+    border-radius: 12px;
+    padding: 20px;
+    animation: timelineEntryIn .3s ease;
+}
+
+.nueva-obs-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.nueva-obs-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .8rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.nueva-obs-meta strong {
+    display: block;
+    font-size: .9rem;
+    color: #1a202c;
+}
+
+.nueva-obs-meta small {
+    font-size: .78rem;
+    color: #94a3b8;
+}
+
+.nueva-obs-textarea {
+    width: 100%;
+    padding: 14px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: .9rem;
+    color: #1a202c;
+    resize: vertical;
+    min-height: 140px;
+    line-height: 1.65;
+    background: #fff;
+    transition: border-color .2s, box-shadow .2s;
+}
+
+.nueva-obs-textarea:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, .1);
+    background: #fff;
+}
+
+.nueva-obs-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 12px;
+}
+
+.btn-guardar-obs {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: .88rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(99, 102, 241, .35);
+    transition: transform .15s, box-shadow .15s;
+}
+
+.btn-guardar-obs:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, .45);
+}
+
+.btn-guardar-obs:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ============================================================
+   HISTORIAL CLÍNICO — Animations
+   ============================================================ */
+@keyframes timelineEntryIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes historialFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* ============================================================
+   HISTORIAL CLÍNICO — Dark Mode
+   ============================================================ */
+body.dark-theme .historial-section {
+    background: var(--ck-white);
+    border-color: var(--ck-border);
+}
+
+body.dark-theme .historial-header {
+    border-color: var(--ck-border);
+}
+
+body.dark-theme .historial-header h3 {
+    color: #7dd3fc;
+}
+
+body.dark-theme .historial-tabs {
+    background: #0f172a;
+}
+
+body.dark-theme .historial-tab {
+    color: #94a3b8;
+}
+
+body.dark-theme .historial-tab.active {
+    background: var(--ck-white);
+    color: var(--ck-teal);
+}
+
+body.dark-theme .historial-filter-btn {
+    background: var(--ck-white);
+    border-color: var(--ck-border);
+    color: #94a3b8;
+}
+
+body.dark-theme .historial-filter-btn.active {
+    background: #164e63;
+    border-color: var(--ck-teal);
+    color: #7dd3fc;
+}
+
+body.dark-theme .timeline-entry {
+    background: #0f172a;
+    border-color: #334155;
+}
+
+body.dark-theme .timeline-entry:hover {
+    border-color: var(--ck-teal);
+}
+
+body.dark-theme .timeline-entry-body {
+    color: #f8fafc;
+}
+
+body.dark-theme .timeline-entry-date {
+    color: #64748b;
+}
+
+body.dark-theme .nueva-obs-form {
+    background: #0f172a;
+    border-color: #334155;
+}
+
+body.dark-theme .nueva-obs-meta strong {
+    color: #f8fafc;
+}
+
+body.dark-theme .nueva-obs-textarea {
+    background: #1e293b;
+    border-color: #334155;
+    color: #f8fafc;
+}
+
+body.dark-theme .nueva-obs-textarea:focus {
+    border-color: #6366f1;
+    background: #0f172a;
+}
+
+body.dark-theme .historial-empty {
+    color: #64748b;
+}
+
+body.dark-theme .timeline-cita-detail {
+    color: #cbd5e1;
+}
+
+/* ============================================================
+   HISTORIAL CLÍNICO — Responsive
+   ============================================================ */
+@media (max-width: 768px) {
+    .historial-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .historial-tabs {
+        width: 100%;
+    }
+
+    .historial-tab {
+        flex: 1;
+        justify-content: center;
+    }
+}

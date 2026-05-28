@@ -320,34 +320,57 @@
 
               <hr class="ficha-divider">
 
-              <!-- Observaciones -->
-              <div class="ficha-observaciones-section">
-                <div class="ficha-section-header">
-                  <h3>Observaciones</h3>
-                </div>
-                <div class="ficha-observaciones-box">
-                  <div class="ficha-editor-toolbar">
-                    <button type="button"><i class="fa-solid fa-bold"></i></button>
-                    <button type="button"><i class="fa-solid fa-italic"></i></button>
-                    <button type="button"><i class="fa-solid fa-underline"></i></button>
-                    <div class="toolbar-sep"></div>
-                    <button type="button"><i class="fa-solid fa-link"></i></button>
-                    <button type="button"><i class="fa-solid fa-quote-right"></i></button>
-                    <div class="toolbar-sep"></div>
-                    <button type="button"><i class="fa-solid fa-list-ul"></i></button>
-                    <button type="button"><i class="fa-solid fa-list-ol"></i></button>
-                    <div class="toolbar-sep"></div>
-                    <span class="toolbar-label">Normal <i class="fa-solid fa-caret-down"></i></span>
+              <!-- ===== HISTORIAL CLÍNICO ===== -->
+              <div class="historial-section" id="historialSection">
+                <div class="historial-header">
+                  <h3><i class="fa-solid fa-clock-rotate-left"></i> Historial Clínico</h3>
+                  <div class="historial-tabs">
+                    <button class="historial-tab active" data-historial-tab="timeline" id="tabTimeline">
+                      <i class="fa-solid fa-timeline"></i> <span>Timeline</span>
+                    </button>
+                    <button class="historial-tab" data-historial-tab="nueva-obs" id="tabNuevaObs">
+                      <i class="fa-solid fa-plus-circle"></i> <span>Nueva Observación</span>
+                    </button>
                   </div>
-                  <textarea id="fObservaciones" placeholder="Escribe aquí tu contenido..."></textarea>
+                </div>
+
+                <!-- Panel: Timeline -->
+                <div class="historial-panel active" id="panelTimeline">
+                  <div class="historial-filters">
+                    <button class="historial-filter-btn active" data-filter="todos">Todos</button>
+                    <button class="historial-filter-btn" data-filter="observaciones"><i class="fa-solid fa-note-sticky"></i> Observaciones</button>
+                    <button class="historial-filter-btn" data-filter="citas"><i class="fa-solid fa-calendar-check"></i> Citas</button>
+                  </div>
+                  <div class="historial-timeline" id="historialTimeline">
+                    <div class="historial-empty">
+                      <i class="fa-solid fa-folder-open"></i>
+                      <p>Cargando historial…</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Panel: Nueva Observación -->
+                <div class="historial-panel" id="panelNuevaObs">
+                  <div class="nueva-obs-form">
+                    <div class="nueva-obs-header">
+                      <div class="nueva-obs-avatar" id="obsAutorAvatar">U</div>
+                      <div class="nueva-obs-meta">
+                        <strong id="obsAutorNombre">Usuario</strong>
+                        <small id="obsAutorFecha"></small>
+                      </div>
+                    </div>
+                    <textarea id="fNuevaObservacion" class="nueva-obs-textarea" placeholder="Escribe aquí la observación clínica del paciente…&#10;&#10;Puedes describir evolución, síntomas, tratamiento aplicado, etc." rows="6"></textarea>
+                    <div class="nueva-obs-actions">
+                      <button type="button" class="btn-guardar-obs" id="btnGuardarObservacion">
+                        <i class="fa-solid fa-paper-plane"></i> Guardar Observación
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <!-- Citas del paciente -->
-              <div class="ficha-appointments" style="margin-top:14px;">
-                <h4 style="margin:8px 0 10px;font-size:1rem;color:#2d3748;">Citas del paciente</h4>
-                <div id="fPacienteCitas" class="f-paciente-citas">— Selecciona un paciente para ver sus citas —</div>
-              </div>
+              <!-- Campo oculto para mantener compatibilidad con notas antiguas -->
+              <input type="hidden" id="fObservaciones" value="">
 
               <!-- Tarjetas Sanitarias -->
               <div class="ficha-card-block">
