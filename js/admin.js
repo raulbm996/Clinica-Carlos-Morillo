@@ -673,7 +673,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert('El paciente no tiene teléfono válido.');
                     return;
                 }
-                window.location.href = `sms:+34${tel}`;
+                const phone = tel.startsWith('34') ? tel : '34' + tel;
+                window.open(`sms:+${phone}`, '_self');
                 return;
             }
 
@@ -685,7 +686,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert('El paciente no tiene teléfono válido.');
                     return;
                 }
-                window.open(`https://wa.me/34${tel}`, '_blank');
+                const phone = tel.startsWith('34') ? tel : '34' + tel;
+                window.open(`https://wa.me/${phone}`, '_blank');
                 return;
             }
 
