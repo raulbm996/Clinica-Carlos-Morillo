@@ -16,12 +16,6 @@ module.exports = async function handler(req, res) {
     if (errors.length) return res.status(400).json({ ok: false, errors });
 
     try {
-        // Evitar solapamientos: si ya existe una cita en la misma fecha y hora con estado pendiente/confirmada
-        const conflict = await query('SELECT COUNT(*) as cnt FROM citas WHERE fecha = ? AND hora = ? AND estado IN ("pendiente","confirmada")', [fecha, hora]);
-        if (conflict[0] && conflict[0].cnt > 0) {
-            return res.status(409).json({ ok: false, error: 'La hora seleccionada ya está ocupada. Elige otra hora.' });
-        }
-
         // Buscar paciente por teléfono; si no existe, crear ficha mínima
         const tel = telefono.trim();
         const existing = await query('SELECT id FROM pacientes WHERE telefono = ? LIMIT 1', [tel]);
