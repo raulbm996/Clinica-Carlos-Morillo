@@ -882,17 +882,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (fichaIconSMS) {
         fichaIconSMS.addEventListener('click', () => {
-            const t = document.getElementById('fTelefono').value.trim();
-            if (t) window.location.href = `sms:+34${t}`;
-            else alert('El paciente no tiene teléfono guardado.');
+            const t = document.getElementById('fTelefono').value.trim().replace(/\D/g, '');
+            if (t) {
+                const phone = t.startsWith('34') ? t : '34' + t;
+                window.open(`sms:+${phone}`, '_self');
+            } else {
+                alert('El paciente no tiene teléfono guardado.');
+            }
         });
     }
 
     if (fichaIconWA) {
         fichaIconWA.addEventListener('click', () => {
-            const t = document.getElementById('fTelefono').value.trim().replace(/\\D/g, '');
-            if (t) window.open(`https://wa.me/34${t}`, '_blank');
-            else alert('El paciente no tiene teléfono válido.');
+            const t = document.getElementById('fTelefono').value.trim().replace(/\D/g, '');
+            if (t) {
+                const phone = t.startsWith('34') ? t : '34' + t;
+                window.open(`https://wa.me/${phone}`, '_blank');
+            } else {
+                alert('El paciente no tiene teléfono válido.');
+            }
         });
     }
 
@@ -902,7 +910,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const apellidos = document.getElementById('fApellidos').value.trim();
             const telefono = document.getElementById('fTelefono').value.trim();
             const fullName = [nombre, apellidos].filter(Boolean).join(' ');
-            // Abrir el modal de Nueva Cita con el paciente pre-seleccionado
             if (window.openNuevaCita) {
                 window.openNuevaCita({ nombre: fullName, telefono });
             }
