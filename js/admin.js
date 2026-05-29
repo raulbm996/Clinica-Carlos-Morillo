@@ -546,6 +546,52 @@ document.addEventListener('DOMContentLoaded', () => {
         popup.className = 'cita-actions-popup';
         popup.style.cssText = 'position:absolute;z-index:999;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.15);padding:6px;min-width:170px;';
 
+        // Botón "Ver ficha" del paciente
+        const fichaBtn = document.createElement('button');
+        fichaBtn.style.cssText = 'display:block;width:100%;text-align:left;padding:8px 12px;border:none;background:none;cursor:pointer;border-radius:6px;font-size:.85rem;color:#3bb2b8;font-weight:600;';
+        fichaBtn.textContent = '📋 Ver ficha del paciente';
+        fichaBtn.addEventListener('mouseenter', () => fichaBtn.style.background = '#e6f7f8');
+        fichaBtn.addEventListener('mouseleave', () => fichaBtn.style.background = 'none');
+        fichaBtn.addEventListener('click', async () => {
+            popup.remove();
+            try {
+                // Buscar el paciente: priorizar teléfono (más fiable) y si no, por nombre
+                let searchParam = cita.paciente_nombre;
+                if (cita.telefono && cita.telefono.trim()) {
+                    searchParam = cita.telefono.trim();
+                }
+                const data = await apiGet(`${API}/pacientes?buscar=${encodeURIComponent(searchParam)}`);
+                if (data.ok && data.pacientes && data.pacientes.length > 0) {
+                    // Encontrar la mejor coincidencia (nombre exacto o primer resultado)
+                    let paciente = data.pacientes.find(p => {
+                        const fullName = `${p.nombre} ${p.apellidos || ''}`.trim();
+                        return fullName === cita.paciente_nombre;
+                    }) || data.pacientes[0];
+
+                    // Actualizar la lista de pacientes en memoria para que openFichaPaciente funcione
+                    currentPacientes = data.pacientes;
+
+                    // Marcar que venimos del calendario para el botón "Volver"
+                    fichaOriginView = 'calendario';
+
+                    // Mostrar la vista de pacientes (oculta) y abrir la ficha
+                    tabBar.style.display = 'none';
+                    openFichaPaciente(paciente.id);
+                } else {
+                    alert('No se encontró el paciente "' + cita.paciente_nombre + '" en la base de datos.');
+                }
+            } catch (err) {
+                console.error('Error buscando paciente:', err);
+                alert('Error al buscar el paciente.');
+            }
+        });
+        popup.appendChild(fichaBtn);
+
+        // Separador después de "Ver ficha"
+        const sepFicha = document.createElement('div');
+        sepFicha.style.cssText = 'height:1px;background:#e2e8f0;margin:4px 0;';
+        popup.appendChild(sepFicha);
+
         const actions = [
             { label: '✅ Confirmar', estado: 'confirmada', color: '#38a169' },
             { label: '❌ Cancelar', estado: 'cancelada', color: '#e53e3e' },
@@ -752,11 +798,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const checkExclusivo = document.getElementById('fCheckExclusivo');
     const boxExclusivo = document.getElementById('fBoxExclusivo');
 
+    // Rastrear desde qué vista se abrió la ficha del paciente
+    let fichaOriginView = 'pacientes';
+
     if (btnBackToPacientes) {
         btnBackToPacientes.addEventListener('click', () => {
             secFicha.classList.remove('active');
-            secPacientes.classList.add('active');
-            loadPacientes(); // Reload just in case
+            if (fichaOriginView === 'calendario') {
+                showView('calendario');
+                tabs.forEach(t => t.classList.toggle('active', t.dataset.target === 'calendario'));
+            } else {
+                secPacientes.classList.add('active');
+                tabBar.style.display = '';
+                tabs.forEach(t => t.classList.toggle('active', t.dataset.target === 'pacientes'));
+                loadPacientes();
+            }
+            fichaOriginView = 'pacientes'; // Reset
         });
     }
 
