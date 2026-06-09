@@ -4280,3 +4280,1098 @@ body.dark-theme .timeline-cita-detail {
         justify-content: center;
     }
 }
+
+/* ============================================================
+   COMPREHENSIVE MOBILE RESPONSIVE FIXES
+   Fixes overlapping, hidden elements, and layout issues
+   ============================================================ */
+
+/* ————————————————————————————
+   MOBILE ≤ 768px — Tablets & large phones
+   ———————————————————————————— */
+@media (max-width: 768px) {
+
+    /* --- TOPBAR FIX: prevent overlap --- */
+    .admin-topbar {
+        height: auto;
+        min-height: 50px;
+        flex-wrap: wrap;
+        padding: 8px 12px;
+        gap: 8px;
+    }
+
+    .hamburger-menu {
+        order: 1;
+        flex-shrink: 0;
+    }
+
+    .topbar-search {
+        order: 3;
+        flex: 1 1 100%;
+        min-width: 0;
+        height: 38px;
+    }
+
+    .topbar-clinic-name {
+        order: 2;
+        flex: 1;
+        font-size: .85rem;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .topbar-actions {
+        order: 2;
+        flex-shrink: 0;
+    }
+
+    .user-name {
+        display: none;
+    }
+
+    /* --- TABS: scrollable, never hidden --- */
+    .admin-tabs {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        flex-wrap: nowrap;
+        gap: 4px;
+        padding: 6px 10px;
+        scrollbar-width: none;
+    }
+
+    .admin-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .tab-btn {
+        flex: 0 0 auto;
+        white-space: nowrap;
+        font-size: .85rem;
+        padding: 8px 12px;
+    }
+
+    /* --- CALENDAR TOOLBAR: proper wrapping --- */
+    .calendar-toolbar {
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 8px 10px;
+    }
+
+    .calendar-toolbar-left {
+        flex: 1 1 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        align-items: center;
+    }
+
+    .cal-month-picker {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .cal-month-select,
+    .cal-year-select {
+        min-width: 0;
+        max-width: 120px;
+        font-size: .8rem;
+        padding: 6px 8px;
+    }
+
+    .cal-nav-btn,
+    .cal-today-btn {
+        flex-shrink: 0;
+        padding: 6px 10px;
+        font-size: .78rem;
+    }
+
+    .nueva-cita-btn {
+        flex: 1 1 100%;
+        justify-content: center;
+        padding: 10px 14px;
+        font-size: .85rem;
+        margin-right: 0;
+    }
+
+    .calendar-subheader {
+        padding: 8px 12px;
+    }
+
+    .calendar-subheader-left h2 {
+        font-size: 1rem;
+    }
+
+    .cal-breadcrumb {
+        font-size: .78rem;
+    }
+
+    /* --- CALENDAR GRID: smaller cells --- */
+    .calendar-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .calendar-grid {
+        min-width: 600px;
+    }
+
+    /* --- PACIENTES TABLE: card layout --- */
+    #pacientes {
+        padding: 12px;
+    }
+
+    .section-top {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .section-top h3 {
+        font-size: .95rem;
+    }
+
+    .section-top .btn-clinni-primary {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .search-box {
+        max-width: 100%;
+    }
+
+    .table-actions {
+        padding: 10px;
+    }
+
+    /* --- FICHA DE PACIENTE: stack everything --- */
+    #fichaPaciente {
+        padding: 14px;
+    }
+
+    .ficha-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding-bottom: 14px;
+        margin-bottom: 16px;
+    }
+
+    .ficha-top-left {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    #fichaMainName {
+        font-size: 1.15rem;
+        word-break: break-word;
+    }
+
+    .ficha-top-right {
+        display: flex;
+        gap: 10px;
+        width: 100%;
+    }
+
+    .action-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 1.1rem;
+    }
+
+    .ficha-body {
+        overflow-x: hidden;
+    }
+
+    .ficha-form-grid {
+        gap: 14px;
+    }
+
+    .ficha-row {
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .ficha-field {
+        min-width: 0 !important;
+        flex: 1 1 100% !important;
+    }
+
+    .ficha-field label {
+        font-size: .7rem;
+        white-space: normal;
+    }
+
+    .ficha-field input,
+    .ficha-field select {
+        padding: 12px 10px;
+        font-size: .88rem;
+    }
+
+    .ficha-divider {
+        margin: 8px 0;
+    }
+
+    /* --- Config section: proper spacing --- */
+    .ficha-config-box {
+        padding: 16px;
+    }
+
+    .ficha-check-label {
+        gap: 8px;
+    }
+
+    .chk-text {
+        font-size: .82rem;
+    }
+
+    .ficha-hint {
+        font-size: .72rem;
+    }
+
+    .ml-28 {
+        margin-left: 0;
+        padding-left: 28px;
+    }
+
+    .btn-firmar-doc {
+        font-size: .84rem;
+        padding: 10px;
+    }
+
+    /* --- Bottom actions: stack vertically --- */
+    .ficha-bottom-actions {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+        margin-top: 16px;
+        padding-top: 14px;
+    }
+
+    .ficha-bottom-actions .btn-clinni-primary {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .lopd-panel {
+        display: block !important;
+        margin-left: 0 !important;
+    }
+
+    .lopd-card {
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+    }
+
+    .lopd-card .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* --- HISTORIAL CLÍNICO: responsive --- */
+    .historial-section {
+        margin-top: 12px;
+    }
+
+    .historial-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 12px 14px;
+    }
+
+    .historial-header h3 {
+        font-size: .95rem;
+    }
+
+    .historial-tabs {
+        width: 100%;
+    }
+
+    .historial-tab {
+        flex: 1;
+        justify-content: center;
+        padding: 7px 10px;
+        font-size: .78rem;
+    }
+
+    .historial-tab span {
+        display: inline;
+    }
+
+    .historial-panel {
+        padding: 12px 14px;
+    }
+
+    .historial-filters {
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 12px;
+    }
+
+    .historial-filter-btn {
+        padding: 5px 10px;
+        font-size: .74rem;
+    }
+
+    .historial-timeline {
+        padding-left: 22px;
+        max-height: 400px;
+    }
+
+    .historial-timeline::before {
+        left: 8px;
+    }
+
+    .timeline-entry {
+        padding: 10px 12px;
+        margin-bottom: 12px;
+    }
+
+    .timeline-dot {
+        left: -18px;
+        width: 10px;
+        height: 10px;
+    }
+
+    .timeline-entry-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+
+    .timeline-entry-body {
+        font-size: .84rem;
+    }
+
+    .timeline-cita-details {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .nueva-obs-form {
+        padding: 14px;
+    }
+
+    .nueva-obs-textarea {
+        min-height: 100px;
+        font-size: .85rem;
+    }
+
+    .btn-guardar-obs {
+        width: 100%;
+        justify-content: center;
+        padding: 10px 20px;
+    }
+
+    /* --- USUARIO SECTION: stack layout --- */
+    .usuario-page {
+        padding: 14px;
+        gap: 14px;
+    }
+
+    .usuario-card {
+        padding: 18px;
+    }
+
+    .usuario-profile-row {
+        flex-direction: column;
+        align-items: center;
+        gap: 18px;
+    }
+
+    .usuario-photo {
+        width: 100px;
+        height: 100px;
+    }
+
+    .usuario-fields-col {
+        width: 100%;
+    }
+
+    .usuario-field-row {
+        grid-template-columns: 1fr;
+    }
+
+    .usuario-save-row {
+        justify-content: center;
+    }
+
+    .usuario-save-row .btn-clinni-primary {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .usuario-color-section {
+        margin-top: 16px;
+        padding-top: 14px;
+    }
+
+    .usuario-color-row {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .usuario-color-picker {
+        width: 48px;
+        height: 48px;
+    }
+
+    /* Notification & password cards */
+    .usuario-notif-card,
+    .usuario-password-card {
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .usuario-card-icon {
+        align-self: flex-start;
+    }
+
+    .password-fields {
+        grid-template-columns: 1fr;
+    }
+
+    .password-hint {
+        font-size: .8rem;
+    }
+
+    .usuario-password-card .btn-clinni-primary {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* --- MODALS: full screen on mobile --- */
+    .asistente-overlay,
+    .nueva-cita-overlay {
+        padding: 8px;
+        align-items: flex-end;
+    }
+
+    .asistente-modal {
+        width: 100%;
+        max-width: 100%;
+        max-height: 92vh;
+        border-radius: 16px 16px 0 0;
+        margin: 0;
+    }
+
+    .asistente-scroll {
+        padding: 14px 16px 20px;
+    }
+
+    .asistente-card-main {
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px 14px;
+    }
+
+    .asistente-card-main .asistente-card-icon {
+        align-self: flex-start;
+    }
+
+    .asistente-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .asistente-field-pref {
+        width: 100%;
+    }
+
+    .asistente-save-btn {
+        width: 100%;
+    }
+
+    .asistente-card-info {
+        flex-direction: column;
+        text-align: center;
+        padding: 14px;
+    }
+
+    /* --- NUEVA CITA MODAL: full width --- */
+    .nueva-cita-modal {
+        width: 100%;
+        max-width: 100%;
+        max-height: 92vh;
+        border-radius: 16px 16px 0 0;
+        margin: 0;
+    }
+
+    .nci-header {
+        padding: 14px 16px;
+        gap: 10px;
+    }
+
+    .nci-header-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 1rem;
+    }
+
+    .nci-title {
+        font-size: 1rem;
+    }
+
+    .nci-subtitle {
+        font-size: .72rem;
+    }
+
+    .nci-body {
+        padding: 14px 16px;
+        gap: 16px;
+    }
+
+    .nci-patient-search input {
+        font-size: .86rem;
+        padding: 10px 12px;
+    }
+
+    .nci-service-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+    }
+
+    .nci-service-btn {
+        padding: 8px 6px;
+        font-size: .76rem;
+    }
+
+    .nci-datetime-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .nci-footer {
+        padding: 12px 16px;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .nci-cancel-btn,
+    .nci-save-btn {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .nci-feedback {
+        padding: 0 16px;
+        font-size: .8rem;
+    }
+
+    /* New patient card inside Nueva Cita */
+    #nciNewPatientCard .asistente-row {
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+
+    #nciNewPatientCard .asistente-field-grow,
+    #nciNewPatientCard .asistente-field-pref {
+        flex: 1 1 100% !important;
+        width: 100% !important;
+    }
+
+    /* --- AUDIT MODAL: responsive --- */
+    .modal-content {
+        width: calc(100% - 16px);
+        max-height: 90vh;
+        padding: 14px;
+    }
+
+    #auditFilters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    #auditFilters input,
+    #auditFilters button {
+        flex: 1 1 calc(50% - 4px);
+        min-width: 80px;
+        margin-right: 0 !important;
+    }
+
+    /* --- CARD TABLE: better cards on mobile --- */
+    .card-table {
+        border-radius: 10px;
+    }
+
+    .ficha-card-block {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+        padding: 12px;
+    }
+}
+
+/* ————————————————————————————
+   MOBILE ≤ 480px — Small phones
+   ———————————————————————————— */
+@media (max-width: 480px) {
+
+    /* --- TOPBAR: ultra compact --- */
+    .admin-topbar {
+        padding: 6px 8px;
+        gap: 6px;
+    }
+
+    .topbar-clinic-name {
+        display: none;
+    }
+
+    .topbar-search {
+        padding: 6px 8px;
+        height: 36px;
+    }
+
+    .topbar-search input {
+        font-size: .8rem;
+    }
+
+    .topbar-add-btn {
+        width: 26px;
+        height: 26px;
+        font-size: .75rem;
+    }
+
+    /* --- CALENDAR: ultra compact toolbar --- */
+    .cal-month-picker {
+        flex-wrap: wrap;
+    }
+
+    .cal-month-select {
+        max-width: 100px;
+        font-size: .78rem;
+    }
+
+    .cal-year-select {
+        max-width: 70px;
+        font-size: .78rem;
+    }
+
+    .cal-nav-btn {
+        width: 30px;
+        height: 30px;
+        font-size: .7rem;
+    }
+
+    .cal-today-btn {
+        font-size: .72rem;
+        padding: 5px 8px;
+    }
+
+    .nueva-cita-btn {
+        font-size: .8rem;
+        padding: 9px 12px;
+    }
+
+    .nueva-cita-btn i {
+        font-size: .85rem;
+    }
+
+    .calendar-subheader-left h2 {
+        font-size: .9rem;
+    }
+
+    .cal-info-icon {
+        display: none;
+    }
+
+    /* Calendar grid even more compact */
+    .calendar-grid {
+        min-width: 520px;
+        grid-template-columns: 40px repeat(7, minmax(0, 1fr));
+    }
+
+    .cal-cell {
+        min-height: 44px;
+    }
+
+    .cal-time-label {
+        font-size: .65rem;
+        padding: 4px 4px 0 0;
+    }
+
+    .cal-day-header .day-num {
+        font-size: .88rem;
+    }
+
+    .cal-day-header .day-name {
+        font-size: .6rem;
+    }
+
+    /* --- FICHA: even tighter --- */
+    #fichaPaciente {
+        padding: 10px;
+    }
+
+    #fichaMainName {
+        font-size: 1rem;
+    }
+
+    .btn-back {
+        width: 32px;
+        height: 32px;
+        font-size: .9rem;
+    }
+
+    .action-icon {
+        width: 34px;
+        height: 34px;
+        font-size: 1rem;
+    }
+
+    .ficha-field input,
+    .ficha-field select {
+        padding: 10px 8px;
+        font-size: .84rem;
+    }
+
+    .ficha-config-box {
+        padding: 12px;
+    }
+
+    .chk-text {
+        font-size: .78rem;
+    }
+
+    .ficha-hint {
+        font-size: .68rem;
+    }
+
+    .btn-firmar-doc {
+        font-size: .8rem;
+        padding: 9px;
+    }
+
+    /* --- USUARIO: even tighter --- */
+    .usuario-page {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .usuario-card {
+        padding: 14px;
+    }
+
+    .usuario-photo {
+        width: 80px;
+        height: 80px;
+        font-size: 1rem;
+    }
+
+    .usuario-field input {
+        padding: 8px 10px;
+        font-size: .86rem;
+    }
+
+    .usuario-field label {
+        font-size: .74rem;
+    }
+
+    .check-row {
+        font-size: .82rem;
+    }
+
+    .check-row span {
+        font-size: .82rem;
+    }
+
+    .usuario-card-body h3 {
+        font-size: .9rem;
+    }
+
+    .password-hint {
+        font-size: .76rem;
+    }
+
+    /* --- MODALS: full-screen sheet --- */
+    .asistente-modal,
+    .nueva-cita-modal {
+        max-height: 95vh;
+        border-radius: 14px 14px 0 0;
+    }
+
+    .asistente-title {
+        font-size: 1rem;
+        padding: 16px 14px 0;
+    }
+
+    .asistente-scroll {
+        padding: 10px 12px 16px;
+    }
+
+    .asistente-card-main {
+        padding: 12px;
+    }
+
+    .asistente-field input {
+        padding: 10px;
+        font-size: .84rem;
+    }
+
+    .nci-header {
+        padding: 12px 14px;
+    }
+
+    .nci-body {
+        padding: 10px 14px;
+        gap: 14px;
+    }
+
+    .nci-service-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 5px;
+    }
+
+    .nci-service-btn {
+        padding: 7px 4px;
+        font-size: .72rem;
+    }
+
+    .nci-footer {
+        padding: 10px 14px;
+    }
+
+    /* --- TABLE: card style on small phones --- */
+    #pacientes {
+        padding: 8px;
+    }
+
+    .section-top h3 {
+        font-size: .88rem;
+    }
+
+    .section-top .btn-clinni-primary {
+        font-size: .82rem;
+        padding: 8px 12px;
+    }
+
+    .search-box input {
+        font-size: .8rem;
+        padding: 6px 8px 6px 28px;
+    }
+
+    /* --- HISTORIAL: compact --- */
+    .historial-header {
+        padding: 10px 12px;
+    }
+
+    .historial-header h3 {
+        font-size: .88rem;
+    }
+
+    .historial-tab {
+        padding: 6px 8px;
+        font-size: .74rem;
+    }
+
+    /* Hide tab text, show only icon */
+    .historial-tab span {
+        display: none;
+    }
+
+    .historial-panel {
+        padding: 10px 12px;
+    }
+
+    .historial-filter-btn {
+        padding: 4px 8px;
+        font-size: .7rem;
+    }
+
+    .historial-timeline {
+        padding-left: 18px;
+        max-height: 350px;
+    }
+
+    .historial-timeline::before {
+        left: 6px;
+    }
+
+    .timeline-entry {
+        padding: 8px 10px;
+    }
+
+    .timeline-dot {
+        left: -14px;
+        width: 8px;
+        height: 8px;
+        top: 14px;
+    }
+
+    .timeline-entry-type {
+        font-size: .66rem;
+        padding: 2px 8px;
+    }
+
+    .timeline-entry-date {
+        font-size: .7rem;
+    }
+
+    .timeline-entry-body {
+        font-size: .8rem;
+    }
+
+    .timeline-entry-author {
+        font-size: .68rem;
+    }
+
+    .nueva-obs-form {
+        padding: 10px;
+    }
+
+    .nueva-obs-avatar {
+        width: 32px;
+        height: 32px;
+        font-size: .7rem;
+    }
+
+    .nueva-obs-meta strong {
+        font-size: .82rem;
+    }
+
+    .nueva-obs-meta small {
+        font-size: .72rem;
+    }
+
+    .nueva-obs-textarea {
+        min-height: 80px;
+        font-size: .82rem;
+        padding: 10px;
+    }
+
+    .btn-guardar-obs {
+        font-size: .82rem;
+        padding: 9px 16px;
+    }
+}
+
+/* ————————————————————————————
+   MOBILE ≤ 360px — Very small phones
+   ———————————————————————————— */
+@media (max-width: 360px) {
+
+    .admin-topbar {
+        padding: 4px 6px;
+    }
+
+    .hamburger-menu {
+        font-size: 1rem;
+    }
+
+    .topbar-search {
+        height: 32px;
+    }
+
+    .tab-btn {
+        font-size: .78rem;
+        padding: 6px 8px;
+    }
+
+    .cal-month-select {
+        max-width: 80px;
+        font-size: .74rem;
+    }
+
+    .cal-year-select {
+        max-width: 55px;
+        font-size: .74rem;
+    }
+
+    .calendar-grid {
+        min-width: 480px;
+    }
+
+    #fichaPaciente {
+        padding: 8px;
+    }
+
+    .ficha-field input,
+    .ficha-field select {
+        padding: 9px 7px;
+        font-size: .8rem;
+    }
+
+    .usuario-card {
+        padding: 10px;
+    }
+
+    .nci-service-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .nci-service-btn {
+        font-size: .7rem;
+        padding: 6px 3px;
+    }
+
+    /* Ensure sidebar covers full width on very small screens */
+    .admin-sidebar {
+        width: 100%;
+    }
+}
+
+/* ————————————————————————————
+   SAFE AREA & NOTCH SUPPORT (iOS)
+   ———————————————————————————— */
+@supports (padding: env(safe-area-inset-bottom)) {
+    @media (max-width: 768px) {
+        .nci-footer,
+        .asistente-save-row,
+        .ficha-bottom-actions {
+            padding-bottom: calc(12px + env(safe-area-inset-bottom));
+        }
+
+        .asistente-modal,
+        .nueva-cita-modal {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+    }
+}
+
+/* ————————————————————————————
+   TOUCH IMPROVEMENTS
+   ———————————————————————————— */
+@media (hover: none) and (pointer: coarse) {
+
+    /* Bigger touch targets */
+    .cal-nav-btn,
+    .cal-today-btn,
+    .tab-btn,
+    .action-btn,
+    .topbar-icon-btn,
+    .sidebar-nav .nav-item a,
+    .historial-filter-btn,
+    .historial-tab,
+    .nci-service-btn {
+        min-height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Remove hover effects that look weird on touch */
+    .timeline-entry:hover {
+        transform: none;
+    }
+
+    .nci-save-btn:hover,
+    .nueva-cita-btn:hover,
+    .btn-guardar-obs:hover {
+        transform: none;
+    }
+
+    /* Better scrolling */
+    .calendar-wrapper,
+    .historial-timeline,
+    .table-responsive,
+    .nci-body,
+    .asistente-scroll {
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+    }
+}
